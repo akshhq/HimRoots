@@ -46,7 +46,7 @@ export default function Home() {
     <div className="flex flex-col bg-[var(--color-background)]">
       
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-6 sm:pt-10 pb-16 md:pb-24 border-b border-[var(--color-border)]">
+      <section className="relative overflow-hidden pt-1 sm:pt-2 pb-16 md:pb-24 border-b border-[var(--color-border)]">
         {/* Subtle Ambient Glows */}
         <div className="absolute top-1/4 left-1/3 w-[600px] h-[600px] bg-[var(--color-primary)]/10 rounded-full blur-[160px] pointer-events-none" />
         <div className="absolute bottom-10 right-1/4 w-[450px] h-[450px] bg-[var(--color-accent)]/10 rounded-full blur-[140px] pointer-events-none" />
@@ -66,7 +66,7 @@ export default function Home() {
           {/* Centered Main Website Logo with subtle red visual treatment */}
           <div 
             ref={heroLogoRef}
-            className="flex flex-col items-center justify-center text-center pt-2 pb-8 sm:pb-12"
+            className="flex flex-col items-center justify-center text-center pt-1 pb-6 sm:pb-8"
           >
             <div className="relative group inline-block">
               {/* Subtle ambient warm red berry aura */}

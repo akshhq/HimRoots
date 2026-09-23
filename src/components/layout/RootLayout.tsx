@@ -15,7 +15,7 @@ export function RootLayout() {
   return (
     <div className="flex flex-col min-h-screen bg-[var(--color-background)]">
       <Navbar />
-      <main className="flex-1 pt-[88px]">
+      <main className="flex-1">
         <Outlet />
       </main>
       <Footer />
