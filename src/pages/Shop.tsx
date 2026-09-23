@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, Filter, Check, ShoppingBag, ShieldCheck, Truck, Sparkles } from "lucide-react";
+import { Search, Filter, Check, ShoppingBag, ShieldCheck, Truck, Sparkles, ArrowRight } from "lucide-react";
 import { products } from "@/data/products";
 import { Button } from "@/components/ui/Button";
 import { useCartStore } from "@/store/cartStore";
@@ -165,6 +165,31 @@ export default function Shop() {
             </Button>
           </div>
         )}
+
+        {/* Editorial Guide Banner */}
+        <div className="max-w-5xl mx-auto mb-14 p-5 sm:p-8 rounded-2xl bg-gradient-to-r from-[var(--color-secondary)] via-[var(--color-card)] to-[var(--color-secondary)] border border-[var(--color-border-gold)] flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xl">
+          <div className="flex items-start sm:items-center gap-4">
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-[var(--color-primary)]/15 border border-[var(--color-border-gold)] flex items-center justify-center text-[var(--color-primary)] flex-shrink-0">
+              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6" />
+            </div>
+            <div>
+              <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[var(--color-primary)] block mb-0.5">
+                Botanical Monograph
+              </span>
+              <h3 className="text-base sm:text-lg font-serif font-bold text-white mb-1">
+                Curious why Sea Buckthorn is called the "Holy Fruit"?
+              </h3>
+              <p className="text-xs text-gray-400 max-w-xl">
+                Read about the Pegasus legend, Genghis Khan's cavalry rations, Soviet cosmonaut space diets, and rare Omega-7 science in our definitive guide.
+              </p>
+            </div>
+          </div>
+          <Button asChild variant="outline" className="border-[var(--color-border-gold)] text-white hover:text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10 text-xs font-bold uppercase tracking-wider shrink-0 w-full md:w-auto">
+            <Link to="/about-sea-buckthorn">
+              About Sea Buckthorn <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+            </Link>
+          </Button>
+        </div>
 
         {/* Quality Assurances Strip */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-5xl mx-auto pt-8 border-t border-[var(--color-border)]">

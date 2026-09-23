@@ -1,67 +1,270 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/Button";
-import { CheckCircle2, ArrowRight } from "lucide-react";
+import { CheckCircle2, ArrowRight, ShieldCheck, Mail, ShoppingBag, HelpCircle } from "lucide-react";
+
+interface OrderSuccessState {
+  orderId?: string;
+  orderNumber?: string;
+  total?: number;
+  subtotal?: number;
+  shippingFee?: number;
+  paymentId?: string;
+  paymentStatus?: string;
+  customer?: {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    phone?: string;
+    address?: string;
+    city?: string;
+    state?: string;
+    pincode?: string;
+  };
+  items?: Array<{
+    productId?: string;
+    productName?: string;
+    quantity: number;
+    price: number;
+    subtotal: number;
+  }>;
+}
 
 export default function OrderSuccess() {
   const location = useLocation();
   const navigate = useNavigate();
-  const state = location.state as { orderId: string; total: number; customer: any };
+  const state = (location.state as OrderSuccessState) || null;
+
+  const [orderData, setOrderData] = useState<OrderSuccessState | null>(state);
+  const [isLoading, setIsLoading] = useState(!state?.orderNumber && !state?.orderId);
 
   useEffect(() => {
-    // If accessed directly without order state, redirect home
-    if (!state || !state.orderId) {
+    // If state was passed via React Router navigation, we're ready
+    if (state?.orderNumber || state?.orderId) {
+      setOrderData(state);
+      setIsLoading(false);
+      return;
+    }
+
+    // Fallback: Check if accessed via URL search query params e.g. /order-success?orderNumber=HM-...
+    const searchParams = new URLSearchParams(location.search);
+    const identifier = searchParams.get("orderNumber") || searchParams.get("orderId");
+
+    if (identifier) {
+      fetch(`/api/orders/${encodeURIComponent(identifier)}`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data && data.success && data.order) {
+            const dbOrder = data.order;
+            const nameParts = (dbOrder.customer_name || "").split(" ");
+            setOrderData({
+              orderId: dbOrder.id,
+              orderNumber: dbOrder.order_number,
+              total: Number(dbOrder.total),
+              subtotal: Number(dbOrder.subtotal),
+              shippingFee: Number(dbOrder.shipping_fee),
+              paymentStatus: dbOrder.payment_status === "paid" ? "Paid" : dbOrder.payment_status,
+              customer: {
+                firstName: nameParts[0] || "",
+                lastName: nameParts.slice(1).join(" ") || "",
+                email: dbOrder.email,
+                phone: dbOrder.phone,
+                address: dbOrder.shipping_address,
+                city: dbOrder.city,
+                state: dbOrder.state,
+                pincode: dbOrder.pincode,
+              },
+              items: (dbOrder.order_items || []).map((it: any) => ({
+                productName: it.product_name,
+                quantity: it.quantity,
+                price: Number(it.price),
+                subtotal: Number(it.subtotal),
+              })),
+            });
+          } else {
+            navigate("/");
+          }
+        })
+        .catch(() => navigate("/"))
+        .finally(() => setIsLoading(false));
+    } else {
+      // No order context found; safely return to homepage
       navigate("/");
     }
-  }, [state, navigate]);
+  }, [location, navigate, state]);
 
-  if (!state || !state.orderId) return null;
+  if (isLoading) {
+    return (
+      <div className="py-32 bg-[var(--color-background)] min-h-[60vh] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4 text-center">
+          <div className="w-8 h-8 border-2 border-[var(--color-primary)] border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-gray-400 text-sm">Retrieving your order confirmation...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!orderData) return null;
+
+  const displayOrderNumber = orderData.orderNumber || orderData.orderId || "HM-PENDING";
+  const displayStatus = orderData.paymentStatus || "Paid";
 
   return (
-    <div className="py-20 md:py-32 bg-[var(--color-background)] min-h-[70vh] flex items-center justify-center">
-      <div className="container mx-auto px-4 max-w-2xl text-center">
+    <div className="py-16 md:py-24 bg-[var(--color-background)] min-h-[80vh] flex items-center justify-center">
+      <div className="container mx-auto px-4 max-w-3xl">
 
-        <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-500/40">
-          <CheckCircle2 className="w-10 h-10 text-green-500" />
-        </div>
-        
-        <h1 className="text-3xl md:text-5xl font-bold mb-4">Order Successful!</h1>
-        <p className="text-gray-400 text-lg mb-8 max-w-md mx-auto">
-          Thank you for your purchase. Your order has been placed and is being processed.
-        </p>
-
-        <div className="bg-[var(--color-secondary)] p-8 rounded-lg border border-[var(--color-border)] mb-10 text-left">
-          <h3 className="font-bold uppercase tracking-wider mb-6 border-b border-[var(--color-border)] pb-4">Order Details</h3>
-          
-          <div className="grid grid-cols-2 gap-y-4 text-sm mb-6">
-            <div className="text-gray-400">Order ID:</div>
-            <div className="font-bold text-white text-right">{state.orderId}</div>
-            
-            <div className="text-gray-400">Date:</div>
-            <div className="text-white text-right">{new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
-            
-            <div className="text-gray-400">Total Amount:</div>
-            <div className="font-bold text-[var(--color-primary)] text-right">₹{state.total}</div>
-            
-            <div className="text-gray-400">Payment Method:</div>
-            <div className="text-white text-right">Razorpay (Paid)</div>
+        {/* Success Header Icon & Title */}
+        <div className="text-center mb-10">
+          <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-500/30 animate-scaleUp">
+            <CheckCircle2 className="w-10 h-10 text-green-400" />
           </div>
           
-          <h3 className="font-bold uppercase tracking-wider mb-4 border-b border-[var(--color-border)] pb-4 mt-8">Delivery Information</h3>
-          <div className="text-sm text-gray-300">
-            <p className="font-bold text-white mb-1">{state.customer.firstName} {state.customer.lastName}</p>
-            <p>{state.customer.address}</p>
-            <p>{state.customer.city}, {state.customer.state} {state.customer.pincode}</p>
-            <p className="mt-2 text-gray-400">{state.customer.email}</p>
-            <p className="text-gray-400">{state.customer.phone}</p>
+          <span className="text-xs uppercase tracking-widest text-[var(--color-primary)] font-semibold mb-2 block">
+            Payment Verified & Order Confirmed
+          </span>
+          <h1 className="text-3xl md:text-5xl font-bold font-serif text-white mb-3">Thank You for Your Order!</h1>
+          <p className="text-gray-300 text-base md:text-lg max-w-lg mx-auto leading-relaxed">
+            Your payment has been securely verified. We are preparing your fresh Himalayan wellness harvest.
+          </p>
+        </div>
+
+        {/* Main Order Card */}
+        <div className="bg-[var(--color-secondary)] p-6 md:p-8 rounded-xl border border-[var(--color-border)] mb-8 shadow-2xl">
+          
+          {/* Top Order Metadata Bar */}
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--color-border)] pb-6 mb-6">
+            <div>
+              <span className="text-xs uppercase tracking-wider text-gray-400 block mb-1">Order Reference</span>
+              <span className="text-lg md:text-xl font-bold font-mono text-[var(--color-primary)]">{displayOrderNumber}</span>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-300 border border-green-500/40">
+                <ShieldCheck className="w-3.5 h-3.5 text-green-400" />
+                Payment Status: {displayStatus}
+              </span>
+            </div>
+          </div>
+
+          {/* Purchased Items (if available) */}
+          {orderData.items && orderData.items.length > 0 && (
+            <div className="mb-6 pb-6 border-b border-[var(--color-border)]">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-4">Purchased Products</h3>
+              <div className="flex flex-col gap-3">
+                {orderData.items.map((item, idx) => (
+                  <div key={idx} className="flex justify-between items-center text-sm">
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-400 font-mono text-xs">{item.quantity}x</span>
+                      <span className="text-white font-medium">{item.productName || "Himroots Wellness Product"}</span>
+                    </div>
+                    <div className="text-gray-300 font-mono">
+                      ₹{item.subtotal || (item.price * item.quantity)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Pricing Summary */}
+          <div className="grid grid-cols-2 gap-y-3 text-sm border-b border-[var(--color-border)] pb-6 mb-6">
+            <div className="text-gray-400">Order Date:</div>
+            <div className="text-white text-right font-medium">
+              {new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+            </div>
+
+            {orderData.subtotal !== undefined && (
+              <>
+                <div className="text-gray-400">Subtotal:</div>
+                <div className="text-white text-right font-mono">₹{orderData.subtotal}</div>
+              </>
+            )}
+
+            {orderData.shippingFee !== undefined && (
+              <>
+                <div className="text-gray-400">Shipping Delivery:</div>
+                <div className="text-white text-right font-mono">
+                  {orderData.shippingFee === 0 ? "Complimentary" : `₹${orderData.shippingFee}`}
+                </div>
+              </>
+            )}
+
+            <div className="text-gray-300 font-semibold pt-2 border-t border-[var(--color-border)]/50">Total Paid:</div>
+            <div className="font-bold text-lg text-[var(--color-primary)] text-right pt-2 border-t border-[var(--color-border)]/50 font-mono">
+              ₹{orderData.total}
+            </div>
+
+            <div className="text-gray-400">Payment Gateway:</div>
+            <div className="text-white text-right text-xs flex items-center justify-end gap-1.5">
+              <span>Razorpay Verified</span>
+              {orderData.paymentId && (
+                <span className="font-mono text-gray-400">({orderData.paymentId.substring(0, 10)}...)</span>
+              )}
+            </div>
+          </div>
+          
+          {/* Shipping & Delivery Address */}
+          {orderData.customer && (
+            <div>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Shipping Destination</h3>
+              <div className="text-sm text-gray-300 leading-relaxed bg-black/40 p-4 rounded-lg border border-[var(--color-border)]">
+                <p className="font-bold text-white mb-1">
+                  {orderData.customer.firstName} {orderData.customer.lastName}
+                </p>
+                <p>{orderData.customer.address}</p>
+                <p>{orderData.customer.city}, {orderData.customer.state} - {orderData.customer.pincode}</p>
+                <div className="mt-3 pt-3 border-t border-[var(--color-border)]/50 flex flex-wrap gap-x-6 gap-y-1 text-xs text-gray-400">
+                  <span>Email: <strong className="text-gray-300">{orderData.customer.email}</strong></span>
+                  <span>Phone: <strong className="text-gray-300">{orderData.customer.phone}</strong></span>
+                </div>
+              </div>
+            </div>
+          )}
+
+        </div>
+
+        {/* Customer Support & Help Options */}
+        <div className="bg-[var(--color-secondary)]/60 p-6 rounded-lg border border-[var(--color-border)] mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <HelpCircle className="w-5 h-5 text-[var(--color-primary)] flex-shrink-0 mt-0.5" />
+            <div>
+              <h4 className="text-sm font-bold text-white mb-1">Need assistance with your order?</h4>
+              <p className="text-xs text-gray-400">
+                Our support team is available Mon-Sat, 9:00 AM – 7:00 PM IST to help you with order tracking or questions.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2 text-xs w-full md:w-auto">
+            <a 
+              href="mailto:support@himroots.com" 
+              className="inline-flex items-center gap-1.5 px-3 py-2 bg-black hover:bg-[var(--color-primary)] hover:text-black border border-[var(--color-border)] rounded text-gray-200 transition-colors"
+            >
+              <Mail className="w-3.5 h-3.5" /> support@himroots.com
+            </a>
+            <Link 
+              to="/contact" 
+              className="inline-flex items-center gap-1.5 px-3 py-2 bg-black hover:bg-[var(--color-primary)] hover:text-black border border-[var(--color-border)] rounded text-gray-200 transition-colors"
+            >
+              Contact Support
+            </Link>
           </div>
         </div>
 
-        <Button asChild size="lg" className="uppercase tracking-widest text-sm">
-          <Link to="/shop">
-            Continue Shopping <ArrowRight className="w-4 h-4 ml-2" />
-          </Link>
-        </Button>
+        {/* Actions */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Button asChild size="lg" className="w-full sm:w-auto uppercase tracking-widest text-sm">
+            <Link to="/shop">
+              <ShoppingBag className="w-4 h-4 mr-2" /> Continue Shopping
+            </Link>
+          </Button>
+
+          <Button asChild variant="outline" size="lg" className="w-full sm:w-auto uppercase tracking-widest text-sm">
+            <Link to="/">
+              Return Home <ArrowRight className="w-4 h-4 ml-2" />
+            </Link>
+          </Button>
+        </div>
         
       </div>
     </div>

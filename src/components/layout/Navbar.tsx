@@ -37,6 +37,7 @@ export function Navbar() {
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "About", path: "/about" },
+    { name: "Sea Buckthorn", path: "/about-sea-buckthorn" },
     { name: "Shop", path: "/shop" },
     { name: "Contact Us", path: "/contact" },
   ];
@@ -44,7 +45,7 @@ export function Navbar() {
   return (
     <>
       {/* Top Banner */}
-      <div className="bg-[var(--color-secondary)]/95 border-b border-[var(--color-border)] text-[10px] sm:text-xs text-[var(--color-muted-foreground)] py-1.5 sm:py-2 px-3 sm:px-6 text-center tracking-[0.14em] sm:tracking-[0.18em] uppercase flex items-center justify-center gap-2">
+      <div className="bg-black border-b border-[var(--color-border)] text-[10px] sm:text-xs text-[var(--color-muted-foreground)] py-1.5 sm:py-2 px-3 sm:px-6 text-center tracking-[0.14em] sm:tracking-[0.18em] uppercase flex items-center justify-center gap-2">
         <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[var(--color-primary)] flex-shrink-0" />
         <span className="truncate">Pure Himalayan Sea Buckthorn Formulations — Free Shipping Across India</span>
         <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[var(--color-primary)] hidden sm:inline flex-shrink-0" />
@@ -53,8 +54,8 @@ export function Navbar() {
       <header
         className={`sticky top-0 w-full z-50 transition-all duration-300 ${
           isScrolled 
-            ? "bg-[#140e0b]/95 backdrop-blur-md py-2.5 sm:py-3 shadow-xl shadow-black/50 border-b border-[var(--color-border-gold)]" 
-            : "bg-[#140e0b]/85 backdrop-blur-md py-3 sm:py-4 border-b border-[var(--color-border)]"
+            ? "bg-black py-2.5 sm:py-3 shadow-xl shadow-black/50 border-b border-[var(--color-border-gold)]" 
+            : "bg-black py-3 sm:py-4 border-b border-[var(--color-border)]"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
@@ -139,7 +140,7 @@ export function Navbar() {
 
         {/* Mobile Menu Drawer */}
         {isMobileMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 w-full bg-[#120e0b]/98 backdrop-blur-xl border-t border-[var(--color-border)] px-6 py-8 flex flex-col gap-6 shadow-2xl animate-in slide-in-from-top-2 duration-200">
+          <div className="md:hidden absolute top-full left-0 w-full bg-black border-t border-[var(--color-border)] px-6 py-8 flex flex-col gap-6 shadow-2xl animate-in slide-in-from-top-2 duration-200">
             <div className="flex flex-col gap-4">
               {navLinks.map((link) => {
                 const isActive = location.pathname === link.path;

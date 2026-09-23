@@ -98,10 +98,14 @@ export default function Home() {
             <div className="lg:col-span-7 flex flex-col items-start text-left">
               
               {/* High Altitude Terroir Badge */}
-              <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-[var(--color-secondary)] border border-[var(--color-border-gold)] text-[9px] sm:text-[10px] md:text-xs font-semibold tracking-[0.16em] sm:tracking-[0.2em] text-[var(--color-primary)] uppercase mb-4 sm:mb-5">
+              <Link 
+                to="/about-sea-buckthorn"
+                className="group inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-[var(--color-secondary)] border border-[var(--color-border-gold)] text-[9px] sm:text-[10px] md:text-xs font-semibold tracking-[0.16em] sm:tracking-[0.2em] text-[var(--color-primary)] uppercase mb-4 sm:mb-5 hover:border-[var(--color-primary)] hover:bg-[var(--color-secondary)]/80 transition-all"
+              >
                 <Mountain className="w-3.5 h-3.5 flex-shrink-0" />
                 <span>Wild-Harvested at 12,000+ Feet in Ladakh & Spiti</span>
-              </div>
+                <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+              </Link>
 
               {/* Main Heading */}
               <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-4 sm:mb-6 leading-[1.18] sm:leading-[1.14] font-serif">
@@ -288,6 +292,21 @@ export default function Home() {
                 Deep nourishment for dull, irritated skin
               </div>
             </div>
+          </div>
+
+          {/* Deep Dive Callout Button */}
+          <div className="mt-10 sm:mt-14 text-center">
+            <Button 
+              asChild 
+              variant="outline" 
+              className="border-[var(--color-border-gold)] text-white hover:text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10 text-xs font-bold uppercase tracking-widest px-8 py-5 rounded-xl shadow-lg"
+            >
+              <Link to="/about-sea-buckthorn" className="inline-flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-[var(--color-primary)]" />
+                <span>Deep Dive: History, Science & Legends of Sea Buckthorn</span>
+                <ArrowRight className="w-4 h-4 ml-1 text-[var(--color-primary)]" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
@@ -579,11 +598,18 @@ export default function Home() {
                 </div>
               </div>
 
-              <Button asChild className="w-full sm:w-auto uppercase tracking-widest text-xs bg-gold-gradient text-black font-bold px-8 py-4 sm:py-5">
-                <Link to="/about">
-                  Read Our Full Story <ArrowRight className="w-4 h-4 ml-2" />
-                </Link>
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <Button asChild className="w-full sm:w-auto uppercase tracking-widest text-xs bg-gold-gradient text-black font-bold px-8 py-4 sm:py-5">
+                  <Link to="/about">
+                    Our Himalayan Story <ArrowRight className="w-4 h-4 ml-2" />
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" className="w-full sm:w-auto uppercase tracking-widest text-xs border-[var(--color-border-gold)] text-white hover:text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10 font-bold px-8 py-4 sm:py-5">
+                  <Link to="/about-sea-buckthorn">
+                    About Sea Buckthorn <ArrowRight className="w-4 h-4 ml-2" />
+                  </Link>
+                </Button>
+              </div>
             </div>
 
             <div className="flex justify-center mt-6 lg:mt-0">

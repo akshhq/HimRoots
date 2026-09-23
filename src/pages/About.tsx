@@ -30,7 +30,10 @@ export default function About() {
               Rooted in the Soil of 12,000 Feet
             </h2>
             <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed mb-4">
-              In the harsh, arid landscapes of Ladakh, Spiti, and Kinnaur, life doesn't merely survive; it learns to concentrate immense protective energy. Among these rocky glacial riverbeds grows the wild, thorny Sea Buckthorn shrub.
+              In the harsh, arid landscapes of Ladakh, Spiti, and Kinnaur, life doesn't merely survive; it learns to concentrate immense protective energy. Among these rocky glacial riverbeds grows the wild, thorny{" "}
+              <Link to="/about-sea-buckthorn" className="text-[var(--color-primary)] hover:underline font-semibold inline-flex items-center gap-1">
+                Sea Buckthorn shrub (Hippophae rhamnoides) <ArrowRight className="w-3.5 h-3.5 inline" />
+              </Link>.
             </p>
             <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed mb-6">
               While mass-market wellness brands often dilute or chemically process active botanical extracts, Himroots takes a purist approach: zero artificial preservatives, zero added sugar, and zero industrial shortcuts.
@@ -132,9 +135,14 @@ export default function About() {
           <p className="text-gray-400 text-xs sm:text-sm max-w-xl mx-auto mb-6 sm:mb-8">
             Experience the raw vitality of the Himalayas through our 500ml unrefined berry pulp and cold-pressed softgel capsules.
           </p>
-          <Button asChild className="w-full sm:w-auto bg-gold-gradient text-black font-bold uppercase text-xs tracking-wider px-8 py-4 sm:py-5">
-            <Link to="/shop">Explore Collection <ArrowRight className="w-4 h-4 ml-2" /></Link>
-          </Button>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button asChild className="w-full sm:w-auto bg-gold-gradient text-black font-bold uppercase text-xs tracking-wider px-8 py-4 sm:py-5">
+              <Link to="/shop">Explore Collection <ArrowRight className="w-4 h-4 ml-2" /></Link>
+            </Button>
+            <Button asChild variant="outline" className="w-full sm:w-auto uppercase tracking-widest text-xs border-[var(--color-border-gold)] text-white hover:text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10 font-bold px-8 py-4 sm:py-5">
+              <Link to="/about-sea-buckthorn">About Sea Buckthorn <ArrowRight className="w-4 h-4 ml-2" /></Link>
+            </Button>
+          </div>
         </div>
 
       </div>

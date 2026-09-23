@@ -101,8 +101,9 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/sea-buckthorn" className="text-gray-400 hover:text-[var(--color-primary)] text-sm transition-colors">
-                  The Himalayan Miracle Berry
+                <Link to="/about-sea-buckthorn" className="text-gray-400 hover:text-[var(--color-primary)] text-sm transition-colors flex items-center gap-1.5">
+                  <span>About Sea Buckthorn</span>
+                  <span className="text-[9px] text-[var(--color-primary)] bg-[var(--color-primary)]/15 border border-[var(--color-border-gold)]/60 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">Guide</span>
                 </Link>
               </li>
             </ul>

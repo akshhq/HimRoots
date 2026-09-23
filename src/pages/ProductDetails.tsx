@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { getProductBySlug } from "@/data/products";
 import { useCartStore } from "@/store/cartStore";
 import { Button } from "@/components/ui/Button";
-import { Star, ShieldCheck, Truck, Package, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { Star, ShieldCheck, Truck, Package, ArrowLeft, CheckCircle2, Sparkles, ArrowRight } from "lucide-react";
 
 export default function ProductDetails() {
   const { slug } = useParams<{ slug: string }>();
@@ -40,13 +40,24 @@ export default function ProductDetails() {
     <div className="py-10 sm:py-16 md:py-20 bg-[var(--color-background)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
         
-        {/* Navigation Breadcrumb */}
-        <Link 
-          to="/shop" 
-          className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] transition-colors mb-6 sm:mb-8"
-        >
-          <ArrowLeft className="w-4 h-4" /> Back to Himalayan Collection
-        </Link>
+        {/* Navigation Breadcrumb Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-6 sm:mb-8">
+          <Link 
+            to="/shop" 
+            className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" /> Back to Himalayan Collection
+          </Link>
+
+          <Link
+            to="/about-sea-buckthorn"
+            className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-[var(--color-primary)] hover:text-[var(--color-primary-light)] transition-colors bg-[var(--color-secondary)]/90 px-3.5 py-1.5 rounded-full border border-[var(--color-border-gold)] font-semibold shadow-sm"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Guide: About Sea Buckthorn</span>
+            <ArrowRight className="w-3 h-3 ml-0.5" />
+          </Link>
+        </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-16 sm:mb-20 items-start">
           
@@ -130,7 +141,7 @@ export default function ProductDetails() {
             </p>
 
             {/* Certifications badges */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-8">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
               {product.certifications.map((cert, idx) => (
                 <div key={idx} className="bg-[var(--color-card)] border border-[var(--color-border)] py-2 px-3 rounded-lg text-center">
                   <span className="text-[11px] font-semibold text-white uppercase tracking-wider block">
@@ -139,6 +150,27 @@ export default function ProductDetails() {
                 </div>
               ))}
             </div>
+
+            {/* Dedicated Botanical Guide Hyperlink Banner */}
+            <Link
+              to="/about-sea-buckthorn"
+              className="group flex items-center justify-between p-3.5 sm:p-4 mb-8 rounded-xl bg-gradient-to-r from-[var(--color-primary)]/15 via-[var(--color-primary)]/5 to-[var(--color-card)] border border-[var(--color-border-gold)] hover:border-[var(--color-primary)] transition-all shadow-md"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[var(--color-primary)]/20 border border-[var(--color-border-gold)] flex items-center justify-center text-[var(--color-primary)] group-hover:scale-105 transition-transform flex-shrink-0">
+                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase font-bold tracking-[0.18em] text-[var(--color-primary)] block">
+                    Botanical Monograph
+                  </span>
+                  <span className="text-xs sm:text-sm font-semibold text-white group-hover:text-[var(--color-primary-light)] transition-colors">
+                    About Sea Buckthorn: Ancient Origins, Space Missions & Rare Omega-7
+                  </span>
+                </div>
+              </div>
+              <ArrowRight className="w-4 h-4 text-[var(--color-primary)] transform group-hover:translate-x-1 transition-transform ml-2 flex-shrink-0" />
+            </Link>
 
             {/* Quantity Selector */}
             <div className="mb-8 flex items-center gap-6">
@@ -268,6 +300,22 @@ export default function ProductDetails() {
                     </div>
                   ))}
                 </div>
+
+                {/* Botanical monograph link inside ingredients tab */}
+                <div className="mt-8 p-4 sm:p-5 rounded-xl bg-[var(--color-secondary)]/70 border border-[var(--color-border-gold)]/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div className="flex items-start gap-3">
+                    <Sparkles className="w-5 h-5 text-[var(--color-primary)] flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="text-sm font-bold text-white font-serif">Curious why Hippophae rhamnoides is revered as the "Holy Fruit"?</h4>
+                      <p className="text-xs text-gray-400 mt-0.5">Explore the full historical chronicle, rare Omega-7 chemistry, and harvesting science.</p>
+                    </div>
+                  </div>
+                  <Button asChild size="sm" variant="outline" className="border-[var(--color-border-gold)] text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10 text-xs font-bold uppercase tracking-wider shrink-0 w-full sm:w-auto">
+                    <Link to="/about-sea-buckthorn">
+                      Read About Sea Buckthorn <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                    </Link>
+                  </Button>
+                </div>
               </div>
             )}
             
@@ -275,13 +323,20 @@ export default function ProductDetails() {
             {activeTab === "benefits" && (
               <div className="bg-[var(--color-card)] p-5 sm:p-8 rounded-2xl border border-[var(--color-border)]">
                 <h3 className="text-lg sm:text-xl font-bold font-serif text-white mb-4">Targeted Wellness Outcomes</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-6">
                   {product.benefits.map((b, idx) => (
                     <div key={idx} className="flex items-start gap-2.5 sm:gap-3 p-3 rounded-lg bg-[var(--color-secondary)]/50 border border-[var(--color-border-gold)]">
                       <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-primary)] flex-shrink-0 mt-0.5" />
                       <span className="text-xs sm:text-sm text-gray-200 font-medium">{b}</span>
                     </div>
                   ))}
+                </div>
+
+                <div className="pt-4 border-t border-[var(--color-border)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-gray-400">
+                  <span>Want deeper biological insight into the 190+ bioactives and clinical history?</span>
+                  <Link to="/about-sea-buckthorn" className="text-xs font-bold text-[var(--color-primary)] hover:underline flex items-center gap-1 shrink-0">
+                    Explore About Sea Buckthorn <ArrowRight className="w-3 h-3" />
+                  </Link>
                 </div>
               </div>
             )}
