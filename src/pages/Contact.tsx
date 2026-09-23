@@ -21,25 +21,25 @@ export default function Contact() {
   };
 
   return (
-    <div className="py-12 md:py-20 bg-[var(--color-background)]">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+    <div className="py-10 sm:py-16 md:py-20 bg-[var(--color-background)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
         
         {/* Page Header — No redundant logo per single-logo rule */}
-        <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20">
-          <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-3 block">
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16 md:mb-20">
+          <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-2 sm:mb-3 block">
             Get in Touch
           </span>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-serif text-white mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-serif text-white mb-4 sm:mb-6">
             Connect with <span className="text-gold-gradient">Himroots</span>
           </h1>
-          <div className="w-20 h-1 bg-gold-gradient mx-auto mb-6" />
-          <p className="text-gray-300 text-sm md:text-base leading-relaxed">
+          <div className="w-16 sm:w-20 h-1 bg-gold-gradient mx-auto mb-4 sm:mb-6" />
+          <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed">
             Have questions about our wild-harvested Himalayan Sea Buckthorn formulations, bulk or wholesale orders, or looking for personal wellness guidance? We are here to assist you.
           </p>
         </div>
 
         {/* 2-Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start max-w-6xl mx-auto">
           
           {/* Left Column: Official Channels with Placeholders */}
           <div className="lg:col-span-5 flex flex-col gap-6">
@@ -148,7 +148,7 @@ export default function Contact() {
           </div>
 
           {/* Right Column: Contact Inquiry Form */}
-          <div className="lg:col-span-7 bg-[var(--color-card)] border border-[var(--color-border)] rounded-2xl p-8 sm:p-10 shadow-2xl">
+          <div className="lg:col-span-7 bg-[var(--color-card)] border border-[var(--color-border)] rounded-2xl p-5 sm:p-8 md:p-10 shadow-2xl">
             <div className="flex items-center gap-3 mb-6 pb-4 border-b border-[var(--color-border)]">
               <MessageSquare className="w-6 h-6 text-[var(--color-primary)]" />
               <div>

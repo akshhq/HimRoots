@@ -4,50 +4,50 @@ import { Button } from "@/components/ui/Button";
 
 export default function SeaBuckthorn() {
   return (
-    <div className="py-12 md:py-20 bg-[var(--color-background)]">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+    <div className="py-10 sm:py-16 md:py-20 bg-[var(--color-background)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
         
         {/* Hero Header — No redundant logo per single-logo rule */}
-        <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20">
-          <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-3 block">
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16 md:mb-20">
+          <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-2 sm:mb-3 block">
             Botanical Deep-Dive
           </span>
-          <h1 className="text-4xl md:text-6xl font-bold font-serif text-white mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold font-serif text-white mb-4 sm:mb-6">
             The Himalayan <span className="text-gold-gradient">Miracle Berry</span>
           </h1>
-          <div className="w-20 h-1 bg-gold-gradient mx-auto mb-6" />
-          <p className="text-gray-300 text-base md:text-lg leading-relaxed">
+          <div className="w-16 sm:w-20 h-1 bg-gold-gradient mx-auto mb-4 sm:mb-6" />
+          <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed">
             Revered in ancient Ayurvedic and Tibetan medical treatises as <em>Sanjeevani</em> and the "Holy Fruit of the Himalayas", Sea Buckthorn (<em>Hippophae rhamnoides</em>) is one of the planet's most nutrient-dense botanical species.
           </p>
         </div>
 
         {/* High Altitude Terroir Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-24 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center mb-16 sm:mb-24 max-w-6xl mx-auto">
           <div className="rounded-2xl overflow-hidden border border-[var(--color-border-gold)] shadow-2xl">
             <img 
               src="/images/pulp-serving-ritual.jpg" 
               alt="Wild Sea Buckthorn Berry Ritual" 
-              className="w-full h-[400px] md:h-[460px] object-cover"
+              className="w-full h-[260px] sm:h-[400px] md:h-[460px] object-cover"
             />
           </div>
           <div>
             <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[var(--color-primary)] block mb-2">Thermal Endurance</span>
-            <h2 className="text-2xl md:text-4xl font-bold font-serif text-white mb-6">
+            <h2 className="text-xl sm:text-2xl md:text-4xl font-bold font-serif text-white mb-4 sm:mb-6">
               Forged in Glacial Cold and Solar Radiance
             </h2>
-            <p className="text-gray-300 text-sm md:text-base leading-relaxed mb-6">
+            <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed mb-4 sm:mb-6">
               At altitudes exceeding 12,000 feet in the cold deserts of Ladakh and Spiti, climatic conditions are relentless. Winter temperatures plummet to -40°C, and summer brings intense ultraviolet radiation.
             </p>
-            <p className="text-gray-300 text-sm md:text-base leading-relaxed mb-6">
+            <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed mb-6">
               To thrive in this hostile environment without wilting, Sea Buckthorn developed an astonishing biochemical defense mechanism: an extraordinarily high concentration of protective bioflavonoids, carotenoids, and dense polyunsaturated fatty acids.
             </p>
-            <div className="grid grid-cols-2 gap-4 text-xs">
-              <div className="p-4 rounded-xl bg-[var(--color-card)] border border-[var(--color-border)]">
-                <span className="text-[var(--color-primary)] font-bold text-lg block mb-1">12,000+ Ft</span>
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 text-xs">
+              <div className="p-3.5 sm:p-4 rounded-xl bg-[var(--color-card)] border border-[var(--color-border)]">
+                <span className="text-[var(--color-primary)] font-bold text-base sm:text-lg block mb-1">12,000+ Ft</span>
                 Pristine glacial altitude free of chemical pesticides.
               </div>
-              <div className="p-4 rounded-xl bg-[var(--color-card)] border border-[var(--color-border)]">
-                <span className="text-[var(--color-primary)] font-bold text-lg block mb-1">-40°C</span>
+              <div className="p-3.5 sm:p-4 rounded-xl bg-[var(--color-card)] border border-[var(--color-border)]">
+                <span className="text-[var(--color-primary)] font-bold text-base sm:text-lg block mb-1">-40°C</span>
                 Natural thermal endurance concentrating active adaptogens.
               </div>
             </div>
@@ -55,7 +55,7 @@ export default function SeaBuckthorn() {
         </div>
 
         {/* Nutritional Matrix (The 4 Omegas & 190+ Nutrients) */}
-        <div className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-2xl p-8 md:p-12 mb-24 shadow-xl max-w-6xl mx-auto">
+        <div className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-2xl p-5 sm:p-8 md:p-12 mb-16 sm:mb-24 shadow-xl max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-2 block">
               Bioactive Complexity

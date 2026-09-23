@@ -44,24 +44,24 @@ export function Navbar() {
   return (
     <>
       {/* Top Banner */}
-      <div className="bg-[var(--color-secondary)]/95 border-b border-[var(--color-border)] text-[11px] sm:text-xs text-[var(--color-muted-foreground)] py-2 px-4 sm:px-6 text-center tracking-[0.18em] uppercase flex items-center justify-center gap-2">
-        <Sparkles className="w-3.5 h-3.5 text-[var(--color-primary)] flex-shrink-0" />
+      <div className="bg-[var(--color-secondary)]/95 border-b border-[var(--color-border)] text-[10px] sm:text-xs text-[var(--color-muted-foreground)] py-1.5 sm:py-2 px-3 sm:px-6 text-center tracking-[0.14em] sm:tracking-[0.18em] uppercase flex items-center justify-center gap-2">
+        <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[var(--color-primary)] flex-shrink-0" />
         <span className="truncate">Pure Himalayan Sea Buckthorn Formulations — Free Shipping Across India</span>
-        <Sparkles className="w-3.5 h-3.5 text-[var(--color-primary)] hidden sm:inline flex-shrink-0" />
+        <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[var(--color-primary)] hidden sm:inline flex-shrink-0" />
       </div>
 
       <header
         className={`sticky top-0 w-full z-50 transition-all duration-300 ${
           isScrolled 
-            ? "bg-[#140e0b]/95 backdrop-blur-md py-3 shadow-xl shadow-black/50 border-b border-[var(--color-border-gold)]" 
-            : "bg-[#140e0b]/80 backdrop-blur-md py-4 border-b border-[var(--color-border)]"
+            ? "bg-[#140e0b]/95 backdrop-blur-md py-2.5 sm:py-3 shadow-xl shadow-black/50 border-b border-[var(--color-border-gold)]" 
+            : "bg-[#140e0b]/85 backdrop-blur-md py-3 sm:py-4 border-b border-[var(--color-border)]"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+          <div className="flex items-center justify-between gap-3 sm:gap-4">
             
             {/* Logo Slot - Dynamically revealed on scroll or internal pages */}
-            <div className="flex items-center min-w-[140px] sm:min-w-[160px]">
+            <div className="flex items-center min-w-[130px] sm:min-w-[160px]">
               <Link 
                 to="/" 
                 aria-label="Himroots Home"
@@ -71,7 +71,7 @@ export function Navbar() {
                     : "opacity-0 -translate-y-2 scale-95 pointer-events-none select-none"
                 }`}
               >
-                <BrandLogo size="sm" showSubtitle={false} />
+                <BrandLogo size="sm" imgClassName="h-11 sm:h-13 md:h-[56px] w-auto" showSubtitle={false} />
               </Link>
             </div>
 
@@ -166,7 +166,7 @@ export function Navbar() {
                 rel="noopener noreferrer"
                 className="flex items-center gap-2.5 text-gray-300 hover:text-[var(--color-primary)] transition-colors py-2"
               >
-                <InstagramIcon className="w-4 h-4 text-[var(--color-primary)]" />
+                <InstagramIcon className="w-5 h-5 flex-shrink-0" />
                 <span className="tracking-wider">@himroots.wellness</span>
               </a>
               <span className="text-[10px] uppercase tracking-widest text-[var(--color-muted-foreground)]">HimRoots Wellness</span>

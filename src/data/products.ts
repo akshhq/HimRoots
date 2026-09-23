@@ -40,6 +40,7 @@ export const products: Product[] = [
     price: 999,
     originalPrice: 1299,
     images: [
+      "/images/himroots-sea-buckthorn-pulp.jpg",
       "/images/himroots-sea-buckthorn-juice.jpg",
       "/images/pulp-serving-ritual.jpg",
       "/images/himroots-harvest-berries.jpg"

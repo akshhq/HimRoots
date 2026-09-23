@@ -4,40 +4,40 @@ import { InstagramIcon } from "@/components/ui/InstagramIcon";
 
 export function Footer() {
   return (
-    <footer className="bg-[var(--color-card)] pt-16 pb-12 border-t border-[var(--color-border)]">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+    <footer className="bg-[var(--color-card)] pt-12 sm:pt-16 pb-12 border-t border-[var(--color-border)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
         
         {/* Brand & Quality Highlights */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pb-12 mb-12 border-b border-[var(--color-border)]">
-          <div className="flex items-center gap-3.5 bg-[var(--color-secondary)]/60 p-4 rounded-xl border border-[var(--color-border-gold)]">
-            <CheckCircle2 className="w-5 h-5 text-[var(--color-primary)] flex-shrink-0" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 pb-8 sm:pb-12 mb-8 sm:mb-12 border-b border-[var(--color-border)]">
+          <div className="flex items-center gap-2.5 sm:gap-3.5 bg-[var(--color-secondary)]/60 p-3 sm:p-4 rounded-xl border border-[var(--color-border-gold)]">
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-primary)] flex-shrink-0" />
             <div>
-              <div className="text-xs font-bold uppercase tracking-wider text-white">100% Natural</div>
-              <div className="text-[11px] text-[var(--color-muted-foreground)]">Wild-foraged botanicals</div>
+              <div className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white">100% Natural</div>
+              <div className="text-[10px] sm:text-[11px] text-[var(--color-muted-foreground)]">Wild botanicals</div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3.5 bg-[var(--color-secondary)]/60 p-4 rounded-xl border border-[var(--color-border-gold)]">
-            <CheckCircle2 className="w-5 h-5 text-[var(--color-primary)] flex-shrink-0" />
+          <div className="flex items-center gap-2.5 sm:gap-3.5 bg-[var(--color-secondary)]/60 p-3 sm:p-4 rounded-xl border border-[var(--color-border-gold)]">
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-primary)] flex-shrink-0" />
             <div>
-              <div className="text-xs font-bold uppercase tracking-wider text-white">No Added Sugar</div>
-              <div className="text-[11px] text-[var(--color-muted-foreground)]">Pure unadulterated pulp</div>
+              <div className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white">No Added Sugar</div>
+              <div className="text-[10px] sm:text-[11px] text-[var(--color-muted-foreground)]">Pure raw pulp</div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3.5 bg-[var(--color-secondary)]/60 p-4 rounded-xl border border-[var(--color-border-gold)]">
-            <CheckCircle2 className="w-5 h-5 text-[var(--color-primary)] flex-shrink-0" />
+          <div className="flex items-center gap-2.5 sm:gap-3.5 bg-[var(--color-secondary)]/60 p-3 sm:p-4 rounded-xl border border-[var(--color-border-gold)]">
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-primary)] flex-shrink-0" />
             <div>
-              <div className="text-xs font-bold uppercase tracking-wider text-white">Zero Preservatives</div>
-              <div className="text-[11px] text-[var(--color-muted-foreground)]">Raw botanical vitality</div>
+              <div className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white">Zero Preservatives</div>
+              <div className="text-[10px] sm:text-[11px] text-[var(--color-muted-foreground)]">Raw vitality</div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3.5 bg-[var(--color-secondary)]/60 p-4 rounded-xl border border-[var(--color-border-gold)]">
-            <CheckCircle2 className="w-5 h-5 text-[var(--color-primary)] flex-shrink-0" />
+          <div className="flex items-center gap-2.5 sm:gap-3.5 bg-[var(--color-secondary)]/60 p-3 sm:p-4 rounded-xl border border-[var(--color-border-gold)]">
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-primary)] flex-shrink-0" />
             <div>
-              <div className="text-xs font-bold uppercase tracking-wider text-white">Vegan Friendly</div>
-              <div className="text-[11px] text-[var(--color-muted-foreground)]">Plant-powered wellness</div>
+              <div className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white">Vegan Friendly</div>
+              <div className="text-[10px] sm:text-[11px] text-[var(--color-muted-foreground)]">Plant-powered</div>
             </div>
           </div>
         </div>
@@ -68,7 +68,7 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2.5 px-4 py-2 rounded-lg bg-[var(--color-secondary)] border border-[var(--color-border-gold)] text-gray-200 hover:text-[var(--color-primary)] hover:border-[var(--color-primary)] transition-all text-xs font-semibold"
               >
-                <InstagramIcon className="w-4 h-4 text-[var(--color-primary)]" />
+                <InstagramIcon className="w-4 h-4 flex-shrink-0" />
                 <span>Follow @himroots.wellness</span>
               </a>
             </div>

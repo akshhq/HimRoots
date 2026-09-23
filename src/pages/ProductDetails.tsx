@@ -37,22 +37,22 @@ export default function ProductDetails() {
   };
 
   return (
-    <div className="py-12 md:py-20 bg-[var(--color-background)]">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+    <div className="py-10 sm:py-16 md:py-20 bg-[var(--color-background)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
         
         {/* Navigation Breadcrumb */}
         <Link 
           to="/shop" 
-          className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] transition-colors mb-8"
+          className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] transition-colors mb-6 sm:mb-8"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Himalayan Collection
         </Link>
         
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-16 sm:mb-20 items-start">
           
           {/* Image Gallery */}
-          <div className="lg:col-span-6 flex flex-col gap-4">
-            <div className="relative w-full h-[450px] md:h-[580px] bg-[var(--color-card)] rounded-2xl overflow-hidden border border-[var(--color-border-gold)] shadow-2xl flex items-center justify-center p-4">
+          <div className="lg:col-span-6 flex flex-col gap-3 sm:gap-4">
+            <div className="relative w-full h-[320px] sm:h-[450px] md:h-[580px] bg-[var(--color-card)] rounded-2xl overflow-hidden border border-[var(--color-border-gold)] shadow-2xl flex items-center justify-center p-3 sm:p-4">
               <img 
                 src={product.images[activeImage]} 
                 alt={product.name} 
@@ -60,24 +60,24 @@ export default function ProductDetails() {
               />
               
               {/* Volume tag */}
-              <div className="absolute top-4 left-4 bg-black/85 backdrop-blur-md border border-[var(--color-border-gold)] text-[var(--color-primary)] text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-widest">
+              <div className="absolute top-3 sm:top-4 left-3 sm:left-4 bg-black/85 backdrop-blur-md border border-[var(--color-border-gold)] text-[var(--color-primary)] text-[10px] sm:text-xs font-bold px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full uppercase tracking-widest">
                 Net Volume: {product.volume}
               </div>
 
               {product.originalPrice && (
-                <div className="absolute top-4 right-4 bg-[var(--color-accent)] text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">
+                <div className="absolute top-3 sm:top-4 right-3 sm:right-4 bg-[var(--color-accent)] text-white text-[10px] sm:text-xs font-bold px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full uppercase tracking-wider">
                   Save ₹{product.originalPrice - product.price}
                 </div>
               )}
             </div>
 
             {product.images.length > 1 && (
-              <div className="flex gap-4 overflow-x-auto pb-2">
+              <div className="flex gap-2.5 sm:gap-4 overflow-x-auto pb-2">
                 {product.images.map((img, idx) => (
                   <button 
                     key={idx} 
                     onClick={() => setActiveImage(idx)}
-                    className={`w-24 h-24 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all p-1 bg-[var(--color-card)] ${
+                    className={`w-16 h-16 sm:w-24 sm:h-24 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all p-1 bg-[var(--color-card)] ${
                       activeImage === idx 
                         ? "border-[var(--color-primary)] shadow-lg shadow-[var(--color-primary)]/20" 
                         : "border-[var(--color-border)] opacity-60 hover:opacity-100"
@@ -219,7 +219,7 @@ export default function ProductDetails() {
         {/* Detailed Information Tabs */}
         <div className="max-w-5xl mx-auto mt-16 pt-12 border-t border-[var(--color-border)]">
           
-          <div className="flex border-b border-[var(--color-border)] mb-8 overflow-x-auto gap-2">
+          <div className="flex border-b border-[var(--color-border)] mb-6 sm:mb-8 overflow-x-auto gap-1 sm:gap-2 pb-1 scrollbar-none">
             {[
               { id: "ingredients", label: "Key Ingredients & Ratios" },
               { id: "benefits", label: "Health Benefits" },
@@ -229,7 +229,7 @@ export default function ProductDetails() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`px-6 py-4 text-xs md:text-sm font-bold uppercase tracking-wider whitespace-nowrap transition-all border-b-2 ${
+                className={`px-3.5 sm:px-6 py-2.5 sm:py-4 text-xs md:text-sm font-bold uppercase tracking-wider whitespace-nowrap transition-all border-b-2 ${
                   activeTab === tab.id 
                     ? "border-[var(--color-primary)] text-[var(--color-primary)] bg-[var(--color-card)]/50 rounded-t-lg" 
                     : "border-transparent text-gray-400 hover:text-white"
@@ -240,7 +240,7 @@ export default function ProductDetails() {
             ))}
           </div>
           
-          <div className="min-h-[250px] text-gray-300 leading-relaxed pb-12">
+          <div className="min-h-[250px] text-gray-300 leading-relaxed pb-8 sm:pb-12">
             
             {/* Ingredients Tab */}
             {activeTab === "ingredients" && (
@@ -248,16 +248,16 @@ export default function ProductDetails() {
                 <p className="text-xs uppercase tracking-widest text-[var(--color-primary)] mb-4">
                   Full Botanical Formulation as on Packaging
                 </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                   {product.detailedIngredients.map((item, idx) => (
-                    <div key={idx} className="bg-[var(--color-card)] border border-[var(--color-border)] p-5 rounded-xl">
+                    <div key={idx} className="bg-[var(--color-card)] border border-[var(--color-border)] p-4 sm:p-5 rounded-xl">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-base font-bold text-white font-serif">{item.name}</span>
+                        <span className="text-sm sm:text-base font-bold text-white font-serif">{item.name}</span>
                         <span className="text-xs font-black text-black bg-gold-gradient px-2 py-0.5 rounded">
                           {item.percentage}
                         </span>
                       </div>
-                      <ul className="space-y-1.5 text-xs text-gray-400 mt-3">
+                      <ul className="space-y-1.5 text-xs text-gray-400 mt-2 sm:mt-3">
                         {item.benefits.map((b, bIdx) => (
                           <li key={bIdx} className="flex items-center gap-2">
                             <div className="w-1 h-1 rounded-full bg-[var(--color-primary)]" />
@@ -273,13 +273,13 @@ export default function ProductDetails() {
             
             {/* Benefits Tab */}
             {activeTab === "benefits" && (
-              <div className="bg-[var(--color-card)] p-8 rounded-2xl border border-[var(--color-border)]">
-                <h3 className="text-xl font-bold font-serif text-white mb-4">Targeted Wellness Outcomes</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-[var(--color-card)] p-5 sm:p-8 rounded-2xl border border-[var(--color-border)]">
+                <h3 className="text-lg sm:text-xl font-bold font-serif text-white mb-4">Targeted Wellness Outcomes</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                   {product.benefits.map((b, idx) => (
-                    <div key={idx} className="flex items-start gap-3 p-3 rounded-lg bg-[var(--color-secondary)]/50 border border-[var(--color-border-gold)]">
-                      <CheckCircle2 className="w-5 h-5 text-[var(--color-primary)] flex-shrink-0 mt-0.5" />
-                      <span className="text-sm text-gray-200 font-medium">{b}</span>
+                    <div key={idx} className="flex items-start gap-2.5 sm:gap-3 p-3 rounded-lg bg-[var(--color-secondary)]/50 border border-[var(--color-border-gold)]">
+                      <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-primary)] flex-shrink-0 mt-0.5" />
+                      <span className="text-xs sm:text-sm text-gray-200 font-medium">{b}</span>
                     </div>
                   ))}
                 </div>
@@ -288,15 +288,15 @@ export default function ProductDetails() {
 
             {/* Usage Directions Tab */}
             {activeTab === "usage" && (
-              <div className="bg-[var(--color-card)] p-8 rounded-2xl border border-[var(--color-border)]">
-                <h3 className="text-xl font-bold font-serif text-white mb-6">Directions & Recommended Dosage</h3>
-                <div className="space-y-4 max-w-2xl">
+              <div className="bg-[var(--color-card)] p-5 sm:p-8 rounded-2xl border border-[var(--color-border)]">
+                <h3 className="text-lg sm:text-xl font-bold font-serif text-white mb-4 sm:mb-6">Directions & Recommended Dosage</h3>
+                <div className="space-y-3 sm:space-y-4 max-w-2xl">
                   {product.directions.map((dir, idx) => (
-                    <div key={idx} className="flex items-center gap-4 p-4 rounded-xl bg-[var(--color-secondary)] border border-[var(--color-border)]">
-                      <div className="w-8 h-8 rounded-full bg-gold-gradient text-black font-black text-xs flex items-center justify-center flex-shrink-0">
+                    <div key={idx} className="flex items-center gap-3 sm:gap-4 p-3.5 sm:p-4 rounded-xl bg-[var(--color-secondary)] border border-[var(--color-border)]">
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gold-gradient text-black font-black text-xs flex items-center justify-center flex-shrink-0">
                         {idx + 1}
                       </div>
-                      <span className="text-sm text-gray-200 font-medium">{dir}</span>
+                      <span className="text-xs sm:text-sm text-gray-200 font-medium">{dir}</span>
                     </div>
                   ))}
                 </div>
@@ -305,9 +305,9 @@ export default function ProductDetails() {
 
             {/* Packaging Tab */}
             {activeTab === "packaging" && (
-              <div className="bg-[var(--color-card)] p-8 rounded-2xl border border-[var(--color-border)]">
-                <h3 className="text-xl font-bold font-serif text-white mb-3">Eco-Luxury Canister Construction</h3>
-                <p className="text-sm text-gray-300 mb-6 leading-relaxed">
+              <div className="bg-[var(--color-card)] p-5 sm:p-8 rounded-2xl border border-[var(--color-border)]">
+                <h3 className="text-lg sm:text-xl font-bold font-serif text-white mb-3">Eco-Luxury Canister Construction</h3>
+                <p className="text-xs sm:text-sm text-gray-300 mb-5 sm:mb-6 leading-relaxed">
                   {product.packagingFeature}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-gray-400">
