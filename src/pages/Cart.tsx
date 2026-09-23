@@ -28,9 +28,9 @@ export default function Cart() {
   }
 
   return (
-    <div className="py-12 pt-20 bg-[var(--color-background)]">
-      <div className="container mx-auto px-4">
-        <h1 className="text-3xl md:text-4xl font-bold mb-10">Shopping Cart</h1>
+    <div className="py-12 md:py-20 bg-[var(--color-background)]">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+        <h1 className="text-3xl md:text-5xl font-bold font-serif text-white mb-10">Shopping Cart</h1>
         
         <div className="flex flex-col lg:flex-row gap-12">
           {/* Cart Items */}

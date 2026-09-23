@@ -1,17 +1,15 @@
 import { Link } from "react-router-dom";
 import { Sun, Shield, Heart, Zap } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { BrandLogo } from "@/components/ui/BrandLogo";
 
 export default function SeaBuckthorn() {
   return (
-    <div className="py-12 pt-16 bg-[var(--color-background)]">
-      <div className="container mx-auto px-4 md:px-6">
+    <div className="py-12 md:py-20 bg-[var(--color-background)]">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         
-        {/* Hero Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <BrandLogo size="sm" showSubtitle={false} className="mb-4 mx-auto" />
-          <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-2 block">
+        {/* Hero Header — No redundant logo per single-logo rule */}
+        <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20">
+          <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-3 block">
             Botanical Deep-Dive
           </span>
           <h1 className="text-4xl md:text-6xl font-bold font-serif text-white mb-6">
@@ -24,16 +22,17 @@ export default function SeaBuckthorn() {
         </div>
 
         {/* High Altitude Terroir Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-24 max-w-6xl mx-auto">
           <div className="rounded-2xl overflow-hidden border border-[var(--color-border-gold)] shadow-2xl">
             <img 
-              src="https://images.unsplash.com/photo-1596431952404-58a436531526?q=80&w=1200&auto=format&fit=crop" 
-              alt="Wild Sea Buckthorn Berries in the Himalayas" 
-              className="w-full h-[400px] object-cover"
+              src="/images/pulp-serving-ritual.jpg" 
+              alt="Wild Sea Buckthorn Berry Ritual" 
+              className="w-full h-[400px] md:h-[460px] object-cover"
             />
           </div>
           <div>
-            <h2 className="text-3xl font-bold font-serif text-white mb-6">
+            <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[var(--color-primary)] block mb-2">Thermal Endurance</span>
+            <h2 className="text-2xl md:text-4xl font-bold font-serif text-white mb-6">
               Forged in Glacial Cold and Solar Radiance
             </h2>
             <p className="text-gray-300 text-sm md:text-base leading-relaxed mb-6">
@@ -56,7 +55,7 @@ export default function SeaBuckthorn() {
         </div>
 
         {/* Nutritional Matrix (The 4 Omegas & 190+ Nutrients) */}
-        <div className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-2xl p-8 md:p-12 mb-20 shadow-xl">
+        <div className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-2xl p-8 md:p-12 mb-24 shadow-xl max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-2 block">
               Bioactive Complexity
@@ -105,7 +104,7 @@ export default function SeaBuckthorn() {
         </div>
 
         {/* Both Formulations CTA */}
-        <div className="text-center py-12 border-t border-[var(--color-border)]">
+        <div className="text-center py-12 border-t border-[var(--color-border)] max-w-4xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold font-serif text-white mb-4">
             Experience Wild Himalayan Sea Buckthorn
           </h2>
@@ -113,10 +112,10 @@ export default function SeaBuckthorn() {
             Available in our signature 500ml unrefined berry pulp or 60 cold-pressed vegetarian softgel capsules.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" asChild className="bg-gold-gradient text-black font-bold uppercase text-xs tracking-wider">
+            <Button size="lg" asChild className="bg-gold-gradient text-black font-bold uppercase text-xs tracking-wider px-8 py-5">
               <Link to="/products/sea-buckthorn-pulp">View Pure Pulp (500ml)</Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="border-[var(--color-border-gold)] uppercase text-xs tracking-wider text-white">
+            <Button size="lg" variant="outline" asChild className="border-[var(--color-border-gold)] hover:bg-[var(--color-primary)]/10 text-white uppercase text-xs tracking-wider px-8 py-5">
               <Link to="/products/sea-buckthorn-capsules">View Softgel Capsules</Link>
             </Button>
           </div>

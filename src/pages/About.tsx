@@ -1,17 +1,16 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Mountain, ShieldCheck, HeartHandshake } from "lucide-react";
+import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { Button } from "@/components/ui/Button";
-import { BrandLogo } from "@/components/ui/BrandLogo";
 
 export default function About() {
   return (
-    <div className="py-12 pt-16 bg-[var(--color-background)]">
-      <div className="container mx-auto px-4 md:px-6">
+    <div className="py-12 md:py-20 bg-[var(--color-background)]">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <BrandLogo size="md" showSubtitle={false} className="mb-4 mx-auto" />
-          <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-2 block">
+        {/* Header — No redundant logo per single-logo rule */}
+        <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20">
+          <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-3 block">
             Our Himalayan Roots
           </span>
           <h1 className="text-4xl md:text-6xl font-bold font-serif text-white mb-6">
@@ -23,10 +22,11 @@ export default function About() {
           </p>
         </div>
 
-        {/* Narrative Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
+        {/* Narrative Section 1 */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-24 max-w-6xl mx-auto">
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold font-serif text-white mb-6">
+            <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[var(--color-primary)] block mb-2">High Altitude Terroir</span>
+            <h2 className="text-2xl md:text-4xl font-bold font-serif text-white mb-6">
               Rooted in the Soil of 12,000 Feet
             </h2>
             <p className="text-gray-300 text-sm md:text-base leading-relaxed mb-4">
@@ -35,8 +35,10 @@ export default function About() {
             <p className="text-gray-300 text-sm md:text-base leading-relaxed mb-6">
               While mass-market wellness brands often dilute or chemically process active botanical extracts, Himroots takes a purist approach: zero artificial preservatives, zero added sugar, and zero industrial shortcuts.
             </p>
-            <div className="p-4 rounded-xl bg-[var(--color-card)] border border-[var(--color-border-gold)]">
-              <span className="font-script text-2xl text-[var(--color-primary-light)] block mb-1">
+            
+            {/* Elegant Tagline Quote Box */}
+            <div className="p-5 rounded-xl bg-[var(--color-card)] border border-[var(--color-border-gold)]">
+              <span className="font-tagline text-base sm:text-lg text-[var(--color-primary-light)] font-medium uppercase tracking-[0.15em] block mb-1.5">
                 "Nature's Goodness in Every Sip"
               </span>
               <p className="text-xs text-gray-400">
@@ -47,49 +49,90 @@ export default function About() {
 
           <div className="rounded-2xl overflow-hidden border border-[var(--color-border-gold)] shadow-2xl">
             <img 
-              src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop" 
-              alt="Himalayan Mountain Landscape" 
-              className="w-full h-[420px] object-cover"
+              src="/images/himalayan-hero-peaks.jpg" 
+              alt="Majestic Himalayan Peaks and Valleys in Ladakh" 
+              className="w-full h-[400px] md:h-[460px] object-cover"
             />
           </div>
         </div>
 
         {/* Brand Values Pillars */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-          <div className="p-8 rounded-2xl bg-[var(--color-card)] border border-[var(--color-border)]">
-            <Mountain className="w-8 h-8 text-[var(--color-primary)] mb-4" />
-            <h3 className="text-xl font-bold font-serif text-white mb-2">Wild Foraging</h3>
-            <p className="text-xs md:text-sm text-gray-400 leading-relaxed">
-              We never use commercial monoculture crops. Berries are hand-foraged from untamed wild groves at high altitudes where the soil is untouched by chemical fertilizers.
-            </p>
+        <div className="max-w-6xl mx-auto mb-24">
+          <div className="text-center mb-12">
+            <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-2 block">
+              Core Principles
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold font-serif text-white">
+              Pillars of Our Commitment
+            </h2>
           </div>
 
-          <div className="p-8 rounded-2xl bg-[var(--color-card)] border border-[var(--color-border)]">
-            <HeartHandshake className="w-8 h-8 text-[var(--color-primary)] mb-4" />
-            <h3 className="text-xl font-bold font-serif text-white mb-2">Community Empowerment</h3>
-            <p className="text-xs md:text-sm text-gray-400 leading-relaxed">
-              We work directly with Himalayan tribal women's self-help groups and local farming collectives, ensuring fair ethical wages and supporting sustainable harvesting practices.
-            </p>
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="p-8 rounded-2xl bg-[var(--color-card)] border border-[var(--color-border)] hover:border-[var(--color-primary)]/50 transition-all">
+              <Mountain className="w-8 h-8 text-[var(--color-primary)] mb-5" />
+              <h3 className="text-xl font-bold font-serif text-white mb-3">Wild Foraging</h3>
+              <p className="text-xs md:text-sm text-gray-400 leading-relaxed">
+                We never use commercial monoculture crops. Berries are hand-foraged from untamed wild groves at high altitudes where the soil is untouched by chemical fertilizers.
+              </p>
+            </div>
 
-          <div className="p-8 rounded-2xl bg-[var(--color-card)] border border-[var(--color-border)]">
-            <ShieldCheck className="w-8 h-8 text-[var(--color-primary)] mb-4" />
-            <h3 className="text-xl font-bold font-serif text-white mb-2">Uncompromising Purity</h3>
-            <p className="text-xs md:text-sm text-gray-400 leading-relaxed">
-              Every production batch is tested for active nutrient density. Our gold foil embossed packaging protects sensitive fatty acids and vitamins against light degradation.
-            </p>
+            <div className="p-8 rounded-2xl bg-[var(--color-card)] border border-[var(--color-border)] hover:border-[var(--color-primary)]/50 transition-all">
+              <HeartHandshake className="w-8 h-8 text-[var(--color-primary)] mb-5" />
+              <h3 className="text-xl font-bold font-serif text-white mb-3">Community Empowerment</h3>
+              <p className="text-xs md:text-sm text-gray-400 leading-relaxed">
+                We work directly with Himalayan tribal women's self-help groups and local farming collectives, ensuring fair ethical wages and supporting sustainable harvesting practices.
+              </p>
+            </div>
+
+            <div className="p-8 rounded-2xl bg-[var(--color-card)] border border-[var(--color-border)] hover:border-[var(--color-primary)]/50 transition-all">
+              <ShieldCheck className="w-8 h-8 text-[var(--color-primary)] mb-5" />
+              <h3 className="text-xl font-bold font-serif text-white mb-3">Uncompromising Purity</h3>
+              <p className="text-xs md:text-sm text-gray-400 leading-relaxed">
+                Every production batch is tested for active nutrient density. Our gold foil embossed packaging protects sensitive fatty acids and vitamins against light degradation.
+              </p>
+            </div>
           </div>
         </div>
 
+        {/* Community & Instagram Banner */}
+        <div className="max-w-6xl mx-auto mb-20 p-8 sm:p-12 rounded-2xl bg-gradient-to-r from-[var(--color-secondary)] via-[var(--color-card)] to-[var(--color-secondary)] border border-[var(--color-border-gold)] flex flex-col md:flex-row items-center justify-between gap-8 shadow-xl">
+          <div className="flex items-center gap-6">
+            <div className="w-16 h-16 rounded-full bg-[var(--color-card)] border border-[var(--color-border-gold)] flex items-center justify-center text-[var(--color-primary)] flex-shrink-0 shadow-lg">
+              <InstagramIcon className="w-8 h-8" />
+            </div>
+            <div>
+              <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-primary)] block mb-1">
+                Follow the Himalayan Journey
+              </span>
+              <h3 className="text-xl sm:text-2xl font-serif font-bold text-white mb-1">
+                Join Us on Instagram @himroots.wellness
+              </h3>
+              <p className="text-xs sm:text-sm text-gray-400">
+                Witness daily high-altitude wild harvests, traditional foraging methods, and botanical insights.
+              </p>
+            </div>
+          </div>
+          <Button asChild variant="outline" className="border-[var(--color-border-gold)] hover:bg-[var(--color-primary)]/10 text-white uppercase text-xs tracking-wider whitespace-nowrap px-6 py-5 flex-shrink-0">
+            <a 
+              href="https://www.instagram.com/himroots.wellness/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center gap-2"
+            >
+              Follow Profile <ArrowRight className="w-4 h-4 ml-1" />
+            </a>
+          </Button>
+        </div>
+
         {/* Explore Products CTA */}
-        <div className="text-center py-12 border-t border-[var(--color-border)]">
+        <div className="text-center py-12 border-t border-[var(--color-border)] max-w-4xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold font-serif text-white mb-4">
             Discover Our Sea Buckthorn Range
           </h2>
           <p className="text-gray-400 text-sm max-w-xl mx-auto mb-8">
             Experience the raw vitality of the Himalayas through our 500ml unrefined berry pulp and cold-pressed softgel capsules.
           </p>
-          <Button asChild className="bg-gold-gradient text-black font-bold uppercase text-xs tracking-wider px-8 py-6">
+          <Button asChild className="bg-gold-gradient text-black font-bold uppercase text-xs tracking-wider px-8 py-5">
             <Link to="/shop">Explore Collection <ArrowRight className="w-4 h-4 ml-2" /></Link>
           </Button>
         </div>

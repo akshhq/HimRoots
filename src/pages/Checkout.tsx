@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCartStore } from "@/store/cartStore";
 import { Button } from "@/components/ui/Button";
 import { ArrowLeft, Lock, ShieldCheck } from "lucide-react";
-import { BrandLogo } from "@/components/ui/BrandLogo";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -53,13 +52,13 @@ export default function Checkout() {
   };
 
   return (
-    <div className="py-12 pt-20 bg-[var(--color-background)]">
-      <div className="container mx-auto px-4 max-w-6xl">
-        <Link to="/cart" className="inline-flex items-center gap-2 text-gray-400 hover:text-[var(--color-primary)] transition-colors mb-8">
+    <div className="py-12 md:py-20 bg-[var(--color-background)]">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+        <Link to="/cart" className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" /> Back to Cart
         </Link>
         
-        <h1 className="text-3xl md:text-4xl font-bold mb-10">Checkout</h1>
+        <h1 className="text-3xl md:text-5xl font-bold font-serif text-white mb-10">Checkout</h1>
         
         <div className="flex flex-col lg:flex-row gap-12">
           
@@ -209,7 +208,7 @@ export default function Checkout() {
             <div className="bg-[var(--color-secondary)] border border-[var(--color-border)] rounded-lg p-6 sticky top-28 shadow-xl">
               <div className="flex items-center justify-between border-b border-[var(--color-border)] pb-4 mb-6">
                 <h2 className="text-lg font-bold uppercase tracking-wider">Order Summary</h2>
-                <BrandLogo size="xs" showSubtitle={false} />
+                <span className="text-xs text-[var(--color-primary)] font-semibold tracking-wider uppercase">Himroots</span>
               </div>
               
               <div className="flex flex-col gap-4 mb-6">

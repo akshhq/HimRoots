@@ -37,8 +37,8 @@ export default function ProductDetails() {
   };
 
   return (
-    <div className="py-12 pt-16 bg-[var(--color-background)]">
-      <div className="container mx-auto px-4 md:px-6">
+    <div className="py-12 md:py-20 bg-[var(--color-background)]">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         
         {/* Navigation Breadcrumb */}
         <Link 
@@ -93,9 +93,9 @@ export default function ProductDetails() {
           {/* Product Info */}
           <div className="lg:col-span-6 flex flex-col">
             
-            {/* Tagline / Script */}
+            {/* Tagline */}
             {product.scriptQuote && (
-              <div className="font-script text-3xl md:text-4xl text-[var(--color-primary-light)] mb-2">
+              <div className="font-tagline text-base sm:text-lg font-medium tracking-[0.14em] uppercase text-[var(--color-primary-light)] mb-2">
                 {product.scriptQuote}
               </div>
             )}

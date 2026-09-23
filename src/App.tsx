@@ -9,6 +9,7 @@ import OrderSuccess from "./pages/OrderSuccess";
 
 import About from "./pages/About";
 import SeaBuckthorn from "./pages/SeaBuckthorn";
+import Contact from "./pages/Contact";
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
           <Route path="checkout" element={<Checkout />} />
           <Route path="order-success" element={<OrderSuccess />} />
           <Route path="about" element={<About />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="contact-us" element={<Contact />} />
           <Route path="sea-buckthorn" element={<SeaBuckthorn />} />
           <Route path="*" element={<div className="container py-20 text-center"><h1 className="text-3xl font-bold mb-4">404</h1><p>Page not found.</p></div>} />
         </Route>

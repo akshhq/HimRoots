@@ -41,7 +41,8 @@ export const products: Product[] = [
     originalPrice: 1299,
     images: [
       "/images/himroots-sea-buckthorn-juice.jpg",
-      "https://images.unsplash.com/photo-1596431952404-58a436531526?q=80&w=1200&auto=format&fit=crop"
+      "/images/pulp-serving-ritual.jpg",
+      "/images/himroots-harvest-berries.jpg"
     ],
     category: "Wild Himalayan Pulp & Juice",
     ingredients: [
@@ -120,7 +121,8 @@ export const products: Product[] = [
     originalPrice: 1499,
     images: [
       "/images/himroots-sea-buckthorn-capsules.jpg",
-      "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=800&auto=format&fit=crop"
+      "/images/capsules-apothecary.jpg",
+      "/images/himalayan-harvest.jpg"
     ],
     category: "Daily Wellness Supplements",
     ingredients: [

@@ -27,8 +27,8 @@
   --color-border-gold-strong: rgba(223, 183, 108, 0.65);
 
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-serif: 'Cinzel', 'Marcellus', Georgia, serif;
-  --font-script: 'Alex Brush', cursive;
+  --font-serif: 'Marcellus', 'Cinzel', Georgia, serif;
+  --font-tagline: 'Marcellus', Georgia, serif;
 }
 
 @layer base {
@@ -48,9 +48,20 @@
   }
 }
 
-/* Luxury Foil & Gradient Utilities */
-.font-script {
-  font-family: 'Alex Brush', cursive;
+/* Luxury Foil, Tagline & Gradient Utilities */
+.font-tagline {
+  font-family: var(--font-tagline);
+  letter-spacing: 0.08em;
+}
+
+/* Subtle red visual treatment for the hero logo */
+.hero-logo-red-treatment {
+  filter: drop-shadow(0 0 24px rgba(225, 29, 72, 0.38)) drop-shadow(0 4px 16px rgba(223, 183, 108, 0.28));
+  transition: filter 0.4s ease, transform 0.4s ease;
+}
+.hero-logo-red-treatment:hover {
+  filter: drop-shadow(0 0 32px rgba(225, 29, 72, 0.55)) drop-shadow(0 6px 20px rgba(223, 183, 108, 0.4));
+  transform: translateY(-2px);
 }
 
 .text-gold-gradient {

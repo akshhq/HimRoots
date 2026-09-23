@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/Button";
 import { CheckCircle2, ArrowRight } from "lucide-react";
-import { BrandLogo } from "@/components/ui/BrandLogo";
 
 export default function OrderSuccess() {
   const location = useLocation();
@@ -21,8 +20,6 @@ export default function OrderSuccess() {
   return (
     <div className="py-20 md:py-32 bg-[var(--color-background)] min-h-[70vh] flex items-center justify-center">
       <div className="container mx-auto px-4 max-w-2xl text-center">
-        
-        <BrandLogo size="md" showSubtitle={true} className="mb-8 mx-auto" />
 
         <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-500/40">
           <CheckCircle2 className="w-10 h-10 text-green-500" />
