@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #120e0b; /* Deep warm mountain bronze/earth charcoal */
+  --color-foreground: #f6f1ea; /* Soft warm ivory */
+  
+  --color-card: #1c1510;       /* Rich warm craft canister brown */
+  --color-card-foreground: #f6f1ea;
+  
+  --color-primary: #dfb76c;    /* Himalayan golden foil */
+  --color-primary-light: #f5dc9e;
+  --color-primary-dark: #b88a38;
+  --color-primary-foreground: #120e0b;
+  
+  --color-secondary: #241b14;  /* Deep kraft bronze */
+  --color-secondary-foreground: #f6f1ea;
+  
+  --color-muted: #2e231b;
+  --color-muted-foreground: #a89886;
+  
+  --color-accent: #ea580c;     /* Wild Himalayan Sea Buckthorn berry orange */
+  --color-accent-light: #fb923c;
+  --color-accent-foreground: #ffffff;
+
+  --color-border: #382b21;     /* Warm dark wood/kraft border */
+  --color-border-gold: rgba(223, 183, 108, 0.35);
+  --color-border-gold-strong: rgba(223, 183, 108, 0.65);
+
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Cinzel', 'Marcellus', Georgia, serif;
+  --font-script: 'Alex Brush', cursive;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1, h2, h3, h4, .font-serif-luxury {
+    font-family: var(--font-serif);
+    letter-spacing: 0.03em;
+  }
+}
+
+/* Luxury Foil & Gradient Utilities */
+.font-script {
+  font-family: 'Alex Brush', cursive;
+}
+
+.text-gold-gradient {
+  background: linear-gradient(135deg, #fcebc2 0%, #dfb76c 45%, #b98a37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-gold-gradient {
+  background: linear-gradient(135deg, #f7dfa3 0%, #dfb76c 50%, #b88a38 100%);
+}
+
+.bg-gold-gradient-subtle {
+  background: linear-gradient(135deg, rgba(223, 183, 108, 0.15) 0%, rgba(184, 138, 56, 0.05) 100%);
+}
+
+.gold-glow {
+  box-shadow: 0 0 25px rgba(223, 183, 108, 0.2);
+}
+
+.gold-glow-sm {
+  box-shadow: 0 0 12px rgba(223, 183, 108, 0.15);
+}
+
+.gold-ring-border {
+  border: 1px solid rgba(223, 183, 108, 0.35);
+}
+
+/* Berry glow */
+.berry-glow {
+  box-shadow: 0 0 25px rgba(234, 88, 12, 0.25);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-muted);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border);
+}
