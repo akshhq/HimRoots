@@ -70,12 +70,12 @@ export default function Home() {
           >
             <div className="relative group inline-block">
               {/* Subtle ambient warm red berry aura */}
-              <div className="absolute -inset-6 rounded-full bg-gradient-to-r from-red-600/20 via-rose-500/25 to-amber-500/15 blur-2xl pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity duration-700" />
+              <div className="absolute -inset-4 sm:-inset-6 rounded-full bg-gradient-to-r from-red-600/20 via-rose-500/25 to-amber-500/15 blur-2xl pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity duration-700" />
               
               {/* Prominent Hero Logo with subtle red tint/drop-shadow */}
               <BrandLogo 
                 size="xl" 
-                imgClassName="h-24 sm:h-36 md:h-44 w-auto hero-logo-red-treatment"
+                imgClassName="h-[68px] sm:h-36 md:h-44 w-auto hero-logo-red-treatment"
                 showSubtitle={false} 
                 className="relative z-10" 
               />
