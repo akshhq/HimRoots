@@ -160,8 +160,8 @@ Himroots focuses exclusively on two specialized, lab-verified formulations:
 
 | Formulation | Category | Net Volume | Price | Highlights |
 | :--- | :--- | :--- | :--- | :--- |
-| **Himroots Pure Sea Buckthorn Pulp** | Liquid Elixir | 500 ml | ₹1,199 <del>₹1,499</del> | 90% wild Himalayan raw berry pulp + 5 synergistic Ayurvedic herbs (*Bhoomi Amla, Ashwagandha, Makoy, Punarva, Safed Musli*). Formulated for morning vitality, liver detox, digestive balance, and immune defense. |
-| **Himroots Pure Sea Buckthorn Capsules** | Omega Softgels | 60 Softgels | ₹1,299 <del>₹1,599</del> | 100% pure cold-pressed seed & berry oil encapsulated in vegetarian softgels. Peak concentration of rare Omega-7, Omegas 3, 6, 9, and natural Vitamin E for deep cellular hydration, dry eye relief, and radiant skin glow. |
+| **Himroots Pure Sea Buckthorn Pulp** | Liquid Elixir | 500 ml | ₹999 <del>₹1,299</del> | 90% wild Himalayan raw berry pulp + 5 synergistic Ayurvedic herbs (*Bhoomi Amla, Ashwagandha, Makoy, Punarva, Safed Musli*). Formulated for morning vitality, liver detox, digestive balance, and immune defense. |
+| **Himroots Pure Sea Buckthorn Capsules** | Omega Softgels | 60 Softgels | ₹1,199 <del>₹1,499</del> | 100% pure cold-pressed seed & berry oil encapsulated in vegetarian softgels. Peak concentration of rare Omega-7, Omegas 3, 6, 9, and natural Vitamin E for deep cellular hydration, dry eye relief, and radiant skin glow. |
 
 ---
 
@@ -402,13 +402,24 @@ export interface Product {
 
 ---
 
-## Roadmap & Integrations
+## Completed Integrations & Future Roadmap
 
-- [ ] **Payment Gateway:** Connect Checkout form submission to Razorpay / Stripe backend webhook.
-- [ ] **Order Tracking:** Integrate Shiprocket / Delhivery courier API for real-time order tracking.
-- [ ] **Reviews Engine:** Customer review submission and photo upload flow.
-- [ ] **SEO Meta Tags:** Dynamic OpenGraph / Twitter card meta tags per product and blog post.
-- [ ] **Newsletter Automation:** Connect newsletter subscription form to Mailchimp / Klaviyo.
+### ✅ Completed Integrations (Milestone 1 — Full-Stack E-Commerce Core)
+- [x] **Relational Database Layer:** Supabase PostgreSQL with 4 tables (`products`, `orders`, `order_items`, `contact_inquiries`), RLS security policies, and daily order numbering.
+- [x] **Trusted Backend Execution:** Node.js + Express server with server-side price validation, sanitizing error handlers, and proxy integration.
+- [x] **Payment Gateway:** Razorpay Standard Checkout with timing-safe HMAC SHA256 signature verification and idempotent callback handling.
+- [x] **Transactional Email Service:** Instant client order alerts (`New Order - {Order Number}`) and customer confirmation receipts via Resend / Brevo with payment decoupling.
+- [x] **Contact & Support Portal:** Direct support form with 7 categories, order reference tracking, anti-spam honeypot, and rate limiting.
+- [x] **Automated Test Suites:** 12/12 passing integration tests covering all payment edge cases and email workflows.
+
+### 🔮 Future Recommendations (Explicitly Out of Current Scope)
+The current lean model operates on: **Customer buys & pays online → Client receives instant email alert with full shipping details → Client manually packs & ships**. The following features are reserved for future scaling phases:
+- [ ] **Logistics & Courier API:** Automated AWB creation, pickup scheduling, and shipping label generation via Shiprocket or Delhivery.
+- [ ] **Automated Delivery Tracking:** Real-time customer tracking page via courier tracking number webhooks.
+- [ ] **Automated Returns & Refunds:** Self-service customer return requests and automated Razorpay refund API triggers.
+- [ ] **Customer Accounts & Auth:** User signup, OTP login, profile management, and saved shipping addresses.
+- [ ] **Admin Dashboard:** Web-based dashboard for sales charts, order state transitions, and inventory stock adjustments.
+- [ ] **Automated CRM & Marketing:** Klaviyo / WhatsApp Business integration for abandoned cart recovery and refill reminders.
 
 ---
 
