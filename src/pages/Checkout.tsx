@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { loadRazorpayScript, type RazorpayOptions, type RazorpaySuccessResponse } from "@/lib/razorpay";
 import { apiUrl } from "@/lib/api";
 import { ArrowLeft, Lock, ShieldCheck, AlertCircle, Info, CheckCircle2 } from "lucide-react";
+import { SEO } from "@/components/common/SEO";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -295,8 +296,15 @@ export default function Checkout() {
   };
 
   return (
-    <div className="py-12 md:py-20 bg-[var(--color-background)]">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+    <>
+      <SEO
+        title="Secure Checkout | Himroots Wellness"
+        description="Complete your order of authentic Himalayan Sea Buckthorn formulations with encrypted 256-bit secure checkout."
+        canonical="/checkout"
+        noindex={true}
+      />
+      <div className="py-12 md:py-20 bg-[var(--color-background)]">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <Link
           to="/cart"
           className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] transition-colors mb-8"
@@ -574,5 +582,6 @@ export default function Checkout() {
         </div>
       </div>
     </div>
+    </>
   );
 }

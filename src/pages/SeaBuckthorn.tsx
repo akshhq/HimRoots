@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { 
   Sun, 
@@ -16,22 +16,33 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { products } from "@/data/products";
+import { SEO } from "@/components/common/SEO";
 
 export default function SeaBuckthorn() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const pulpProduct = products[0];
   const capsuleProduct = products[1];
 
-  useEffect(() => {
-    document.title = "Himalayan Seabuckthorn Juice | Omega 3, 6, 7 & 9 | HIMROOTS WELLNESS";
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute(
-        "content",
-        "Discover HIMROOTS WELLNESS Seabuckthorn Juice, inspired by the Himalayas. Explore the golden berry's natural Omega-3, 6, 7 and 9 fatty-acid profile, botanical nutrients and distinctive flavour."
-      );
-    }
-  }, []);
+  const guideSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: "Himalayan Seabuckthorn Juice | Omega 3, 6, 7 & 9",
+    description: "Discover HIMROOTS WELLNESS Seabuckthorn Juice, inspired by the Himalayas. Explore the golden berry's natural Omega-3, 6, 7 and 9 fatty-acid profile.",
+    image: "https://himroots.in/images/himroots-harvest-berries.jpg",
+    author: {
+      "@type": "Organization",
+      name: "Himroots Wellness",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Himroots Wellness",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://himroots.in/images/himroots-logo.png",
+      },
+    },
+    mainEntityOfPage: "https://himroots.in/about-sea-buckthorn",
+  };
 
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index);
@@ -176,8 +187,17 @@ export default function SeaBuckthorn() {
   ];
 
   return (
-    <div className="py-10 sm:py-16 md:py-24 bg-[var(--color-background)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+    <>
+      <SEO
+        title="Himalayan Seabuckthorn Juice | Omega 3, 6, 7 & 9 | HIMROOTS WELLNESS"
+        description="Discover HIMROOTS WELLNESS Seabuckthorn Juice, inspired by the Himalayas. Explore the golden berry's natural Omega-3, 6, 7 and 9 fatty-acid profile, botanical nutrients and distinctive flavour."
+        canonical="/about-sea-buckthorn"
+        image="/images/himroots-harvest-berries.jpg"
+        type="article"
+        structuredData={guideSchema}
+      />
+      <div className="py-10 sm:py-16 md:py-24 bg-[var(--color-background)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
         
         {/* Navigation Breadcrumb */}
         <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs uppercase tracking-widest text-[var(--color-muted-foreground)] mb-8">
@@ -696,5 +716,6 @@ export default function SeaBuckthorn() {
 
       </div>
     </div>
+    </>
   );
 }

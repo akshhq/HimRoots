@@ -3,6 +3,7 @@ import { Mail, Phone, MapPin, Clock, Send, CheckCircle2, MessageSquare, AlertCir
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { Button } from "@/components/ui/Button";
 import { apiUrl } from "@/lib/api";
+import { SEO } from "@/components/common/SEO";
 
 const CATEGORIES = [
   "Order Support",
@@ -79,9 +80,24 @@ export default function Contact() {
     }
   };
 
+  const contactSchema = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    name: "Contact Himroots Wellness",
+    description: "Get in touch with Himroots Wellness customer care and botanical guidance team.",
+    url: "https://himroots.in/contact",
+  };
+
   return (
-    <div className="py-10 sm:py-16 md:py-20 bg-[var(--color-background)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+    <>
+      <SEO
+        title="Contact Himroots Wellness | Customer Care & Inquiries"
+        description="Get in touch with Himroots Wellness for customer support, order assistance, and wholesale inquiries. Based in Dharamshala, Himachal Pradesh."
+        canonical="/contact"
+        structuredData={contactSchema}
+      />
+      <div className="py-10 sm:py-16 md:py-20 bg-[var(--color-background)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
         
         {/* Page Header */}
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16 md:mb-20">
@@ -402,5 +418,6 @@ export default function Contact() {
 
       </div>
     </div>
+    </>
   );
 }

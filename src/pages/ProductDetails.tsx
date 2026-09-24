@@ -4,7 +4,8 @@ import { getProductBySlug as getFallbackProductBySlug, type Product } from "@/da
 import { getStoreProductBySlug } from "@/lib/supabase";
 import { useCartStore } from "@/store/cartStore";
 import { Button } from "@/components/ui/Button";
-import { Star, ShieldCheck, Truck, Package, ArrowLeft, CheckCircle2, Sparkles, ArrowRight } from "lucide-react";
+import { Star, ShieldCheck, Truck, Package, ArrowLeft, CheckCircle2, Sparkles, ArrowRight, Compass } from "lucide-react";
+import { SEO } from "@/components/common/SEO";
 
 export default function ProductDetails() {
   const { slug } = useParams<{ slug: string }>();
@@ -26,13 +27,35 @@ export default function ProductDetails() {
 
   if (!product) {
     return (
-      <div className="container py-32 text-center">
-        <h1 className="text-3xl font-bold mb-4 font-serif text-white">Product Not Found</h1>
-        <p className="text-gray-400 mb-8">The product you are looking for does not exist or has been removed.</p>
-        <Button asChild className="bg-gold-gradient text-black font-bold">
-          <Link to="/shop">Back to Shop</Link>
-        </Button>
-      </div>
+      <>
+        <SEO
+          title="Product Not Found | Himroots Wellness"
+          description="The requested Himalayan formulation could not be found. Explore our pure Sea Buckthorn pulp and softgels."
+          noindex={true}
+        />
+        <div className="py-24 sm:py-32 px-4 bg-[var(--color-background)] min-h-[70vh] flex items-center justify-center">
+          <div className="max-w-md w-full text-center">
+            <div className="w-16 h-16 rounded-full bg-[var(--color-secondary)] border border-[var(--color-border-gold)] flex items-center justify-center mx-auto mb-6 shadow-xl">
+              <Compass className="w-8 h-8 text-[var(--color-primary)]" />
+            </div>
+            <span className="text-xs uppercase font-bold tracking-[0.25em] text-[var(--color-primary)] block mb-2">
+              Himalayan Collection
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-bold font-serif text-white mb-3">Formulation Not Found</h1>
+            <p className="text-gray-300 text-sm mb-8 leading-relaxed font-light">
+              The formulation you are searching for does not exist or may have been updated.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Button asChild size="lg" className="w-full sm:w-auto bg-gold-gradient text-black font-bold uppercase text-xs tracking-widest px-8">
+                <Link to="/shop">Explore All Formulations</Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="w-full sm:w-auto border-[var(--color-border-gold)] text-white hover:bg-[var(--color-primary)]/10 text-xs font-semibold px-6">
+                <Link to="/">Back to Home</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </>
     );
   }
 
@@ -45,9 +68,65 @@ export default function ProductDetails() {
     navigate("/checkout");
   };
 
+  const productStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    image: product.images.map((img) => (img.startsWith("http") ? img : `https://himroots.in${img}`)),
+    description: product.description,
+    sku: product.id,
+    brand: {
+      "@type": "Brand",
+      name: "Himroots Wellness",
+    },
+    offers: {
+      "@type": "Offer",
+      url: `https://himroots.in/products/${product.slug}`,
+      priceCurrency: "INR",
+      price: product.price,
+      priceValidUntil: "2026-12-31",
+      availability: "https://schema.org/InStock",
+      itemCondition: "https://schema.org/NewCondition",
+    },
+  };
+
+  const breadcrumbStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://himroots.in",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Shop",
+        item: "https://himroots.in/shop",
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: product.name,
+        item: `https://himroots.in/products/${product.slug}`,
+      },
+    ],
+  };
+
   return (
-    <div className="py-10 sm:py-16 md:py-20 bg-[var(--color-background)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+    <>
+      <SEO
+        title={`${product.name} | Himroots Wellness`}
+        description={product.description}
+        canonical={`/products/${product.slug}`}
+        image={product.images[0]}
+        type="product"
+        structuredData={[productStructuredData, breadcrumbStructuredData]}
+      />
+      <div className="py-10 sm:py-16 md:py-20 bg-[var(--color-background)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
         
         {/* Navigation Breadcrumb Bar */}
         <div className="flex flex-wrap items-center justify-between gap-3 mb-6 sm:mb-8">
@@ -392,5 +471,6 @@ export default function ProductDetails() {
 
       </div>
     </div>
+    </>
   );
 }

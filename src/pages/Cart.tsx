@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useCartStore } from "@/store/cartStore";
 import { Button } from "@/components/ui/Button";
 import { Trash2, ArrowLeft, ShoppingBag } from "lucide-react";
+import { SEO } from "@/components/common/SEO";
 
 export default function Cart() {
   const { items, updateQuantity, removeItem, getTotals } = useCartStore();
@@ -12,23 +13,38 @@ export default function Cart() {
 
   if (items.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-32 text-center flex flex-col items-center">
-        <div className="w-24 h-24 bg-[var(--color-secondary)] rounded-full flex items-center justify-center mb-8 border border-[var(--color-border)]">
-          <ShoppingBag className="w-10 h-10 text-gray-500" />
+      <>
+        <SEO
+          title="Your Shopping Cart | Himroots Wellness"
+          description="Review your selected pure Himalayan Sea Buckthorn formulations and proceed to secure checkout."
+          canonical="/cart"
+          noindex={true}
+        />
+        <div className="container mx-auto px-4 py-32 text-center flex flex-col items-center">
+          <div className="w-24 h-24 bg-[var(--color-secondary)] rounded-full flex items-center justify-center mb-8 border border-[var(--color-border)]">
+            <ShoppingBag className="w-10 h-10 text-gray-500" />
+          </div>
+          <h1 className="text-3xl font-bold mb-4 font-serif text-white">Your Cart is Empty</h1>
+          <p className="text-gray-400 mb-8 max-w-md mx-auto">
+            Looks like you haven't added any wellness products to your cart yet.
+          </p>
+          <Button asChild size="lg" className="uppercase tracking-widest text-sm bg-gold-gradient text-black font-bold">
+            <Link to="/shop">Continue Shopping</Link>
+          </Button>
         </div>
-        <h1 className="text-3xl font-bold mb-4">Your Cart is Empty</h1>
-        <p className="text-gray-400 mb-8 max-w-md mx-auto">
-          Looks like you haven't added any wellness products to your cart yet.
-        </p>
-        <Button asChild size="lg" className="uppercase tracking-widest text-sm">
-          <Link to="/shop">Continue Shopping</Link>
-        </Button>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="py-12 md:py-20 bg-[var(--color-background)]">
+    <>
+      <SEO
+        title="Your Shopping Cart | Himroots Wellness"
+        description="Review your selected pure Himalayan Sea Buckthorn formulations and proceed to secure checkout."
+        canonical="/cart"
+        noindex={true}
+      />
+      <div className="py-12 md:py-20 bg-[var(--color-background)]">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <h1 className="text-3xl md:text-5xl font-bold font-serif text-white mb-10">Shopping Cart</h1>
         
@@ -153,5 +169,6 @@ export default function Cart() {
         </div>
       </div>
     </div>
+    </>
   );
 }

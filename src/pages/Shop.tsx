@@ -5,6 +5,7 @@ import { products as fallbackProducts, type Product } from "@/data/products";
 import { getStoreProducts } from "@/lib/supabase";
 import { Button } from "@/components/ui/Button";
 import { useCartStore } from "@/store/cartStore";
+import { SEO } from "@/components/common/SEO";
 
 export default function Shop() {
   const [productList, setProductList] = useState<Product[]>(fallbackProducts);
@@ -28,9 +29,39 @@ export default function Shop() {
     return matchesSearch && matchesCategory;
   });
 
+  const itemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Himalayan Sea Buckthorn Formulations",
+    description: "Pure wild-foraged Sea Buckthorn products from Himroots Wellness",
+    itemListElement: productList.map((p, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "Product",
+        name: p.name,
+        url: `https://himroots.in/products/${p.slug}`,
+        description: p.description,
+        offers: {
+          "@type": "Offer",
+          priceCurrency: "INR",
+          price: p.price,
+          availability: "https://schema.org/InStock",
+        },
+      },
+    })),
+  };
+
   return (
-    <div className="py-10 sm:py-16 md:py-20 bg-[var(--color-background)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+    <>
+      <SEO
+        title="Shop Wild Himalayan Formulations | Himroots Wellness"
+        description="Explore our collection of pure Himalayan Sea Buckthorn formulations: 90% Raw Wild Berry Pulp (500ml) and Omega-7 Softgels (60s). Wild-foraged in Ladakh & Spiti."
+        canonical="/shop"
+        structuredData={itemListSchema}
+      />
+      <div className="py-10 sm:py-16 md:py-20 bg-[var(--color-background)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
         
         {/* Header — No redundant logo per single-logo rule */}
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16 md:mb-20">
@@ -90,6 +121,7 @@ export default function Shop() {
                   <img 
                     src={product.images[0]} 
                     alt={product.name} 
+                    loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute top-3 sm:top-4 left-3 sm:left-4">
@@ -230,5 +262,6 @@ export default function Shop() {
 
       </div>
     </div>
+    </>
   );
 }

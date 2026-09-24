@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/Button";
 import { CheckCircle2, ArrowRight, ShieldCheck, Mail, ShoppingBag, HelpCircle, Clock } from "lucide-react";
 import { apiUrl } from "@/lib/api";
+import { SEO } from "@/components/common/SEO";
 
 interface OrderSuccessState {
   orderId?: string;
@@ -118,8 +119,15 @@ export default function OrderSuccess() {
     : "Received";
 
   return (
-    <div className="py-16 md:py-24 bg-[var(--color-background)] min-h-[80vh] flex items-center justify-center">
-      <div className="container mx-auto px-4 max-w-3xl">
+    <>
+      <SEO
+        title="Order Confirmed | Himroots Wellness"
+        description="Thank you for your order with Himroots Wellness. Your order has been placed and is being prepared with Himalayan care."
+        canonical="/order-success"
+        noindex={true}
+      />
+      <div className="py-16 md:py-24 bg-[var(--color-background)] min-h-[80vh] flex items-center justify-center">
+        <div className="container mx-auto px-4 max-w-3xl">
         {/* Success Header Icon & Title */}
         <div className="text-center mb-10">
           <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-500/30 animate-scaleUp">
@@ -289,5 +297,6 @@ export default function OrderSuccess() {
         </div>
       </div>
     </div>
+    </>
   );
 }

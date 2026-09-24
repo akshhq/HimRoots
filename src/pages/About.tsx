@@ -2,11 +2,27 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Mountain, ShieldCheck, HeartHandshake } from "lucide-react";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { Button } from "@/components/ui/Button";
+import { SEO } from "@/components/common/SEO";
 
 export default function About() {
+  const aboutSchema = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: "Our Himalayan Roots & Story",
+    description: "Discover the origins of Himroots Wellness, ethically wild-foraged in Ladakh and Spiti at 12,000+ ft altitude.",
+    url: "https://himroots.in/about",
+  };
+
   return (
-    <div className="py-10 sm:py-16 md:py-20 bg-[var(--color-background)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+    <>
+      <SEO
+        title="Our Himalayan Story & Ethical Harvesting | Himroots Wellness"
+        description="Discover the origins of Himroots Wellness. Ethically wild-foraged by local Himalayan communities at 12,000+ ft altitude, bridging ancient Ayurvedic wisdom with modern botanical purity."
+        canonical="/about"
+        structuredData={aboutSchema}
+      />
+      <div className="py-10 sm:py-16 md:py-20 bg-[var(--color-background)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
         
         {/* Header — No redundant logo per single-logo rule */}
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16 md:mb-20">
@@ -147,5 +163,6 @@ export default function About() {
 
       </div>
     </div>
+    </>
   );
 }

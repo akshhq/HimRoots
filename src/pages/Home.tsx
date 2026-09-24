@@ -7,6 +7,7 @@ import { getStoreProducts } from "@/lib/supabase";
 import { useCartStore } from "@/store/cartStore";
 import { useLogoStore } from "@/store/logoStore";
 import { BrandLogo } from "@/components/ui/BrandLogo";
+import { SEO } from "@/components/common/SEO";
 
 export default function Home() {
   const { addItem } = useCartStore();
@@ -53,8 +54,45 @@ export default function Home() {
     };
   }, [setIsHeroLogoVisible]);
 
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Himroots Wellness",
+    url: "https://himroots.in",
+    logo: "https://himroots.in/images/himroots-logo.png",
+    description: "Pure wild-foraged Himalayan Sea Buckthorn juice and natural wellness formulations from Ladakh and Spiti.",
+    sameAs: ["https://www.instagram.com/himroots.wellness/"],
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Dharamshala",
+      addressRegion: "Himachal Pradesh",
+      postalCode: "176215",
+      addressCountry: "IN",
+    },
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "Customer Support",
+      email: "support@himroots.in",
+    },
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Himroots Wellness",
+    url: "https://himroots.in",
+  };
+
   return (
-    <div className="flex flex-col bg-[var(--color-background)]">
+    <>
+      <SEO
+        title="Himroots Wellness | Pure Himalayan Sea Buckthorn Juice & Botanicals"
+        description="Experience the untouched vitality of wild-harvested Himalayan Sea Buckthorn juice from 12,000+ feet in Ladakh and Spiti. Raw, pure, and rich in rare Omega-7."
+        canonical="/"
+        type="website"
+        structuredData={[organizationSchema, websiteSchema]}
+      />
+      <div className="flex flex-col bg-[var(--color-background)]">
       
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-1 sm:pt-2 pb-16 md:pb-24 border-b border-[var(--color-border)]">
@@ -644,5 +682,6 @@ export default function Home() {
       </section>
 
     </div>
+    </>
   );
 }

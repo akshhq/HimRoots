@@ -3,5 +3,7 @@ Allow: /
 Disallow: /checkout
 Disallow: /order-success
 Disallow: /cart
+Disallow: /payment-failed
+Disallow: /api/
 
 Sitemap: https://himroots.in/sitemap.xml
