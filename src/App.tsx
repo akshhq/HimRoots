@@ -28,6 +28,7 @@ function App() {
           <Route path="contact-us" element={<Contact />} />
           <Route path="sea-buckthorn" element={<SeaBuckthorn />} />
           <Route path="about-sea-buckthorn" element={<SeaBuckthorn />} />
+          <Route path="himalayan-seabuckthorn-juice" element={<SeaBuckthorn />} />
           <Route path="*" element={<div className="container py-20 text-center"><h1 className="text-3xl font-bold mb-4">404</h1><p>Page not found.</p></div>} />
         </Route>
       </Routes>

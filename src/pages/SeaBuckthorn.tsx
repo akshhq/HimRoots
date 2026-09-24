@@ -1,80 +1,244 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { 
   Sun, 
   Shield, 
-  Zap, 
   Sparkles, 
   ArrowRight, 
-  Mountain, 
-  Compass, 
   CheckCircle2, 
-  Flame, 
-  Award, 
-  Rocket, 
-  Snowflake, 
-  Feather,
-  Leaf
+  ChevronDown, 
+  Droplets, 
+  Leaf, 
+  FlaskConical, 
+  HelpCircle, 
+  Clock, 
+  Wine 
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { products } from "@/data/products";
 
 export default function SeaBuckthorn() {
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
   const pulpProduct = products[0];
   const capsuleProduct = products[1];
+
+  useEffect(() => {
+    document.title = "Himalayan Seabuckthorn Juice | Omega 3, 6, 7 & 9 | HIMROOTS WELLNESS";
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute(
+        "content",
+        "Discover HIMROOTS WELLNESS Seabuckthorn Juice, inspired by the Himalayas. Explore the golden berry's natural Omega-3, 6, 7 and 9 fatty-acid profile, botanical nutrients and distinctive flavour."
+      );
+    }
+  }, []);
+
+  const toggleFaq = (index: number) => {
+    setOpenFaq(openFaq === index ? null : index);
+  };
+
+  const omegas = [
+    {
+      symbol: "Ω3",
+      title: "Omega-3: Alpha-Linolenic Acid (ALA)",
+      badge: "Essential Fatty Acid",
+      description:
+        "A plant-based polyunsaturated fatty acid that the human body cannot produce on its own. ALA contributes to normal growth, development, and cellular nutrition. Found abundantly in the berry's seed oil.",
+      role: "Seed Oil Profile: 25–30%"
+    },
+    {
+      symbol: "Ω6",
+      title: "Omega-6: Linoleic Acid (LA)",
+      badge: "Essential Fatty Acid",
+      description:
+        "The principal dietary representative of the Omega-6 family. Linoleic acid is an integral structural constituent of cell membranes and helps maintain the skin's natural barrier function.",
+      role: "Seed Oil Profile: 35–40%"
+    },
+    {
+      symbol: "Ω7",
+      title: "Omega-7: Palmitoleic Acid",
+      badge: "The Signature Fatty Acid",
+      description:
+        "The most distinctive hallmark of Seabuckthorn. A rare monounsaturated fatty acid found in few common plant oils. Renowned in scientific literature for its role in cellular membranes, mucosal tissue hydration, and dermal health.",
+      role: "Pulp Oil Profile: 30–40%"
+    },
+    {
+      symbol: "Ω9",
+      title: "Omega-9: Oleic Acid",
+      badge: "Monounsaturated Fatty Acid",
+      description:
+        "A healthy monounsaturated fat also found in virgin olive oil and avocados. Supports healthy cell-membrane architecture and fosters a favorable dietary fatty-acid balance when replacing saturated fats.",
+      role: "Seed & Pulp Oil: 15–20%"
+    }
+  ];
+
+  const nutrients = [
+    {
+      icon: Sun,
+      title: "Vitamin C",
+      subtitle: "Natural Nutritional Support",
+      description:
+        "Seabuckthorn berries are celebrated for their rich natural vitamin C, which contributes to normal immune-system function, healthy collagen synthesis, and cell defense against oxidative stress."
+    },
+    {
+      icon: Shield,
+      title: "Vitamin E",
+      subtitle: "Fat-Soluble Antioxidant",
+      description:
+        "Berry and seed oils naturally contain tocopherols belonging to the vitamin E family, providing fat-soluble cellular protection from oxidative environmental stress."
+    },
+    {
+      icon: Sparkles,
+      title: "Carotenoids",
+      subtitle: "Nature's Golden Pigments",
+      description:
+        "Responsible for the berry's vivid Himalayan sunrise orange colour. These compounds are studied for their antioxidant activities, with key carotenoids converting naturally into Vitamin A."
+    },
+    {
+      icon: FlaskConical,
+      title: "Flavonoids & Polyphenols",
+      subtitle: "Botanical Diversity",
+      description:
+        "An intricate spectrum of polyphenols, quercetin, and flavonoids studied worldwide for their free-radical scavenging capacity and synergistic cellular benefits."
+    }
+  ];
+
+  const blendIngredients = [
+    {
+      percentage: "90%",
+      name: "Wild Himalayan Seabuckthorn",
+      botanical: "Hippophae rhamnoides",
+      role: "The golden foundation berry, hand-harvested at 12,000+ ft altitude, delivering 4 essential omegas and bio-active organic acids."
+    },
+    {
+      percentage: "2%",
+      name: "Bhoomi Amla",
+      botanical: "Phyllanthus species",
+      role: "A classical Indian botanical traditionally revered in Ayurvedic practices for liver vitality, cellular cleansing, and metabolic harmony."
+    },
+    {
+      percentage: "2%",
+      name: "Makoy",
+      botanical: "Solanum nigrum",
+      role: "A time-honored heritage plant celebrated in classical pharmacopoeia for supporting natural internal balance."
+    },
+    {
+      percentage: "2%",
+      name: "Punarnava",
+      botanical: "Boerhavia diffusa",
+      role: "Translates to 'the renewer' in Sanskrit. Traditionally valued for fluid equilibrium, kidney wellness, and overall systemic rejuvenation."
+    },
+    {
+      percentage: "2%",
+      name: "Ashwagandha",
+      botanical: "Withania somnifera",
+      role: "The revered Himalayan rasayana adaptogen, renowned for harmonizing stress response, stamina, and natural vitality."
+    },
+    {
+      percentage: "2%",
+      name: "Safed Musli",
+      botanical: "Chlorophytum borivilianum",
+      role: "A prized traditional Ayurvedic botanical prized for its nutrient-dense tuberous roots and nourishing tonic properties."
+    }
+  ];
+
+  const faqs = [
+    {
+      question: "What makes seabuckthorn different from other fruits?",
+      answer:
+        "Seabuckthorn contains an unusual combination of fatty acids in its fruit and seed oils, including Omega-3, Omega-6, Omega-7, and Omega-9. Unlike most common fruits, it synthesizes healthy lipids in both its pulp and seeds, alongside high naturally occurring vitamin C, carotenoids, and a wide array of botanical flavonoids."
+    },
+    {
+      question: "Does seabuckthorn juice contain all four omegas?",
+      answer:
+        "The seabuckthorn fruit inherently contains all four omega families (Omega-3, 6, 7, and 9). The amount present in finished juice depends on its processing and the proportion of natural pulp and cold-pressed botanical oils retained during pressing. HIMROOTS preserves raw fruit pulp to deliver natural lipid richness."
+    },
+    {
+      question: "What is special about Omega-7?",
+      answer:
+        "Omega-7, particularly palmitoleic acid, is a monounsaturated fatty acid found in seabuckthorn pulp oil. It is comparatively rare among widely consumed plant-based food oils and has attracted deep scientific interest for its natural role in skin physiology, mucosal tissue hydration, and cellular membrane integrity."
+    },
+    {
+      question: "Can seabuckthorn juice replace fish oil or Omega-3 supplements?",
+      answer:
+        "No direct equivalence should be assumed. Seabuckthorn provides plant-based Alpha-Linolenic Acid (ALA), whereas fish oil primarily supplies long-chain EPA and DHA. Their biochemical compositions and dietary roles differ, making seabuckthorn a superb botanical complement to a wholesome, plant-focused diet."
+    },
+    {
+      question: "Can I drink seabuckthorn juice every day?",
+      answer:
+        "Yes, seabuckthorn juice may be enjoyed daily as part of a varied, balanced lifestyle. For best results, follow the recommended serving size (typically 20–30ml diluted in water) on the bottle. Those who are pregnant, nursing, taking prescription medications, or managing specific medical conditions should consult a healthcare professional before adding concentrated botanical juices to their daily regimen."
+    },
+    {
+      question: "Why is seabuckthorn juice naturally tangy?",
+      answer:
+        "Seabuckthorn is naturally rich in organic plant acids (such as malic acid and quinic acid) and concentrated vitamin C, giving it a bright, bracing, and intensely tart flavor. This tangy kick is the authentic hallmark of pure, unadulterated high-altitude Himalayan berries without added artificial sugars or synthetic flavorings."
+    }
+  ];
 
   return (
     <div className="py-10 sm:py-16 md:py-24 bg-[var(--color-background)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
         
         {/* Navigation Breadcrumb */}
-        <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[var(--color-muted-foreground)] mb-8">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs uppercase tracking-widest text-[var(--color-muted-foreground)] mb-8">
           <Link to="/" className="hover:text-[var(--color-primary)] transition-colors">Home</Link>
           <span>/</span>
           <span className="text-[var(--color-primary)] font-semibold">About Sea Buckthorn</span>
-        </div>
+        </nav>
 
         {/* Hero Header */}
-        <div className="text-center max-w-4xl mx-auto mb-14 sm:mb-20">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--color-secondary)] border border-[var(--color-border-gold)] text-[10px] md:text-xs font-semibold tracking-[0.2em] text-[var(--color-primary)] uppercase mb-4">
-            <Sparkles className="w-3.5 h-3.5" />
-            The Definitive Botanical & Historical Guide
+        <header className="text-center max-w-4xl mx-auto mb-16 sm:mb-24">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--color-secondary)] border border-[var(--color-border-gold)] text-[10px] md:text-xs font-semibold tracking-[0.2em] text-[var(--color-primary)] uppercase mb-4">
+            <Sparkles className="w-3.5 h-3.5 text-[var(--color-primary)]" />
+            Premium Seabuckthorn Juice • Nature's Golden Berry • Himalayan Wellness
           </div>
           <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold font-serif text-white mb-5 leading-tight">
-            The Golden Berry of the <br />
-            <span className="text-gold-gradient">High Himalayas</span>
+            The Himalayan Secret to <br />
+            <span className="text-gold-gradient">Natural Vitality</span>
           </h1>
           <div className="w-20 h-1 bg-gold-gradient mx-auto mb-6" />
-          <p className="text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed font-light max-w-3xl mx-auto">
-            From the mythical diet of Pegasus and the conquests of Alexander the Great, to Russian space missions and Olympic athletic records—discover how a thorny, frost-bound shrub surviving at 12,000+ feet in the Himalayas became the planet's most formidable bioactive super-botanical.
+          <p className="text-gray-200 text-base sm:text-lg md:text-xl leading-relaxed font-light max-w-3xl mx-auto mb-6">
+            Discover the golden goodness of the Himalayas. Born in the pristine mountain landscapes, seabuckthorn is an extraordinary orange berry celebrated for its distinctive nutritional composition, rich plant-based antioxidants, and rare beneficial fatty acids.
           </p>
-        </div>
+          <div className="p-4 sm:p-6 rounded-2xl bg-[var(--color-card)]/90 border border-[var(--color-border-gold)] max-w-2xl mx-auto shadow-xl">
+            <p className="text-xs sm:text-sm text-gray-300 leading-relaxed italic">
+              "One remarkable berry. Four important omega fatty acids. A world of natural goodness."
+            </p>
+            <p className="text-[11px] text-[var(--color-primary)] font-semibold uppercase tracking-wider mt-2">
+              HIMROOTS WELLNESS — Rooted in Nature. Inspired by the Himalayas.
+            </p>
+          </div>
+        </header>
 
-        {/* Section 1: The Ancient Survival Plant */}
+        {/* Section 1: Discover the Power of the Golden Berry */}
         <section className="mb-20 sm:mb-28">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center max-w-6xl mx-auto">
             
             <div className="lg:col-span-6">
               <span className="text-[10px] uppercase font-bold tracking-[0.22em] text-[var(--color-primary)] block mb-2">
-                Origin & Habitat
+                Section 1 • Botanical Profile
               </span>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-white mb-5">
-                The Ancient Survival Plant
+                Discover the Power of the Golden Berry
               </h2>
               <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed mb-4">
-                Sea buckthorn (<em>Hippophae rhamnoides</em>) is <strong>not an ocean plant</strong>, despite its English colloquial name. It is a wildly hardy, prehistoric deciduous shrub native to the freezing, high-altitude arid cold deserts of the Himalayas (such as Ladakh and Spiti) and Eurasian rocky river valleys.
+                Seabuckthorn (<em>Hippophae rhamnoides</em>) is a resilient deciduous shrub that thrives in extreme mountainous terrains, including the high-altitude Himalayan landscape of Ladakh and Spiti. Its bright orange berries have long been treasured in traditional mountain food practices and are increasingly studied for their rich nutritional and phytochemical matrix.
+              </p>
+              <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed mb-4">
+                Within these small berries lies an impressive combination of naturally occurring compounds, including vitamin C, carotenoids, tocopherols (vitamin E), flavonoids, organic acids, and plant lipids.
               </p>
               <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed mb-6">
-                Long before modern laboratory assays documented its extraordinary chemical matrix, this thorny mountain plant was revered across millennia as an indispensable survival tool, an elite military ration, and the sovereign cornerstone of trans-Himalayan traditional pharmacopoeia.
+                Seabuckthorn is particularly unique because its seeds and fruit pulp have distinct fatty-acid profiles: the seeds are rich in Omega-3 and Omega-6, while the pulp oil is world-renowned for its rare Omega-7 content.
               </p>
 
               <div className="grid grid-cols-2 gap-3 sm:gap-4 text-xs">
                 <div className="p-4 rounded-xl bg-[var(--color-card)] border border-[var(--color-border-gold)]">
                   <span className="text-[var(--color-primary)] font-bold text-base sm:text-lg block mb-0.5">12,000+ Ft</span>
-                  <span className="text-gray-400 text-[11px]">Cold Himalayan Deserts of Ladakh & Spiti</span>
+                  <span className="text-gray-400 text-[11px]">Wild Himalayan Terroir (Ladakh & Spiti)</span>
                 </div>
                 <div className="p-4 rounded-xl bg-[var(--color-card)] border border-[var(--color-border-gold)]">
                   <span className="text-[var(--color-primary)] font-bold text-base sm:text-lg block mb-0.5">-40°C to +35°C</span>
-                  <span className="text-gray-400 text-[11px]">Extreme Thermal Endurance Adaptation</span>
+                  <span className="text-gray-400 text-[11px]">Sub-Zero Climatic Resilience</span>
                 </div>
               </div>
             </div>
@@ -88,8 +252,8 @@ export default function SeaBuckthorn() {
                 />
                 <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent p-5 sm:p-6">
                   <div className="text-[10px] uppercase font-bold tracking-widest text-[var(--color-primary)]">Hippophae rhamnoides</div>
-                  <div className="text-base sm:text-lg font-serif font-bold text-white">Wild Trans-Himalayan Bioactive Fruit</div>
-                  <p className="text-xs text-gray-300 mt-1">Surviving relentless UV radiation and glacial frosts</p>
+                  <div className="text-base sm:text-lg font-serif font-bold text-white">Wild Trans-Himalayan Golden Berries</div>
+                  <p className="text-xs text-gray-300 mt-1">Rich in botanical lipids, polyphenols, and active organic acids</p>
                 </div>
               </div>
             </div>
@@ -97,348 +261,306 @@ export default function SeaBuckthorn() {
           </div>
         </section>
 
-        {/* Section 2: The "Shining Horse" of Antiquity (Pegasus & Alexander) */}
+        {/* Section 2: The Omega 3-6-7-9 Profile */}
         <section className="mb-20 sm:mb-28 bg-[var(--color-card)] border border-[var(--color-border-gold)] rounded-3xl p-6 sm:p-10 md:p-14 shadow-2xl">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-              
-              <div className="lg:col-span-6 order-2 lg:order-1">
-                <div className="relative rounded-2xl overflow-hidden border border-[var(--color-border-gold)] shadow-2xl group">
-                  <img 
-                    src="/images/hippophae-pegasus-mythology.jpg" 
-                    alt="Classical mythology of Pegasus and the Shining Horse Hippophae" 
-                    className="w-full h-[320px] sm:h-[420px] object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-4 sm:p-6">
-                    <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[var(--color-primary)] block">Classical Antiquity Lore</span>
-                    <h4 className="text-sm sm:text-base font-serif font-bold text-white">The Legend of Pegasus & The Shining Coat</h4>
-                  </div>
-                </div>
-              </div>
-
-              <div className="lg:col-span-6 order-1 lg:order-2">
-                <div className="inline-flex items-center gap-2 text-xs uppercase font-bold tracking-[0.2em] text-[var(--color-primary)] mb-3">
-                  <Feather className="w-4 h-4" />
-                  Classical Etymology & Mythology
-                </div>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-white mb-5">
-                  The "Shining Horse" of Antiquity
-                </h2>
-                
-                <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed mb-4">
-                  The botanical genus name, <strong className="text-[var(--color-primary-light)]">Hippophae</strong>, translates directly from Ancient Greek as <em>"shining horse"</em> (<em>hippos</em> = horse, <em>phaos</em> = shining light).
-                </p>
-
-                <div className="p-4 sm:p-5 rounded-xl bg-[var(--color-secondary)]/70 border border-[var(--color-border)] mb-5 text-xs sm:text-sm text-gray-300 leading-relaxed">
-                  <p className="mb-3">
-                    <strong>The Pegasus Legend:</strong> In Greek classical mythology, sea buckthorn leaves and golden berries were celebrated as the preferred diet of <strong>Pegasus, the divine winged horse</strong>.
-                  </p>
-                  <p>
-                    This myth arose from practical animal husbandry: ancient Greek horsemen observed that wounded and exhausted war horses grazing on wild sea buckthorn groves experienced rapid muscle repair, vibrant vitality, and developed exceptionally radiant, lustrous coats.
-                  </p>
-                </div>
-
-                <div className="space-y-3 text-xs sm:text-sm text-gray-300">
-                  <div className="flex items-start gap-3">
-                    <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] flex-shrink-0 mt-0.5" />
-                    <span><strong>Alexander the Great (4th Century BCE):</strong> Fed wild sea buckthorn berries to his troops and war horses to sustain endurance across grueling multi-year campaigns through Asia Minor and India.</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] flex-shrink-0 mt-0.5" />
-                    <span><strong>Pheidippides & Ancient Runners:</strong> Historic marathon runners consumed the tart, energy-dense berries to enhance pulmonary stamina and delay muscular fatigue.</span>
-                  </div>
-                </div>
-
-              </div>
-
-            </div>
-          </div>
-        </section>
-
-        {/* Section 3: Fueling Empires and Healing Traditions */}
-        <section className="mb-20 sm:mb-28">
-          <div className="max-w-4xl mx-auto text-center mb-12 sm:mb-16">
-            <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-2 block">
-              Sacred Heritage
-            </span>
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold font-serif text-white mb-4">
-              Fueling Empires & Ancient Healing Traditions
-            </h2>
-            <div className="w-16 sm:w-20 h-1 bg-gold-gradient mx-auto mb-5" />
-            <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed">
-              From the sacred medicine chambers of Tibet to the nomadic conquerors of Central Asia, Sea Buckthorn proved its worth where survival depended on unmatched resilience.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            
-            {/* 8th Century Tibetan Pharmacopoeia */}
-            <div className="bg-[var(--color-card)] border border-[var(--color-border)] p-6 sm:p-8 rounded-2xl relative group hover:border-[var(--color-primary)]/60 transition-all duration-300">
-              <div className="w-12 h-12 rounded-xl bg-[var(--color-secondary)] border border-[var(--color-border-gold)] flex items-center justify-center text-[var(--color-primary)] mb-5">
-                <Flame className="w-6 h-6" />
-              </div>
-              <div className="text-xs uppercase font-bold tracking-widest text-[var(--color-primary)] mb-1">
-                8th Century Classical Medicine
-              </div>
-              <h3 className="text-xl sm:text-2xl font-bold font-serif text-white mb-3">
-                The Tibetan rGyud Bzi & Ayurveda
-              </h3>
-              <p className="text-gray-400 text-xs sm:text-sm leading-relaxed mb-4">
-                By the 8th century CE, the intensely sour, luminous golden berries were systematically codified in the <em>rGyud Bzi</em> (The Four Books of Pharmacopoeia), establishing it as a foundational medicine in Tibetan Sowa-Rigpa and Himalayan Ayurvedic traditions.
-              </p>
-              <ul className="space-y-2 text-xs text-gray-300 border-t border-[var(--color-border)] pt-4">
-                <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]" />
-                  <span>Immediate relief for acute altitude sickness in high passes</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]" />
-                  <span>Deep cellular healing for dermal burns and frost-cracked skin</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]" />
-                  <span>Digestive balance, gastric mucosal repair, and spleen tonic</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* 13th Century Genghis Khan */}
-            <div className="bg-[var(--color-card)] border border-[var(--color-border)] p-6 sm:p-8 rounded-2xl relative group hover:border-[var(--color-primary)]/60 transition-all duration-300">
-              <div className="w-12 h-12 rounded-xl bg-[var(--color-secondary)] border border-[var(--color-border-gold)] flex items-center justify-center text-[var(--color-primary)] mb-5">
-                <Compass className="w-6 h-6" />
-              </div>
-              <div className="text-xs uppercase font-bold tracking-widest text-[var(--color-primary)] mb-1">
-                13th Century Mongol Empire
-              </div>
-              <h3 className="text-xl sm:text-2xl font-bold font-serif text-white mb-3">
-                Genghis Khan's Secret Cavalry Ration
-              </h3>
-              <p className="text-gray-400 text-xs sm:text-sm leading-relaxed mb-4">
-                During the 13th century, Sea Buckthorn played a decisive strategic role in the rapid expansion of the Mongol Empire. Genghis Khan famously ordered his commanders to supply cavalry troops and mounts with concentrated Sea Buckthorn rations.
-              </p>
-              <ul className="space-y-2 text-xs text-gray-300 border-t border-[var(--color-border)] pt-4">
-                <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]" />
-                  <span>Sustained agile military marches across sub-zero mountain steppes</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]" />
-                  <span>Rapid recovery from battle fatigue without relying on heavy supplies</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]" />
-                  <span>Immunity against harsh blizzards and scurvy on long campaigns</span>
-                </li>
-              </ul>
-            </div>
-
-          </div>
-        </section>
-
-        {/* Section 4: Modern Marvels (Space Race, Olympics, Everest) */}
-        <section className="mb-20 sm:mb-28 bg-gradient-to-b from-[var(--color-secondary)]/50 via-[var(--color-card)] to-[var(--color-secondary)]/50 border border-[var(--color-border-gold)] rounded-3xl p-6 sm:p-10 md:p-14 shadow-2xl">
           <div className="max-w-6xl mx-auto">
             <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14">
               <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-2 block">
-                20th & 21st Century Science
+                Section 2 • The Complete Fatty Acid Profile
               </span>
               <h2 className="text-2xl sm:text-4xl font-bold font-serif text-white mb-4">
-                Modern Marvels: Space and Sports
+                The Omega 3-6-7-9 Spectrum: Four Fatty Acids, One Extraordinary Fruit
               </h2>
               <div className="w-16 sm:w-20 h-1 bg-gold-gradient mx-auto mb-4" />
               <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed">
-                In the mid-20th century, scientific biochemical analysis elevated Sea Buckthorn from regional folk medicine into a rigorously tested super-botanical for human survival in extreme environments.
+                Seabuckthorn stands apart from ordinary fruits because of the natural fatty acids found in its seed and pulp oils. Its distinctive lipid composition includes two essential polyunsaturated fatty acids and two monounsaturated fatty acids.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-              
-              {/* Space Race */}
-              <div className="bg-[var(--color-card)] border border-[var(--color-border)] p-6 rounded-2xl relative flex flex-col">
-                <div className="w-10 h-10 rounded-xl bg-[var(--color-secondary)] border border-[var(--color-border-gold)] flex items-center justify-center text-[var(--color-primary)] mb-4">
-                  <Rocket className="w-5 h-5" />
+            {/* 4 Omega Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+              {omegas.map((omega) => (
+                <div 
+                  key={omega.symbol}
+                  className="bg-[var(--color-secondary)]/70 border border-[var(--color-border)] hover:border-[var(--color-primary)]/70 p-6 rounded-2xl flex flex-col transition-all duration-300"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-gold-gradient flex items-center justify-center text-black font-serif font-black text-xl shadow-md">
+                      {omega.symbol}
+                    </div>
+                    <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full bg-[var(--color-primary)]/15 border border-[var(--color-border-gold)] text-[var(--color-primary-light)]">
+                      {omega.badge}
+                    </span>
+                  </div>
+                  <h3 className="text-lg font-bold font-serif text-white mb-2">{omega.title}</h3>
+                  <p className="text-xs sm:text-sm text-gray-300 leading-relaxed mb-4 flex-1">
+                    {omega.description}
+                  </p>
+                  <div className="pt-3 border-t border-[var(--color-border)] text-xs font-semibold text-[var(--color-primary)]">
+                    {omega.role}
+                  </div>
                 </div>
-                <h4 className="text-lg font-bold font-serif text-white mb-2">The Russian Space Race</h4>
-                <p className="text-xs sm:text-sm text-gray-400 leading-relaxed mb-4">
-                  Soviet cosmonauts consumed concentrated Sea Buckthorn extracts aboard orbital space stations to protect their bodies from intense cosmic ionizing radiation and to prevent orbital frostbite.
-                </p>
-                <div className="mt-auto pt-3 border-t border-[var(--color-border)] text-[11px] text-[var(--color-primary-light)] font-medium">
-                  Later applied topically to soothe severe radiation burns during Chernobyl recovery.
-                </div>
-              </div>
-
-              {/* Olympic Endurance */}
-              <div className="bg-[var(--color-card)] border border-[var(--color-border)] p-6 rounded-2xl relative flex flex-col">
-                <div className="w-10 h-10 rounded-xl bg-[var(--color-secondary)] border border-[var(--color-border-gold)] flex items-center justify-center text-[var(--color-primary)] mb-4">
-                  <Award className="w-5 h-5" />
-                </div>
-                <h4 className="text-lg font-bold font-serif text-white mb-2">Olympic Athletic Stamina</h4>
-                <p className="text-xs sm:text-sm text-gray-400 leading-relaxed mb-4">
-                  Because of its unique ability to optimize blood oxygen carrying capacity and speed muscle glycogen replenishment, Sea Buckthorn was officially designated as the official sports beverage of the 1992 Olympic Games.
-                </p>
-                <div className="mt-auto pt-3 border-t border-[var(--color-border)] text-[11px] text-[var(--color-primary-light)] font-medium">
-                  Natural cellular stamina without synthetic stimulants or artificial chemicals.
-                </div>
-              </div>
-
-              {/* High Altitude Operations */}
-              <div className="bg-[var(--color-card)] border border-[var(--color-border)] p-6 rounded-2xl relative flex flex-col">
-                <div className="w-10 h-10 rounded-xl bg-[var(--color-secondary)] border border-[var(--color-border-gold)] flex items-center justify-center text-[var(--color-primary)] mb-4">
-                  <Mountain className="w-5 h-5" />
-                </div>
-                <h4 className="text-lg font-bold font-serif text-white mb-2">Mount Everest Operations</h4>
-                <p className="text-xs sm:text-sm text-gray-400 leading-relaxed mb-4">
-                  Modern mountaineers scaling Mount Everest and special mountain defense regiments rely on Sea Buckthorn pulp and seed oil softgels to preserve respiratory vitality and mental alertness at 20,000+ feet altitude.
-                </p>
-                <div className="mt-auto pt-3 border-t border-[var(--color-border)] text-[11px] text-[var(--color-primary-light)] font-medium">
-                  Combats extreme hypoxia, dry mucosal tissues, and freezing mountain winds.
-                </div>
-              </div>
-
+              ))}
             </div>
+
+            {/* Structured Table: Natural Omega Composition */}
+            <div className="bg-[var(--color-background)]/80 border border-[var(--color-border-gold)] rounded-2xl p-6 sm:p-8 mb-8 overflow-x-auto">
+              <h3 className="text-lg sm:text-xl font-bold font-serif text-white mb-2 flex items-center gap-2">
+                <FlaskConical className="w-5 h-5 text-[var(--color-primary)]" />
+                Understanding the Natural Omega Composition
+              </h3>
+              <p className="text-xs text-gray-400 mb-6">
+                The following ranges describe the typical fatty-acid composition of seabuckthorn oils reported in peer-reviewed scientific literature:
+              </p>
+
+              <table className="w-full text-left text-xs sm:text-sm border-collapse min-w-[500px]">
+                <thead>
+                  <tr className="border-b border-[var(--color-border-gold)] text-[var(--color-primary-light)] uppercase tracking-wider text-[11px]">
+                    <th className="py-3 px-4">Omega Fatty Acid</th>
+                    <th className="py-3 px-4">Scientific Name</th>
+                    <th className="py-3 px-4">Typical Seed Oil Profile</th>
+                    <th className="py-3 px-4">Typical Pulp Oil Profile</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[var(--color-border)] text-gray-300">
+                  <tr className="hover:bg-white/5 transition-colors">
+                    <td className="py-3.5 px-4 font-bold text-white">Omega-3</td>
+                    <td className="py-3.5 px-4">Alpha-Linolenic Acid (ALA)</td>
+                    <td className="py-3.5 px-4 font-semibold text-gold-gradient">25 – 30%</td>
+                    <td className="py-3.5 px-4 text-gray-400">Usually lower</td>
+                  </tr>
+                  <tr className="hover:bg-white/5 transition-colors">
+                    <td className="py-3.5 px-4 font-bold text-white">Omega-6</td>
+                    <td className="py-3.5 px-4">Linoleic Acid (LA)</td>
+                    <td className="py-3.5 px-4 font-semibold text-gold-gradient">35 – 40%</td>
+                    <td className="py-3.5 px-4 text-gray-400">Usually lower</td>
+                  </tr>
+                  <tr className="hover:bg-white/5 transition-colors">
+                    <td className="py-3.5 px-4 font-bold text-white">Omega-7</td>
+                    <td className="py-3.5 px-4">Palmitoleic Acid</td>
+                    <td className="py-3.5 px-4 text-gray-400">Trace amounts</td>
+                    <td className="py-3.5 px-4 font-semibold text-gold-gradient">30 – 40%</td>
+                  </tr>
+                  <tr className="hover:bg-white/5 transition-colors">
+                    <td className="py-3.5 px-4 font-bold text-white">Omega-9</td>
+                    <td className="py-3.5 px-4">Oleic Acid</td>
+                    <td className="py-3.5 px-4 font-semibold text-gold-gradient">~15 – 20%</td>
+                    <td className="py-3.5 px-4 text-gray-300">Variable</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <p className="text-[11px] text-gray-400 mt-4 italic border-t border-[var(--color-border)] pt-3">
+                * Illustrative percentages of total fatty acids, not percentages of the raw fruit or beverage. Actual composition naturally varies with cultivar, growing altitude, seasonal harvest conditions, and processing.
+              </p>
+            </div>
+
+            {/* Why This Matters for Your Juice Callout */}
+            <div className="p-5 sm:p-6 rounded-2xl bg-[var(--color-secondary)] border border-[var(--color-border-gold)]">
+              <h4 className="text-sm sm:text-base font-bold font-serif text-white mb-2 flex items-center gap-2">
+                <Droplets className="w-4 h-4 text-[var(--color-primary)]" />
+                Why This Matters for Your Juice
+              </h4>
+              <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                While ordinary filtered fruit juices often eliminate essential oils during industrial clarification, HIMROOTS WELLNESS carefully preserves natural berry pulp and botanical oils. Retaining this golden pulp ensures that the rich fatty-acid profile and active micronutrients remain part of your daily beverage.
+              </p>
+            </div>
+
           </div>
         </section>
 
-        {/* Section 5: Why Is It So Powerful? (The Botanical Breakdown) */}
+        {/* Section 3: Beyond Omegas: A Spectrum of Natural Nutrients */}
         <section className="mb-20 sm:mb-28">
           <div className="max-w-4xl mx-auto text-center mb-12 sm:mb-16">
             <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-2 block">
-              Biochemical Architecture
+              Section 3 • Comprehensive Micronutrients
             </span>
             <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold font-serif text-white mb-4">
-              Why Is It So Powerful?
+              Beyond Omegas: A Spectrum of Natural Nutrients
             </h2>
             <div className="w-16 sm:w-20 h-1 bg-gold-gradient mx-auto mb-5" />
             <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed">
-              To withstand extreme drought, sub-zero winters, glacial salt, and blistering ultraviolet radiation, the Sea Buckthorn shrub produces an extraordinary arsenal of defensive nutrients that translate directly to human wellness:
+              The nutritional story of seabuckthorn goes far beyond fatty acids. The berry contains a diverse spectrum of water-soluble and fat-soluble compounds that contribute to its vibrant colour, distinctive tart flavour, and exceptional nutritional character.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            
-            {/* Rare Omega-7 */}
-            <div className="bg-[var(--color-card)] border border-[var(--color-border)] p-6 sm:p-7 rounded-2xl flex flex-col hover:border-[var(--color-primary)]/70 transition-all duration-300">
-              <div className="w-12 h-12 rounded-xl bg-[var(--color-secondary)] border border-[var(--color-border-gold)] flex items-center justify-center text-[var(--color-primary)] mb-5">
-                <Zap className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold font-serif text-white mb-2">The Rare Omega-7</h3>
-              <div className="text-[11px] font-semibold text-[var(--color-primary)] uppercase tracking-wider mb-3">
-                Palmitoleic Acid
-              </div>
-              <p className="text-xs text-gray-400 leading-relaxed mb-4">
-                One of the only known botanical kingdoms to synthesize active Omega-7. Crucial for cellular membrane integrity, mucosal hydration (soothing dry eyes & gut lining), and stimulating healthy collagen dermal matrices.
-              </p>
-              <div className="mt-auto pt-3 border-t border-[var(--color-border)] text-[10px] text-gray-300 uppercase tracking-widest font-semibold">
-                Virtually absent in other plants
-              </div>
-            </div>
-
-            {/* Unmatched Vitamin C */}
-            <div className="bg-[var(--color-card)] border border-[var(--color-border)] p-6 sm:p-7 rounded-2xl flex flex-col hover:border-[var(--color-primary)]/70 transition-all duration-300">
-              <div className="w-12 h-12 rounded-xl bg-[var(--color-secondary)] border border-[var(--color-border-gold)] flex items-center justify-center text-[var(--color-primary)] mb-5">
-                <Sun className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold font-serif text-white mb-2">Unmatched Vitamin C</h3>
-              <div className="text-[11px] font-semibold text-[var(--color-primary)] uppercase tracking-wider mb-3">
-                Up to 100x vs Lemon
-              </div>
-              <p className="text-xs text-gray-400 leading-relaxed mb-4">
-                Gram for gram, freshly harvested Himalayan Sea Buckthorn berries deliver up to 100 times more natural Vitamin C than citrus lemons, accompanied by synergistic bioflavonoids that prevent oxidation and dramatically boost human bio-availability.
-              </p>
-              <div className="mt-auto pt-3 border-t border-[var(--color-border)] text-[10px] text-gray-300 uppercase tracking-widest font-semibold">
-                Superior natural absorption
-              </div>
-            </div>
-
-            {/* 190+ Bioactives */}
-            <div className="bg-[var(--color-card)] border border-[var(--color-border)] p-6 sm:p-7 rounded-2xl flex flex-col hover:border-[var(--color-primary)]/70 transition-all duration-300">
-              <div className="w-12 h-12 rounded-xl bg-[var(--color-secondary)] border border-[var(--color-border-gold)] flex items-center justify-center text-[var(--color-primary)] mb-5">
-                <Shield className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold font-serif text-white mb-2">190+ Bioactive Nutrients</h3>
-              <div className="text-[11px] font-semibold text-[var(--color-primary)] uppercase tracking-wider mb-3">
-                Full Omega Profile 3, 6, 9 & 7
-              </div>
-              <p className="text-xs text-gray-400 leading-relaxed mb-4">
-                Supplies Vitamins A, B1, B2, B6, E, and K alongside carotenoids (beta-carotene, lycopene), superoxide dismutase (SOD), quercetin, and 24 essential trace minerals necessary for optimal enzymatic function.
-              </p>
-              <div className="mt-auto pt-3 border-t border-[var(--color-border)] text-[10px] text-gray-300 uppercase tracking-widest font-semibold">
-                Complete botanical spectrum
-              </div>
-            </div>
-
-            {/* Ecological Healer */}
-            <div className="bg-[var(--color-card)] border border-[var(--color-border)] p-6 sm:p-7 rounded-2xl flex flex-col hover:border-[var(--color-primary)]/70 transition-all duration-300">
-              <div className="w-12 h-12 rounded-xl bg-[var(--color-secondary)] border border-[var(--color-border-gold)] flex items-center justify-center text-[var(--color-primary)] mb-5">
-                <Leaf className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold font-serif text-white mb-2">Ecological Healer</h3>
-              <div className="text-[11px] font-semibold text-[var(--color-primary)] uppercase tracking-wider mb-3">
-                Pioneer Nitrogen Fixer
-              </div>
-              <p className="text-xs text-gray-400 leading-relaxed mb-4">
-                As a recognized "pioneer plant," Sea Buckthorn actively reverses cold desertification. Its massive deep taproot system pulls atmospheric nitrogen and fixes it directly into rocky earth, enriching barren soil and preventing mountain mudslides.
-              </p>
-              <div className="mt-auto pt-3 border-t border-[var(--color-border)] text-[10px] text-gray-300 uppercase tracking-widest font-semibold">
-                Revitalizes fragile Himalayan soil
-              </div>
-            </div>
-
+            {nutrients.map((item) => {
+              const IconComponent = item.icon;
+              return (
+                <div 
+                  key={item.title}
+                  className="bg-[var(--color-card)] border border-[var(--color-border)] hover:border-[var(--color-primary)]/70 p-6 sm:p-7 rounded-2xl flex flex-col transition-all duration-300"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-[var(--color-secondary)] border border-[var(--color-border-gold)] flex items-center justify-center text-[var(--color-primary)] mb-5">
+                    <IconComponent className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-lg font-bold font-serif text-white mb-1">{item.title}</h3>
+                  <div className="text-[11px] font-semibold text-[var(--color-primary)] uppercase tracking-wider mb-3">
+                    {item.subtitle}
+                  </div>
+                  <p className="text-xs text-gray-300 leading-relaxed mb-4 flex-1">
+                    {item.description}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </section>
 
-        {/* Section 6: The Harvest: Earning the Golden Berry */}
-        <section className="mb-20 sm:mb-28">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center max-w-6xl mx-auto">
+        {/* Section 4: From the Himalayas, Inspired by Nature */}
+        <section className="mb-20 sm:mb-28 bg-[var(--color-card)] border border-[var(--color-border-gold)] rounded-3xl p-6 sm:p-10 md:p-14 shadow-2xl">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center max-w-6xl mx-auto">
             
+            <div className="lg:col-span-6">
+              <span className="text-[10px] uppercase font-bold tracking-[0.22em] text-[var(--color-primary)] block mb-2">
+                Section 4 • Himalayan Provenance
+              </span>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-white mb-5">
+                From the Himalayas, Inspired by Nature
+              </h2>
+              <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed mb-4">
+                High in the Himalayan mountains, where crisp thin air, intense ultraviolet solar exposure, and dramatic seasonal shifts shape the wilderness, seabuckthorn thrives as an emblem of enduring resilience.
+              </p>
+              <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed mb-4">
+                Its vivid orange berries possess an unforgettable character: bright, delightfully tangy, deeply aromatic, and unmistakably invigorating.
+              </p>
+              <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed mb-6">
+                HIMROOTS WELLNESS honors this extraordinary Himalayan gift by translating its pure botanical essence into a convenient, nutrient-dense daily drink. We celebrate ingredients in their authentic natural integrity.
+              </p>
+              
+              <div className="p-4 rounded-xl bg-[var(--color-secondary)] border border-[var(--color-border-gold)]">
+                <span className="text-sm font-serif font-bold text-gold-gradient block mb-1">
+                  The Spirit of the Himalayas, Captured in Every Bottle
+                </span>
+                <span className="text-xs text-gray-400">
+                  Ethically foraged from high mountain riverbeds and processed with care.
+                </span>
+              </div>
+            </div>
+
             <div className="lg:col-span-6">
               <div className="relative rounded-2xl overflow-hidden border-2 border-[var(--color-border-gold)] shadow-2xl group">
                 <img 
                   src="/images/sea-buckthorn-frost-harvest.jpg" 
-                  alt="Wild Sea Buckthorn thorny branches frozen in winter frost in Ladakh mountains" 
-                  className="w-full h-[320px] sm:h-[420px] object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
+                  alt="Wild Himalayan Sea Buckthorn Berries in Frost" 
+                  className="w-full h-[320px] sm:h-[400px] object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent p-5 sm:p-6">
-                  <div className="text-[10px] uppercase font-bold tracking-widest text-[var(--color-primary)]">The Winter Frost Harvest</div>
-                  <div className="text-base sm:text-lg font-serif font-bold text-white">Guarded by Thorns, Mastered by Frost</div>
-                  <p className="text-xs text-gray-300 mt-1">Harvesters tap frozen branches onto tarps without bursting berries</p>
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-5">
+                  <span className="text-[10px] uppercase font-bold tracking-widest text-[var(--color-primary)]">Himalayan Frost Terroir</span>
+                  <div className="text-base font-serif font-bold text-white">Thriving in Sub-Zero Peaks</div>
                 </div>
               </div>
             </div>
 
-            <div className="lg:col-span-6">
+          </div>
+        </section>
+
+        {/* Section 5: Our Botanical Wellness Blend */}
+        <section className="mb-20 sm:mb-28">
+          <div className="max-w-4xl mx-auto text-center mb-12 sm:mb-16">
+            <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-2 block">
+              Section 5 • Signature Formulation
+            </span>
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold font-serif text-white mb-4">
+              Our Botanical Wellness Blend
+            </h2>
+            <div className="w-16 sm:w-20 h-1 bg-gold-gradient mx-auto mb-5" />
+            <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed">
+              At HIMROOTS WELLNESS, we combine the distinctive character of raw Seabuckthorn with a thoughtfully curated synergy of classical Indian herbal botanicals. Our signature formulation unites six powerful plants:
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto mb-8">
+            {blendIngredients.map((item) => (
+              <div 
+                key={item.name}
+                className="bg-[var(--color-card)] border border-[var(--color-border)] hover:border-[var(--color-primary)]/70 p-6 rounded-2xl flex flex-col transition-all duration-300 relative group"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-2xl font-serif font-black text-gold-gradient">
+                    {item.percentage}
+                  </span>
+                  <Leaf className="w-4 h-4 text-[var(--color-primary)] opacity-70 group-hover:opacity-100 transition-opacity" />
+                </div>
+                <h3 className="text-lg font-bold font-serif text-white mb-0.5">{item.name}</h3>
+                <span className="text-[11px] italic text-[var(--color-primary)] mb-3 block">
+                  {item.botanical}
+                </span>
+                <p className="text-xs text-gray-300 leading-relaxed flex-1">
+                  {item.role}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Formulation & Regulatory Note */}
+          <div className="max-w-4xl mx-auto p-4 sm:p-5 rounded-2xl bg-[var(--color-secondary)]/60 border border-[var(--color-border-gold)]/60 text-xs text-gray-400 leading-relaxed flex items-start gap-3">
+            <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] flex-shrink-0 mt-0.5" />
+            <div>
+              <strong className="text-gray-200">Formulation & Transparency Standard:</strong> HIMROOTS WELLNESS formulations are crafted in strict accordance with FSSAI regulations, laboratory-verified for microbiological purity and safety, and formulated to deliver uncompromised botanical potency.
+            </div>
+          </div>
+        </section>
+
+        {/* Section 6: A Golden Addition to Your Daily Routine */}
+        <section className="mb-20 sm:mb-28 bg-[var(--color-card)] border border-[var(--color-border-gold)] rounded-3xl p-6 sm:p-10 md:p-14 shadow-2xl">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center max-w-6xl mx-auto">
+            
+            <div className="lg:col-span-6 order-2 lg:order-1">
+              <div className="relative rounded-2xl overflow-hidden border-2 border-[var(--color-border-gold)] shadow-2xl group">
+                <img 
+                  src="/images/pulp-serving-ritual.jpg" 
+                  alt="Daily Himalayan Seabuckthorn Serving Ritual" 
+                  className="w-full h-[320px] sm:h-[400px] object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-5">
+                  <span className="text-[10px] uppercase font-bold tracking-widest text-[var(--color-primary)]">The Daily Ritual</span>
+                  <div className="text-base font-serif font-bold text-white">Pure Mountain Vitality in Every Sip</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:col-span-6 order-1 lg:order-2">
               <span className="text-[10px] uppercase font-bold tracking-[0.22em] text-[var(--color-primary)] block mb-2">
-                Handcrafted Himalayan Foraging
+                Section 6 • Daily Ritual
               </span>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-white mb-5">
-                The Harvest: Earning the Golden Berry
+                A Golden Addition to Your Daily Routine
               </h2>
-              <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed mb-4">
-                The very same environmental defenses that allow Sea Buckthorn to thrive in extreme sub-zero weather make harvesting the fruit notoriously difficult. The shrubs are armed with sharp, needle-like thorns, and the delicate, juice-filled berries grow in tight clusters directly against wood bark.
-              </p>
               <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed mb-6">
-                Because fresh berries burst easily if plucked by fingers, Himalayan foragers and artisanal cultivators utilize two ancient, high-skill harvesting methods:
+                Make room for a revitalizing moment of Himalayan nourishment. The vibrant, tangy flavour of Seabuckthorn makes it a thrilling addition to your morning routine or an invigorating boost throughout the day.
               </p>
 
-              <div className="space-y-4 text-xs sm:text-sm">
-                <div className="p-4 rounded-xl bg-[var(--color-card)] border border-[var(--color-border)]">
-                  <div className="flex items-center gap-2 font-bold text-white mb-1.5 font-serif text-sm">
-                    <Snowflake className="w-4 h-4 text-[var(--color-primary)]" />
-                    <span>1. The Winter Shake</span>
+              <div className="space-y-4">
+                <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-[var(--color-secondary)] border border-[var(--color-border)]">
+                  <Wine className="w-5 h-5 text-[var(--color-primary)] flex-shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-white text-xs sm:text-sm block mb-0.5">1. Serve Chilled or Diluted</strong>
+                    <p className="text-gray-300 text-xs">
+                      Dilute 20–30ml of pure pulp in a glass of water, coconut water, or fresh fruit juice according to your taste.
+                    </p>
                   </div>
-                  <p className="text-gray-400 text-xs leading-relaxed">
-                    Harvesters wait until the first severe Himalayan winter freezes. Once the berries freeze solid on the branch, foragers sharply tap the thorny boughs, allowing thousands of intact, flash-frozen golden berries to drop cleanly onto clean linen tarps below.
-                  </p>
                 </div>
 
-                <div className="p-4 rounded-xl bg-[var(--color-card)] border border-[var(--color-border)]">
-                  <div className="flex items-center gap-2 font-bold text-white mb-1.5 font-serif text-sm">
-                    <Sparkles className="w-4 h-4 text-[var(--color-primary)]" />
-                    <span>2. The Prune and Freeze</span>
+                <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-[var(--color-secondary)] border border-[var(--color-border)]">
+                  <Droplets className="w-5 h-5 text-[var(--color-primary)] flex-shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-white text-xs sm:text-sm block mb-0.5">2. Shake Well Before Every Use</strong>
+                    <p className="text-gray-300 text-xs">
+                      Because pure botanical oils and raw pulp naturally separate, shake vigorously to redistribute the golden omegas.
+                    </p>
                   </div>
-                  <p className="text-gray-400 text-xs leading-relaxed">
-                    Carefully pruning small fruiting branch tips preserves the health of the mother bush. The branches are immediately flash-frozen at sub-zero temperatures and mechanically vibrated, releasing perfectly intact berries with zero juice degradation.
-                  </p>
+                </div>
+
+                <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-[var(--color-secondary)] border border-[var(--color-border)]">
+                  <Clock className="w-5 h-5 text-[var(--color-primary)] flex-shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-white text-xs sm:text-sm block mb-0.5">3. Optimal Morning Timing</strong>
+                    <p className="text-gray-300 text-xs">
+                      Best consumed in the morning on an empty stomach or 20 minutes before meals for maximum nutrient bio-availability.
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -447,17 +569,67 @@ export default function SeaBuckthorn() {
           </div>
         </section>
 
-        {/* Section 7: Experience Himroots Formulations (Product Hyperlinks) */}
+        {/* Section 7: Frequently Asked Questions */}
+        <section className="mb-20 sm:mb-28 max-w-4xl mx-auto">
+          <div className="text-center mb-12 sm:mb-16">
+            <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-2 block">
+              Section 7 • Clarifying Questions
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-bold font-serif text-white mb-4 flex items-center justify-center gap-2.5">
+              <HelpCircle className="w-7 h-7 text-[var(--color-primary)]" />
+              Frequently Asked Questions
+            </h2>
+            <div className="w-16 sm:w-20 h-1 bg-gold-gradient mx-auto mb-4" />
+            <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed">
+              Explore scientific clarifications and practical insights on Himalayan Seabuckthorn Juice.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {faqs.map((faq, index) => {
+              const isOpen = openFaq === index;
+              return (
+                <div 
+                  key={faq.question}
+                  className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[var(--color-primary)]/50"
+                >
+                  <button
+                    onClick={() => toggleFaq(index)}
+                    className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 focus:outline-none"
+                    aria-expanded={isOpen}
+                  >
+                    <span className="font-serif font-bold text-white text-sm sm:text-base md:text-lg">
+                      {faq.question}
+                    </span>
+                    <ChevronDown 
+                      className={`w-5 h-5 text-[var(--color-primary)] flex-shrink-0 transition-transform duration-300 ${
+                        isOpen ? "transform rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {isOpen && (
+                    <div className="px-5 sm:px-6 pb-6 pt-1 text-xs sm:text-sm text-gray-300 leading-relaxed border-t border-[var(--color-border)]/50">
+                      {faq.answer}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Section 8: Experience HIMROOTS WELLNESS (CTA & Products) */}
         <section className="bg-[var(--color-card)] border border-[var(--color-border-gold)] rounded-3xl p-8 sm:p-12 md:p-16 max-w-5xl mx-auto shadow-2xl text-center">
           <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-2 block">
-            Pure Trans-Himalayan Purity
+            Section 8 • Experience Himroots
           </span>
           <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold font-serif text-white mb-4">
-            Experience Wild Himalayan Sea Buckthorn
+            Nature's Golden Goodness, Bottled for You
           </h2>
           <div className="w-20 h-1 bg-gold-gradient mx-auto mb-6" />
           <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed max-w-2xl mx-auto mb-10">
-            Himroots captures this ancient high-altitude vitality in two unadulterated formulations: raw 500ml unrefined daily drink pulp, and concentrated cold-pressed softgel capsules.
+            From the extraordinary nutritional diversity of wild Seabuckthorn to the rich heritage of Indian botanicals, HIMROOTS WELLNESS brings together nature-inspired ingredients in a distinctive beverage experience.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-3xl mx-auto mb-10 text-left">
@@ -471,7 +643,7 @@ export default function SeaBuckthorn() {
                   className="w-16 h-16 rounded-xl object-cover border border-[var(--color-border-gold)]"
                 />
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-[var(--color-primary)] block">Liquid Botanical Elixir</span>
+                  <span className="text-[10px] uppercase font-bold text-[var(--color-primary)] block">Signature Elixir</span>
                   <h4 className="text-base font-bold text-white font-serif">{pulpProduct.name}</h4>
                   <span className="text-xs text-gold-gradient font-black">₹{pulpProduct.price}</span>
                 </div>
@@ -481,7 +653,7 @@ export default function SeaBuckthorn() {
               </p>
               <Button asChild size="sm" className="w-full bg-gold-gradient text-black font-bold uppercase text-xs tracking-wider">
                 <Link to={`/products/${pulpProduct.slug}`}>
-                  Explore Pure Pulp <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+                  Explore Pure Juice <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
                 </Link>
               </Button>
             </div>
@@ -501,11 +673,11 @@ export default function SeaBuckthorn() {
                 </div>
               </div>
               <p className="text-xs text-gray-300 mb-6 flex-1">
-                Pure seed and berry oil providing the highest natural concentration of Omega-7 for dry eye relief, deep cellular hydration, and skin glow.
+                Pure seed and pulp oil providing the highest natural concentration of Omega-7 for dry eye relief, cellular hydration, and skin radiance.
               </p>
               <Button asChild size="sm" className="w-full bg-gold-gradient text-black font-bold uppercase text-xs tracking-wider">
                 <Link to={`/products/${capsuleProduct.slug}`}>
-                  Explore Capsules <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+                  Explore Softgels <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
                 </Link>
               </Button>
             </div>
@@ -514,10 +686,10 @@ export default function SeaBuckthorn() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button asChild size="lg" className="w-full sm:w-auto uppercase tracking-widest text-xs font-bold bg-gold-gradient text-black px-8 py-4 sm:py-5">
-              <Link to="/shop">View Complete Shop Collection</Link>
+              <Link to="/shop">Explore Our Seabuckthorn Juice</Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="w-full sm:w-auto uppercase tracking-widest text-xs font-bold border-[var(--color-border-gold)] hover:bg-[var(--color-primary)]/10 text-white px-8 py-4 sm:py-5">
-              <Link to="/about">Our Himalayan Roots Story</Link>
+              <Link to="/about">Our Himalayan Story</Link>
             </Button>
           </div>
         </section>
