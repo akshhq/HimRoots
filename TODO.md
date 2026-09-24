@@ -1,79 +1,77 @@
-# Himroots Wellness — Setup & Deployment TODO
+# Himroots Wellness — Setup & Deployment Roadmap
 
 ---
 
-## ✅ Completed
+## ✅ Completed Architecture & Production Readiness
 
-- [x] Frontend (catalog, cart, checkout, order success, contact form, SPA routing)
-- [x] Backend API (products, orders, payments, contact, health check)
-- [x] Database schema, seed data, RLS policies, indexes
-- [x] Razorpay payment flow with server-side signature verification
-- [x] Transactional email (Resend / Brevo) with payment-email decoupling
-- [x] Apache `.htaccess` SPA routing for `/public_html/` deployments
-- [x] Automated test suites (12/12 passing)
+- [x] **Frontend Core**: React 19 + Vite 8 SPA with responsive luxury aesthetics and Tailwind CSS v4
+- [x] **Client Routing**: HTML5 pushState `BrowserRouter` with `.htaccess` rewrite rules in `public/`
+- [x] **API Base URL Support**: Centralized `src/lib/api.ts` wired to `Checkout.tsx`, `Contact.tsx`, and `OrderSuccess.tsx` supporting `VITE_API_BASE_URL`
+- [x] **Dynamic Catalog Preparation**: `Shop.tsx`, `ProductDetails.tsx`, and `Home.tsx` wired to query Supabase with graceful fallback to static product catalog
+- [x] **Backend API**: Express 5 on Node.js with price recalculation, order creation, HMAC signature verification, health checks, and sanitized error handling
+- [x] **Database Schema**: Supabase PostgreSQL DDL (`supabase/schema.sql`) for products, orders, order items, and contact inquiries with RLS and automated `HM-YYYYMMDD-XXXX` order numbers
+- [x] **Production Server Readiness**: `tsx` moved to runtime dependencies in `package.json` with universal `npm start` command
+- [x] **Security Hardening**: Disabled test simulation fallback in production, CORS origin configurability, and Row Level Security on all Supabase tables
+- [x] **Environment Separation**: Cleaned `.env.example` with strict segregation of public `VITE_` variables vs private server secrets
+- [x] **Documentation**: Created [PRODUCTION_AUDIT.md](PRODUCTION_AUDIT.md) and [PRODUCTION_SETUP.md](PRODUCTION_SETUP.md)
 
 ---
 
-## 📋 Client Setup Required
+## 📋 Client Setup Required (One-Time)
 
-### A. Supabase
+### A. Supabase PostgreSQL
+1. Create project at [supabase.com](https://supabase.com) in region **Mumbai (ap-south-1)**.
+2. In SQL Editor, run [`supabase/schema.sql`](supabase/schema.sql).
+3. In SQL Editor, run [`supabase/seed.sql`](supabase/seed.sql).
+4. Retrieve from **Project Settings > API**:
+   - `SUPABASE_URL` / `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY` (keep private)
 
-1. Create project at [supabase.com](https://supabase.com) → region **Mumbai (ap-south-1)**
-2. Run [`supabase/schema.sql`](supabase/schema.sql) in SQL Editor
-3. Run [`supabase/seed.sql`](supabase/seed.sql) in SQL Editor
-4. Copy from **Project Settings > API**:
-   - Project URL → `SUPABASE_URL` / `VITE_SUPABASE_URL`
-   - Anon key → `VITE_SUPABASE_ANON_KEY`
-   - Service role key → `SUPABASE_SERVICE_ROLE_KEY`
+### B. Razorpay Live Gateway
+1. Complete KYC at [razorpay.com](https://razorpay.com).
+2. Generate Live API Keys from **Settings > API Keys**:
+   - `RAZORPAY_KEY_ID` / `VITE_RAZORPAY_KEY_ID`
+   - `RAZORPAY_KEY_SECRET` (server only)
+3. Ensure UPI, Cards, and NetBanking are active.
+4. Optional: Configure Webhook URL (`https://api.himroots.in/api/webhooks/razorpay`) with `payment.captured`.
 
-### B. Razorpay
-
-1. Create account at [razorpay.com](https://razorpay.com), complete KYC
-2. Generate API keys from **Settings > API Keys**
-   - Key ID → `RAZORPAY_KEY_ID` / `VITE_RAZORPAY_KEY_ID`
-   - Key Secret → `RAZORPAY_KEY_SECRET` (server only)
-3. Enable UPI, Cards, and NetBanking under **Payment Methods**
-
-### C. Email Provider (Resend or Brevo)
-
-1. Sign up at [resend.com](https://resend.com)
-2. Add sending domain (e.g. `himroots.com`)
-3. Generate API key → `EMAIL_API_KEY` / `RESEND_API_KEY`
-4. Set `EMAIL_FROM`, `CLIENT_ORDER_EMAIL`, `CLIENT_SUPPORT_EMAIL`
-
-### D. DNS Verification
-
-1. Add DKIM, SPF, DMARC records at your domain registrar
-2. Verify domain status in email provider dashboard
+### C. Transactional Email (Resend or Brevo)
+1. Sign up at [resend.com](https://resend.com).
+2. Add and verify your custom domain (DKIM, SPF, DMARC DNS records).
+3. Generate API Key → `EMAIL_API_KEY`.
+4. Configure `EMAIL_FROM`, `CLIENT_ORDER_EMAIL`, `CLIENT_SUPPORT_EMAIL`.
 
 ---
 
 ## 🛠️ Developer Setup Required
 
-1. Set all production env vars on hosting platform (use `.env.example` as template)
-2. Restrict CORS origins in `server/index.ts` to production domains
-3. Configure backend process manager (PM2 / container / serverless)
-4. Upload `.htaccess` from `dist/` to `/public_html/` (enable "Show Hidden Files" in FTP/cPanel)
-5. Ensure HTTPS is active (required by Razorpay)
+1. Populate production environment variables on backend host (use `.env.example` as guide).
+2. Set `VITE_API_BASE_URL` in `.env.production` if API is hosted on a separate subdomain (`https://api.himroots.in`).
+3. Run `npm run build` to generate `dist/`.
+4. Upload all files from `dist/` (including `.htaccess`) to `/public_html/`.
+5. Deploy backend service using `npm start` (with PM2, Docker, or Render/Railway).
+6. Verify HTTPS SSL certificate is active on both frontend and backend.
 
 ---
 
-## 🧪 Production Testing Checklist
+## 🧪 Production Verification Checklist
 
-- [ ] Test transaction with Razorpay test keys (card `4111 1111 1111 1111`)
-- [ ] Verify order appears in Supabase with `payment_status = 'paid'`
-- [ ] Verify client receives order email, customer receives confirmation
-- [ ] Test contact form → check `contact_inquiries` table + support email
-- [ ] Live ₹1 transaction with real Razorpay keys → verify → test refund
+- [ ] Verify `https://himroots.in/shop` displays formulations with live/fallback prices
+- [ ] Test direct navigation to `https://himroots.in/cart` (verify no 404)
+- [ ] Verify `GET /api/health` returns `status: ok`
+- [ ] Execute test transaction with live or test keys
+- [ ] Verify order record appears in Supabase with `payment_status = 'paid'`
+- [ ] Verify client notification email arrives at `CLIENT_ORDER_EMAIL`
+- [ ] Verify customer receipt arrives at customer email address
+- [ ] Verify contact form inquiry is saved to `contact_inquiries` table
 
 ---
 
-## 🔮 Future (Out of Scope)
+## 🔮 Future Enhancements (Post-Launch)
 
-- [ ] Courier API (Shiprocket / Delhivery)
-- [ ] Delivery tracking page
-- [ ] Automated returns & refunds
-- [ ] Customer accounts & login
-- [ ] Admin dashboard
-- [ ] Inventory management
-- [ ] CRM & marketing automation
+- [ ] Courier API integration (Shiprocket / Delhivery)
+- [ ] Dedicated customer order tracking page
+- [ ] Customer account authentication & order history
+- [ ] Custom administrative management portal
+- [ ] SMS / WhatsApp order status notifications

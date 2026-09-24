@@ -1,18 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Search, Filter, Check, ShoppingBag, ShieldCheck, Truck, Sparkles, ArrowRight } from "lucide-react";
-import { products } from "@/data/products";
+import { products as fallbackProducts, type Product } from "@/data/products";
+import { getStoreProducts } from "@/lib/supabase";
 import { Button } from "@/components/ui/Button";
 import { useCartStore } from "@/store/cartStore";
 
 export default function Shop() {
+  const [productList, setProductList] = useState<Product[]>(fallbackProducts);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
   const { addItem } = useCartStore();
 
-  const categories = ["All", ...Array.from(new Set(products.map(p => p.category)))];
+  useEffect(() => {
+    getStoreProducts()
+      .then((items) => {
+        if (items && items.length > 0) setProductList(items);
+      })
+      .catch(() => setProductList(fallbackProducts));
+  }, []);
 
-  const filteredProducts = products.filter(product => {
+  const categories = ["All", ...Array.from(new Set(productList.map(p => p.category)))];
+
+  const filteredProducts = productList.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = activeCategory === "All" || product.category === activeCategory;
     return matchesSearch && matchesCategory;

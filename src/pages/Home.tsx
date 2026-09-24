@@ -1,8 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Shield, Heart, Sparkles, Check, Sun, Zap, Mountain, Compass } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { products } from "@/data/products";
+import { products, type Product } from "@/data/products";
+import { getStoreProducts } from "@/lib/supabase";
 import { useCartStore } from "@/store/cartStore";
 import { useLogoStore } from "@/store/logoStore";
 import { BrandLogo } from "@/components/ui/BrandLogo";
@@ -12,8 +13,18 @@ export default function Home() {
   const setIsHeroLogoVisible = useLogoStore((state) => state.setIsHeroLogoVisible);
   const heroLogoRef = useRef<HTMLDivElement>(null);
 
-  const pulpProduct = products[0];
-  const capsuleProduct = products[1];
+  const [storeProducts, setStoreProducts] = useState<Product[]>(products);
+
+  useEffect(() => {
+    getStoreProducts()
+      .then((items) => {
+        if (items && items.length > 0) setStoreProducts(items);
+      })
+      .catch(() => setStoreProducts(products));
+  }, []);
+
+  const pulpProduct = storeProducts[0] || products[0];
+  const capsuleProduct = storeProducts[1] || products[1];
 
   // Observer to manage single-logo visibility between hero and navbar
   useEffect(() => {

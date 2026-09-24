@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCartStore } from "@/store/cartStore";
 import { Button } from "@/components/ui/Button";
 import { loadRazorpayScript, type RazorpayOptions, type RazorpaySuccessResponse } from "@/lib/razorpay";
+import { apiUrl } from "@/lib/api";
 import { ArrowLeft, Lock, ShieldCheck, AlertCircle, Info, CheckCircle2 } from "lucide-react";
 
 export default function Checkout() {
@@ -96,7 +97,7 @@ export default function Checkout() {
         },
       };
 
-      const createResponse = await fetch("/api/orders/create", {
+      const createResponse = await fetch(apiUrl("/api/orders/create"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderPayload),
@@ -138,7 +139,7 @@ export default function Checkout() {
           handler: async function (response: RazorpaySuccessResponse) {
             try {
               // 3. Backend verifies HMAC SHA256 signature
-              const verifyRes = await fetch("/api/orders/verify", {
+              const verifyRes = await fetch(apiUrl("/api/orders/verify"), {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -197,11 +198,18 @@ export default function Checkout() {
         return;
       }
 
-      // 3. Fallback / Test Simulation Mode (when local dev runs without live Razorpay API keys)
-      // Simulates real gateway callback to /api/orders/verify to validate backend integration end-to-end
+      // If we are in production, never allow simulated payments
+      if (!import.meta.env.DEV) {
+        setIsProcessing(false);
+        setErrorMessage("Payment gateway is currently unavailable. Please verify your connection or try again shortly.");
+        return;
+      }
+
+      // 3. Fallback / Test Simulation Mode (ONLY in local development when running without live Razorpay API keys)
+      // Simulates gateway callback to /api/orders/verify to validate local development flow
       const mockPaymentId = `pay_sim_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 7)}`;
       
-      const verifyRes = await fetch("/api/orders/verify", {
+      const verifyRes = await fetch(apiUrl("/api/orders/verify"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

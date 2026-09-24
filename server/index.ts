@@ -9,10 +9,15 @@ import { errorHandler } from './middleware/errorHandler';
 const app = express();
 
 // Middleware
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',').map(s => s.trim())
+  : '*';
+
 app.use(cors({
-  origin: '*', // Allow frontend dev server and production domains
+  origin: allowedOrigins,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 }));
 
 app.use(express.json({ limit: '1mb' }));

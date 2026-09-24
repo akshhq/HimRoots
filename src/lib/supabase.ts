@@ -17,7 +17,23 @@ export const supabase = isSupabaseConfigured
   ? createClient<Database>(supabaseUrl, supabaseAnonKey)
   : null;
 
+/**
+ * Resolves product image paths supporting relative local paths (/images/...),
+ * full CDN URLs, or Supabase Storage public bucket files ('products/xyz.webp').
+ */
+export function getProductImageUrl(imagePath: string): string {
+  if (!imagePath) return '/images/himroots-harvest-berries.jpg';
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://') || imagePath.startsWith('/')) {
+    return imagePath;
+  }
+  if (supabaseUrl) {
+    return `${supabaseUrl.replace(/\/+$/, '')}/storage/v1/object/public/products/${imagePath}`;
+  }
+  return `/images/${imagePath}`;
+}
+
 function mapProductRowToProduct(row: ProductRow): Product {
+  const rawImages = row.images && row.images.length > 0 ? row.images : ['/images/himroots-harvest-berries.jpg'];
   return {
     id: row.id,
     name: row.name,
@@ -28,7 +44,7 @@ function mapProductRowToProduct(row: ProductRow): Product {
     price: Number(row.price),
     originalPrice: row.original_price ? Number(row.original_price) : undefined,
     volume: row.volume || '',
-    images: row.images && row.images.length > 0 ? row.images : ['/images/himroots-harvest-berries.jpg'],
+    images: rawImages.map(getProductImageUrl),
     category: row.category,
     ingredients: row.ingredients || [],
     detailedIngredients: (row.detailed_ingredients as any) || [],

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Mail, Phone, MapPin, Clock, Send, CheckCircle2, MessageSquare, AlertCircle, HelpCircle } from "lucide-react";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { Button } from "@/components/ui/Button";
+import { apiUrl } from "@/lib/api";
 
 const CATEGORIES = [
   "Order Support",
@@ -49,7 +50,7 @@ export default function Contact() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch(apiUrl("/api/contact"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

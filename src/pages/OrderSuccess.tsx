@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/Button";
 import { CheckCircle2, ArrowRight, ShieldCheck, Mail, ShoppingBag, HelpCircle } from "lucide-react";
+import { apiUrl } from "@/lib/api";
 
 interface OrderSuccessState {
   orderId?: string;
@@ -51,7 +52,7 @@ export default function OrderSuccess() {
     const identifier = searchParams.get("orderNumber") || searchParams.get("orderId");
 
     if (identifier) {
-      fetch(`/api/orders/${encodeURIComponent(identifier)}`)
+      fetch(apiUrl(`/api/orders/${encodeURIComponent(identifier)}`))
         .then((res) => (res.ok ? res.json() : null))
         .then((data) => {
           if (data && data.success && data.order) {

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { getProductBySlug } from "@/data/products";
+import { getProductBySlug as getFallbackProductBySlug, type Product } from "@/data/products";
+import { getStoreProductBySlug } from "@/lib/supabase";
 import { useCartStore } from "@/store/cartStore";
 import { Button } from "@/components/ui/Button";
 import { Star, ShieldCheck, Truck, Package, ArrowLeft, CheckCircle2, Sparkles, ArrowRight } from "lucide-react";
@@ -8,8 +9,16 @@ import { Star, ShieldCheck, Truck, Package, ArrowLeft, CheckCircle2, Sparkles, A
 export default function ProductDetails() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const product = getProductBySlug(slug || "");
+  const [product, setProduct] = useState<Product | undefined>(() => getFallbackProductBySlug(slug || ""));
   const { addItem } = useCartStore();
+
+  useEffect(() => {
+    if (slug) {
+      getStoreProductBySlug(slug).then((liveProduct) => {
+        if (liveProduct) setProduct(liveProduct);
+      });
+    }
+  }, [slug]);
   
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);

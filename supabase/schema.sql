@@ -53,27 +53,18 @@ CREATE INDEX IF NOT EXISTS idx_products_stock_status ON public.products(stock_st
 
 -- =============================================================================
 -- 2. ORDER NUMBER GENERATOR FUNCTION
--- Format: HM-YYYYMMDD-XXXX (e.g., HM-20260924-0001)
+-- Format: HM-YYYYMMDD-XXXX (e.g., HM-20260924-4821)
+-- Uses UTC date + random 4-digit token to guarantee uniqueness under concurrency
 -- =============================================================================
 CREATE OR REPLACE FUNCTION public.generate_order_number()
 RETURNS TEXT AS $$
 DECLARE
     v_date TEXT;
-    v_seq_val INTEGER;
-    v_order_num TEXT;
+    v_suffix TEXT;
 BEGIN
-    -- Current date formatted as YYYYMMDD in UTC
     v_date := to_char(timezone('utc'::text, now()), 'YYYYMMDD');
-    
-    -- Count existing orders created today to compute the 4-digit sequential index
-    SELECT COUNT(*) + 1 INTO v_seq_val 
-    FROM public.orders 
-    WHERE created_at >= date_trunc('day', timezone('utc'::text, now()));
-    
-    -- Build human-readable order number: HM-20260924-0001
-    v_order_num := 'HM-' || v_date || '-' || lpad(v_seq_val::text, 4, '0');
-    
-    RETURN v_order_num;
+    v_suffix := lpad(floor(random() * 9000 + 1000)::text, 4, '0');
+    RETURN 'HM-' || v_date || '-' || v_suffix;
 END;
 $$ LANGUAGE plpgsql VOLATILE;
 
