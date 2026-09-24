@@ -236,8 +236,8 @@ export async function persistOrderToDatabase(
           discount: calculated.discount,
           total: calculated.total,
           payment_status: 'pending',
-          order_status: 'received',
-          razorpay_order_id: razorpayOrderId,
+          order_status: 'pending',
+          razorpay_order_id: razorpayOrderId || null,
           notes: notes || null,
         })
         .select('id, order_number')
@@ -279,8 +279,8 @@ export async function persistOrderToDatabase(
         discount: calculated.discount,
         total: calculated.total,
         paymentStatus: 'pending',
-        orderStatus: 'received',
-        razorpayOrderId,
+        orderStatus: 'pending',
+        razorpayOrderId: razorpayOrderId || undefined,
         emailStatus: 'pending',
         emailError: null,
         createdAt: new Date().toISOString(),
@@ -311,8 +311,8 @@ export async function persistOrderToDatabase(
     discount: calculated.discount,
     total: calculated.total,
     paymentStatus: 'pending',
-    orderStatus: 'received',
-    razorpayOrderId,
+    orderStatus: 'pending',
+    razorpayOrderId: razorpayOrderId || undefined,
     emailStatus: 'pending',
     emailError: null,
     createdAt: new Date().toISOString(),
@@ -640,7 +640,17 @@ export async function verifyPaymentSignature(
   }
 
   // 4. Test mode / local development verification
-  // Allows testing invalid signature handling explicitly
+  // SECURITY: This bypass is strictly disabled in production.
+  // In production, all payment verification MUST use the real Razorpay HMAC signature check above.
+  if (config.nodeEnv === 'production') {
+    return {
+      isValid: false,
+      isDuplicate: false,
+      errorMessage: 'Payment verification failed: live Razorpay credentials are required in production.',
+    };
+  }
+
+  // Allows testing invalid signature handling explicitly (development only)
   if (razorpaySignature === 'invalid_signature_test' || razorpayPaymentId.includes('invalid_test')) {
     return {
       isValid: false,
@@ -649,7 +659,10 @@ export async function verifyPaymentSignature(
     };
   }
 
-  if (razorpayPaymentId.startsWith('pay_') || razorpayPaymentId.startsWith('test_')) {
+  // Development-only: accept simulated payment IDs for local testing without live credentials
+  if (razorpayPaymentId.startsWith('pay_') || razorpayPaymentId.startsWith('pay_sim_') || razorpayPaymentId.startsWith('test_')) {
+    console.warn(`⚠️  [DEV] Accepting simulated payment ID '${razorpayPaymentId}' — this bypass is DISABLED in production.`);
+
     if (supabaseAdmin) {
       await (supabaseAdmin as any)
         .from('orders')
@@ -688,6 +701,53 @@ export async function verifyPaymentSignature(
     isValid: false,
     isDuplicate: false,
     errorMessage: 'Payment ID format unrecognized for verification',
+  };
+}
+
+/**
+ * High-level service function to calculate and create an order in Supabase
+ * Strictly computes amounts on server, generates Razorpay order, and sets status to pending
+ */
+export async function executeCreateOrder(payload: CreateOrderRequest) {
+  // 1. Calculate amounts authentically from database-backed prices
+  const calculated = await calculateOrderAmounts(payload.items);
+
+  // 2. Prepare/create Razorpay order (amount in paise, receipt = order number)
+  const razorpayOrder = await createRazorpayOrder(
+    calculated.total,
+    calculated.orderNumber,
+    payload.customer
+  );
+
+  // 3. Persist order and line items to database with razorpay_order_id
+  const { orderId, orderNumber } = await persistOrderToDatabase(
+    calculated,
+    payload.customer,
+    payload.shipping,
+    razorpayOrder.id,
+    payload.notes
+  );
+
+  return {
+    id: orderId,
+    orderNumber,
+    subtotal: calculated.subtotal,
+    shippingFee: calculated.shippingFee,
+    discount: calculated.discount,
+    total: calculated.total,
+    paymentStatus: 'pending',
+    orderStatus: 'pending',
+    items: calculated.lineItems,
+    customer: payload.customer,
+    shipping: payload.shipping,
+    createdAt: new Date().toISOString(),
+    razorpay: {
+      orderId: razorpayOrder.id,
+      keyId: config.razorpay.keyId || 'rzp_test_mock_key',
+      amount: razorpayOrder.amount, // in paise
+      currency: razorpayOrder.currency,
+      isConfigured: isRazorpayConfigured,
+    },
   };
 }
 

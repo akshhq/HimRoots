@@ -10,8 +10,9 @@ export default function Checkout() {
   const navigate = useNavigate();
   const { items, getTotals, clearCart } = useCartStore();
   const { subtotal } = getTotals();
-  
-  // Shipping calculation matching backend policy: Free above ₹2000, else ₹150
+
+  // Client-side visual estimation matching backend policy: Free above ₹2000, else ₹150
+  // Note: Backend calculates and enforces authentic amounts upon order creation.
   const shipping = subtotal > 2000 ? 0 : 150;
   const total = subtotal + (items.length > 0 ? shipping : 0);
 
@@ -32,7 +33,7 @@ export default function Checkout() {
   });
 
   useEffect(() => {
-    // Only redirect to cart if user arrived with an empty cart, not when cart is cleared upon payment completion
+    // Only redirect to cart if user arrived with an empty cart, not when cart is cleared upon order placement
     if (items.length === 0 && !isOrderCompletedRef.current) {
       navigate("/cart");
     }
@@ -44,48 +45,62 @@ export default function Checkout() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   /**
    * Process Checkout & Launch Razorpay Gateway
+   * Backend authenticates data and calculates prices; frontend never trusts client amounts
    */
   const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
     setInfoMessage(null);
 
-    // Basic frontend field validation
+    // 1. Client-side input validation
     if (!formData.firstName.trim() || !formData.lastName.trim()) {
-      setErrorMessage("Please enter your complete first and last name.");
+      setErrorMessage("Please enter both your first and last name.");
       return;
     }
-    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
-      setErrorMessage("Please provide a valid email address for order confirmation.");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email.trim() || !emailRegex.test(formData.email.trim())) {
+      setErrorMessage("Please provide a valid email address for order notifications.");
       return;
     }
-    const cleanPhone = formData.phone.replace(/[\s-]/g, "");
+    const cleanPhone = formData.phone.replace(/[\s\-\(\)\+]/g, "");
     if (!cleanPhone || cleanPhone.length < 8) {
-      setErrorMessage("Please provide a valid contact phone number.");
+      setErrorMessage("Please provide a valid contact phone number (at least 8 digits).");
       return;
     }
-    if (!formData.address.trim() || !formData.city.trim() || !formData.state.trim() || !formData.pincode.trim()) {
-      setErrorMessage("Please complete all required shipping address fields.");
+    if (
+      !formData.address.trim() ||
+      formData.address.trim().length < 5 ||
+      !formData.city.trim() ||
+      !formData.state.trim() ||
+      !formData.pincode.trim()
+    ) {
+      setErrorMessage("Please provide a complete delivery street address, city, state, and PIN code.");
+      return;
+    }
+
+    if (items.length === 0) {
+      setErrorMessage("Your cart is empty. Please add items before checking out.");
       return;
     }
 
     setIsProcessing(true);
 
     try {
-      // 1. Send order payload to backend for product/price verification & Razorpay order creation
+      // 2. Prepare order payload: Only send product IDs, quantities, customer & shipping info.
+      // Backend calculates authentic prices & totals, and generates Razorpay order
       const orderPayload = {
-        items: items.map(item => ({
+        items: items.map((item) => ({
           productId: item.id,
           quantity: item.quantity,
         })),
         customer: {
           name: `${formData.firstName.trim()} ${formData.lastName.trim()}`,
-          email: formData.email.trim(),
+          email: formData.email.trim().toLowerCase(),
           phone: formData.phone.trim(),
         },
         shipping: {
@@ -97,24 +112,27 @@ export default function Checkout() {
         },
       };
 
-      const createResponse = await fetch(apiUrl("/api/orders/create"), {
+      const response = await fetch(apiUrl("/api/orders"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderPayload),
       });
 
-      const orderData = await createResponse.json();
+      const responseData = await response.json();
 
-      if (!createResponse.ok || !orderData.success) {
-        throw new Error(orderData.error || "Failed to initiate order. Please verify cart items.");
+      if (!response.ok || !responseData.success) {
+        const errorMsg =
+          responseData.error ||
+          (responseData.details ? Object.values(responseData.details)[0] : null) ||
+          "Failed to place order. Please review your cart and details.";
+        throw new Error(String(errorMsg));
       }
 
-      const { order, razorpay } = orderData;
+      const { order, razorpay } = responseData;
 
-      // 2. Load Razorpay Checkout SDK if not already available
+      // 3. Load Razorpay Checkout SDK
       const scriptReady = await loadRazorpayScript();
 
-      // If Razorpay SDK is available and gateway is configured (or test key provided)
       if (scriptReady && window.Razorpay && razorpay?.keyId && !razorpay.keyId.includes("mock")) {
         const options: RazorpayOptions = {
           key: razorpay.keyId || (import.meta.env.VITE_RAZORPAY_KEY_ID as string),
@@ -134,29 +152,29 @@ export default function Checkout() {
             orderNumber: order.orderNumber,
           },
           theme: {
-            color: "#D4AF37", // Himroots warm Himalayan gold
+            color: "#D4AF37", // Warm Himalayan Gold
           },
-          handler: async function (response: RazorpaySuccessResponse) {
+          handler: async function (paymentResponse: RazorpaySuccessResponse) {
             try {
-              // 3. Backend verifies HMAC SHA256 signature
+              // 4. Server-Side HMAC SHA256 Signature Verification
               const verifyRes = await fetch(apiUrl("/api/orders/verify"), {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                   orderId: order.id,
-                  razorpayOrderId: response.razorpay_order_id,
-                  razorpayPaymentId: response.razorpay_payment_id,
-                  razorpaySignature: response.razorpay_signature,
+                  razorpayOrderId: paymentResponse.razorpay_order_id,
+                  razorpayPaymentId: paymentResponse.razorpay_payment_id,
+                  razorpaySignature: paymentResponse.razorpay_signature,
                 }),
               });
 
               const verifyData = await verifyRes.json();
 
               if (!verifyRes.ok || !verifyData.success) {
-                throw new Error(verifyData.error || "Payment verification failed. If charged, please contact support.");
+                throw new Error(verifyData.error || "Payment signature verification failed.");
               }
 
-              // 4. Verification successful: Mark order completed and clear cart
+              // 5. Verification successful: mark completed, clear cart, transition to order-success
               isOrderCompletedRef.current = true;
               clearCart();
               navigate("/order-success", {
@@ -166,64 +184,79 @@ export default function Checkout() {
                   total: order.total,
                   subtotal: order.subtotal,
                   shippingFee: order.shippingFee,
-                  paymentId: response.razorpay_payment_id,
+                  discount: order.discount,
+                  paymentId: paymentResponse.razorpay_payment_id,
                   paymentStatus: "Paid",
-                  customer: formData,
+                  orderStatus: "processing",
+                  customer: {
+                    firstName: formData.firstName.trim(),
+                    lastName: formData.lastName.trim(),
+                    email: formData.email.trim(),
+                    phone: formData.phone.trim(),
+                    address: formData.address.trim(),
+                    city: formData.city.trim(),
+                    state: formData.state.trim(),
+                    pincode: formData.pincode.trim(),
+                  },
                   items: order.items,
                 },
               });
             } catch (verifyErr: any) {
               console.error("Signature verification error:", verifyErr);
               setIsProcessing(false);
-              setErrorMessage(verifyErr.message || "Payment verification failed. Please contact Himroots support.");
+              setErrorMessage(
+                verifyErr.message ||
+                  "Payment verification failed. If your account was debited, please contact Himroots support."
+              );
             }
           },
           modal: {
             ondismiss: function () {
               setIsProcessing(false);
-              setInfoMessage("Payment was cancelled. Your cart and details have been preserved so you can retry whenever ready.");
+              setInfoMessage(
+                "Payment was cancelled. Your cart and details have been preserved so you can retry whenever ready."
+              );
             },
           },
         };
 
         const rzp = new window.Razorpay(options);
 
-        rzp.on("payment.failed", function (response: any) {
+        rzp.on("payment.failed", function (failRes: any) {
           setIsProcessing(false);
-          const failureReason = response?.error?.description || "Transaction was declined by issuing bank.";
-          setErrorMessage(`Payment failed: ${failureReason}. Please try another card or UPI.`);
+          const failureReason = failRes?.error?.description || "Transaction was declined by issuing bank.";
+          setErrorMessage(
+            `Payment failed: ${failureReason}. Your cart is preserved. Please try another card, UPI, or NetBanking.`
+          );
         });
 
         rzp.open();
         return;
       }
 
-      // If we are in production, never allow simulated payments
+      // If in production without live keys:
       if (!import.meta.env.DEV) {
         setIsProcessing(false);
-        setErrorMessage("Payment gateway is currently unavailable. Please verify your connection or try again shortly.");
+        setErrorMessage("Payment gateway is temporarily unavailable. Please try again shortly or contact support.");
         return;
       }
 
-      // 3. Fallback / Test Simulation Mode (ONLY in local development when running without live Razorpay API keys)
-      // Simulates gateway callback to /api/orders/verify to validate local development flow
+      // 4. Fallback / Test Simulation Mode (ONLY in local development when running without live Razorpay API keys)
       const mockPaymentId = `pay_sim_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 7)}`;
-      
       const verifyRes = await fetch(apiUrl("/api/orders/verify"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           orderId: order.id,
-          razorpayOrderId: razorpay.orderId,
+          razorpayOrderId: razorpay?.orderId || "order_test_sim",
           razorpayPaymentId: mockPaymentId,
           razorpaySignature: "simulated_test_signature",
         }),
       });
 
       const verifyData = await verifyRes.json();
-
       if (!verifyRes.ok || !verifyData.success) {
-        throw new Error(verifyData.error || "Verification failed during simulated payment test.");
+        throw new Error(verifyData.error || "Simulated payment verification failed.");
       }
 
       isOrderCompletedRef.current = true;
@@ -235,27 +268,42 @@ export default function Checkout() {
           total: order.total,
           subtotal: order.subtotal,
           shippingFee: order.shippingFee,
+          discount: order.discount,
           paymentId: mockPaymentId,
           paymentStatus: "Paid",
-          customer: formData,
+          orderStatus: "processing",
+          customer: {
+            firstName: formData.firstName.trim(),
+            lastName: formData.lastName.trim(),
+            email: formData.email.trim(),
+            phone: formData.phone.trim(),
+            address: formData.address.trim(),
+            city: formData.city.trim(),
+            state: formData.state.trim(),
+            pincode: formData.pincode.trim(),
+          },
           items: order.items,
         },
       });
-
     } catch (err: any) {
-      console.error("Order processing error:", err);
+      console.error("Order submission error:", err);
       setIsProcessing(false);
-      setErrorMessage(err.message || "An unexpected network error occurred while processing your order.");
+      setErrorMessage(
+        err.message || "A network or server error occurred while processing your order. Your cart has been preserved."
+      );
     }
   };
 
   return (
     <div className="py-12 md:py-20 bg-[var(--color-background)]">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        <Link to="/cart" className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] transition-colors mb-8">
+        <Link
+          to="/cart"
+          className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] transition-colors mb-8"
+        >
           <ArrowLeft className="w-4 h-4" /> Back to Cart
         </Link>
-        
+
         <h1 className="text-3xl md:text-5xl font-bold font-serif text-white mb-6">Checkout</h1>
 
         {/* Status / Error Alerts */}
@@ -263,8 +311,8 @@ export default function Checkout() {
           <div className="mb-8 p-4 rounded-lg bg-red-950/40 border border-red-500/50 flex items-start gap-3 text-red-200 animate-fadeIn">
             <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
             <div className="flex-1 text-sm leading-relaxed">{errorMessage}</div>
-            <button 
-              onClick={() => setErrorMessage(null)} 
+            <button
+              onClick={() => setErrorMessage(null)}
               className="text-red-400 hover:text-white text-xs uppercase font-bold"
             >
               Dismiss
@@ -276,32 +324,32 @@ export default function Checkout() {
           <div className="mb-8 p-4 rounded-lg bg-amber-950/40 border border-amber-500/50 flex items-start gap-3 text-amber-200 animate-fadeIn">
             <Info className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
             <div className="flex-1 text-sm leading-relaxed">{infoMessage}</div>
-            <button 
-              onClick={() => setInfoMessage(null)} 
+            <button
+              onClick={() => setInfoMessage(null)}
               className="text-amber-400 hover:text-white text-xs uppercase font-bold"
             >
               Dismiss
             </button>
           </div>
         )}
-        
+
         <div className="flex flex-col lg:flex-row gap-12">
-          
           {/* Checkout Form */}
           <div className="lg:w-2/3">
             <form id="checkout-form" onSubmit={handlePayment} className="flex flex-col gap-8">
-              
               {/* Contact Information */}
               <div className="bg-[var(--color-secondary)] p-6 md:p-8 rounded-lg border border-[var(--color-border)]">
                 <h2 className="text-xl font-bold mb-6 uppercase tracking-wider flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full bg-[var(--color-primary)] text-black flex items-center justify-center text-sm">1</span>
-                  Contact Information
+                  <span className="w-6 h-6 rounded-full bg-[var(--color-primary)] text-black flex items-center justify-center text-sm">
+                    1
+                  </span>
+                  Customer Information
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1 md:col-span-2">
-                    <label className="text-sm text-gray-400">Email Address (for order receipts)</label>
-                    <input 
-                      type="email" 
+                    <label className="text-sm text-gray-400">Email Address (for order receipts & tracking)</label>
+                    <input
+                      type="email"
                       name="email"
                       required
                       placeholder="e.g. yourname@example.com"
@@ -312,8 +360,8 @@ export default function Checkout() {
                   </div>
                   <div className="flex flex-col gap-1">
                     <label className="text-sm text-gray-400">First Name</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       name="firstName"
                       required
                       placeholder="First name"
@@ -324,8 +372,8 @@ export default function Checkout() {
                   </div>
                   <div className="flex flex-col gap-1">
                     <label className="text-sm text-gray-400">Last Name</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       name="lastName"
                       required
                       placeholder="Last name"
@@ -336,8 +384,8 @@ export default function Checkout() {
                   </div>
                   <div className="flex flex-col gap-1 md:col-span-2">
                     <label className="text-sm text-gray-400">Phone Number (for delivery coordination)</label>
-                    <input 
-                      type="tel" 
+                    <input
+                      type="tel"
                       name="phone"
                       required
                       placeholder="+91 98765 43210"
@@ -349,17 +397,21 @@ export default function Checkout() {
                 </div>
               </div>
 
-              {/* Shipping Address */}
+              {/* Shipping Destination */}
               <div className="bg-[var(--color-secondary)] p-6 md:p-8 rounded-lg border border-[var(--color-border)]">
                 <h2 className="text-xl font-bold mb-6 uppercase tracking-wider flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full bg-[var(--color-primary)] text-black flex items-center justify-center text-sm">2</span>
+                  <span className="w-6 h-6 rounded-full bg-[var(--color-primary)] text-black flex items-center justify-center text-sm">
+                    2
+                  </span>
                   Shipping Destination
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1 md:col-span-2">
-                    <label className="text-sm text-gray-400">Street Address (House/Flat No, Apartment, Landmark)</label>
-                    <input 
-                      type="text" 
+                    <label className="text-sm text-gray-400">
+                      Street Address (House/Flat No, Apartment, Landmark)
+                    </label>
+                    <input
+                      type="text"
                       name="address"
                       required
                       placeholder="Flat 102, Green Meadows, Mall Road"
@@ -370,8 +422,8 @@ export default function Checkout() {
                   </div>
                   <div className="flex flex-col gap-1">
                     <label className="text-sm text-gray-400">City / Town</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       name="city"
                       required
                       placeholder="Shimla"
@@ -382,8 +434,8 @@ export default function Checkout() {
                   </div>
                   <div className="flex flex-col gap-1">
                     <label className="text-sm text-gray-400">State</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       name="state"
                       required
                       placeholder="Himachal Pradesh"
@@ -394,8 +446,8 @@ export default function Checkout() {
                   </div>
                   <div className="flex flex-col gap-1">
                     <label className="text-sm text-gray-400">PIN Code</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       name="pincode"
                       required
                       placeholder="171001"
@@ -406,8 +458,8 @@ export default function Checkout() {
                   </div>
                   <div className="flex flex-col gap-1">
                     <label className="text-sm text-gray-400">Country</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value="India"
                       readOnly
                       className="bg-black/50 border border-[var(--color-border)] text-gray-400 px-4 py-3 rounded cursor-not-allowed"
@@ -416,13 +468,15 @@ export default function Checkout() {
                 </div>
               </div>
 
-              {/* Payment Section */}
+              {/* Payment Gateway Section */}
               <div className="bg-[var(--color-secondary)] p-6 md:p-8 rounded-lg border border-[var(--color-border)]">
                 <h2 className="text-xl font-bold mb-6 uppercase tracking-wider flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full bg-[var(--color-primary)] text-black flex items-center justify-center text-sm">3</span>
+                  <span className="w-6 h-6 rounded-full bg-[var(--color-primary)] text-black flex items-center justify-center text-sm">
+                    3
+                  </span>
                   Payment Gateway
                 </h2>
-                
+
                 <div className="border border-[var(--color-primary)]/30 bg-black/40 p-6 rounded-lg mb-4">
                   <div className="flex items-center gap-3 mb-2">
                     <ShieldCheck className="w-5 h-5 text-[var(--color-primary)]" />
@@ -438,20 +492,21 @@ export default function Checkout() {
                   <span>256-bit SSL encrypted • Backend signature verification • Zero card storage</span>
                 </div>
               </div>
-
             </form>
           </div>
-          
+
           {/* Order Summary sidebar */}
           <div className="lg:w-1/3">
             <div className="bg-[var(--color-secondary)] border border-[var(--color-border)] rounded-lg p-6 sticky top-28 shadow-xl">
               <div className="flex items-center justify-between border-b border-[var(--color-border)] pb-4 mb-6">
                 <h2 className="text-lg font-bold uppercase tracking-wider">Order Summary</h2>
-                <span className="text-xs text-[var(--color-primary)] font-semibold tracking-wider uppercase">Himroots</span>
+                <span className="text-xs text-[var(--color-primary)] font-semibold tracking-wider uppercase">
+                  Himroots
+                </span>
               </div>
-              
+
               <div className="flex flex-col gap-4 mb-6">
-                {items.map(item => (
+                {items.map((item) => (
                   <div key={item.id} className="flex gap-4 items-center">
                     <div className="w-16 h-16 bg-black rounded-md overflow-hidden border border-[var(--color-border)] relative">
                       <img src={item.images[0]} alt={item.name} className="w-full h-full object-cover" />
@@ -463,13 +518,11 @@ export default function Checkout() {
                       <h4 className="text-sm font-bold line-clamp-1">{item.name}</h4>
                       <p className="text-xs text-gray-400">{item.category}</p>
                     </div>
-                    <div className="text-sm font-medium">
-                      ₹{item.price * item.quantity}
-                    </div>
+                    <div className="text-sm font-medium">₹{item.price * item.quantity}</div>
                   </div>
                 ))}
               </div>
-              
+
               <div className="flex flex-col gap-4 mb-6 text-sm border-t border-[var(--color-border)] pt-6">
                 <div className="flex justify-between text-gray-300">
                   <span>Subtotal</span>
@@ -489,18 +542,18 @@ export default function Checkout() {
                   <span className="font-bold text-2xl text-[var(--color-primary)]">₹{total}</span>
                 </div>
               </div>
-              
-              <Button 
-                type="submit" 
-                form="checkout-form" 
-                size="lg" 
+
+              <Button
+                type="submit"
+                form="checkout-form"
+                size="lg"
                 className="w-full uppercase tracking-widest text-sm mb-4 relative"
                 disabled={isProcessing}
               >
                 {isProcessing ? (
                   <span className="flex items-center gap-2">
                     <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
-                    Verifying & Processing...
+                    Verifying & Launching Gateway...
                   </span>
                 ) : (
                   <span className="flex items-center gap-2">
@@ -516,10 +569,8 @@ export default function Checkout() {
                   <span className="px-2 py-0.5 bg-black rounded border border-[var(--color-border)]">Verified API</span>
                 </div>
               </div>
-
             </div>
           </div>
-          
         </div>
       </div>
     </div>

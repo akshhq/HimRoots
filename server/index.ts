@@ -1,29 +1,50 @@
 import express from 'express';
 import cors from 'cors';
-import { config, isSupabaseAdminConfigured, isRazorpayConfigured } from './config/env';
+import { config, isSupabaseAdminConfigured } from './config/env';
+import { securityHeaders, getCorsOrigins } from './middleware/security';
+import { apiLimiter } from './middleware/rateLimiter';
+import { errorHandler } from './middleware/errorHandler';
 import productsRouter from './routes/products';
 import ordersRouter from './routes/orders';
 import contactRouter from './routes/contact';
-import { errorHandler } from './middleware/errorHandler';
 
 const app = express();
 
-// Middleware
-const allowedOrigins = process.env.CORS_ORIGIN
-  ? process.env.CORS_ORIGIN.split(',').map(s => s.trim())
-  : '*';
+// 1. Security Headers
+app.use(securityHeaders);
 
-app.use(cors({
-  origin: allowedOrigins,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-}));
+// 2. CORS configuration with explicit origins (restricted in production)
+const allowedOrigins = getCorsOrigins();
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow server-to-server or non-browser tools (e.g. curl, postman, health checks)
+      if (!origin) return callback(null, true);
 
-app.use(express.json({ limit: '1mb' }));
-app.use(express.urlencoded({ extended: true }));
+      if (Array.isArray(allowedOrigins)) {
+        if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+          return callback(null, true);
+        }
+        return callback(new Error(`Origin '${origin}' not allowed by CORS policy`));
+      }
 
-// Request Logger (Development)
+      if (allowedOrigins === '*' || allowedOrigins === origin) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`Origin '${origin}' not allowed by CORS policy`));
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    credentials: true,
+  })
+);
+
+// 3. Request Body Parsing with strict size limits
+app.use(express.json({ limit: '50kb' }));
+app.use(express.urlencoded({ extended: true, limit: '50kb' }));
+
+// 4. Request Logger (Development & Staging)
 app.use((req, _res, next) => {
   if (config.nodeEnv !== 'test') {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
@@ -31,7 +52,10 @@ app.use((req, _res, next) => {
   next();
 });
 
-// Health & Status Check
+// 5. Rate Limiter for all API routes
+app.use('/api', apiLimiter);
+
+// 6. Health & Status Check
 app.get('/api/health', (_req, res) => {
   res.json({
     status: 'ok',
@@ -40,17 +64,16 @@ app.get('/api/health', (_req, res) => {
     version: '1.0.0',
     integrations: {
       supabase: isSupabaseAdminConfigured ? 'configured' : 'fallback_mode',
-      razorpay: isRazorpayConfigured ? 'configured' : 'mock_test_mode',
     },
   });
 });
 
-// Mount Routes
+// 7. Mount Core API Routes
 app.use('/api/products', productsRouter);
 app.use('/api/orders', ordersRouter);
 app.use('/api/contact', contactRouter);
 
-// 404 Handler for undefined API routes
+// 8. 404 Handler for undefined API routes
 app.use((req, res, next) => {
   if (req.path.startsWith('/api')) {
     return res.status(404).json({
@@ -61,10 +84,10 @@ app.use((req, res, next) => {
   next();
 });
 
-// Centralized Error Handling
+// 9. Centralized Safe Error Handling
 app.use(errorHandler);
 
-// Start Server
+// 10. Start Server
 if (process.env.NODE_ENV !== 'test') {
   app.listen(config.port, () => {
     console.log(`
@@ -73,7 +96,7 @@ if (process.env.NODE_ENV !== 'test') {
    URL: http://localhost:${config.port}
    Environment: ${config.nodeEnv}
    Database: ${isSupabaseAdminConfigured ? 'Connected (Supabase)' : 'Local Fallback'}
-   Payments: ${isRazorpayConfigured ? 'Live / Test Active' : 'Simulation Mode'}
+   Security: Enabled (Rate Limits, Strict CORS, Headers)
 ======================================================= 🌿
     `);
   });

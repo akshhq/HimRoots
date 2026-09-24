@@ -41,23 +41,28 @@ This platform is structured for a lean, production-grade e-commerce model where 
 * **Static Product Layer:** The catalog currently references a typed in-memory array (`src/data/products.ts`) containing full nutritional, percentage, pricing, and packaging metadata for both flagship products.
 
 ### 3. Backend / API Architecture (Node.js + Express)
-* **Dedicated Trusted Execution Layer:** A secure, modular **Node.js + Express** server located in [`server/`](file:///d:/Clg/Client%20Work/HimRoots/server):
-  * Entrypoint: [`server/index.ts`](file:///d:/Clg/Client%20Work/HimRoots/server/index.ts)
-  * Port: `5000` (development default, proxied seamlessly by Vite via [`vite.config.ts`](file:///d:/Clg/Client%20Work/HimRoots/vite.config.ts)).
+* **Dedicated Trusted Execution Layer:** A secure, modular **Node.js + Express** server located in [`server/`](server):
+  * Entrypoint: [`server/index.ts`](server/index.ts)
+  * Layered Design: Clean separation into `routes/`, `controllers/`, `services/`, `middleware/`, and `config/`.
+  * Port: `5000` (development default, proxied seamlessly by Vite via [`vite.config.ts`](vite.config.ts)).
   * Secret Protection: Strict segregation of client variables (`VITE_*`) from private server secrets (`RAZORPAY_KEY_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`).
+* **Security & Defensive Controls:**
+  * **Defensive Headers:** Automatic `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, and XSS filters.
+  * **Strict CORS:** Whitelists allowed production and local origins; wildcard `*` is denied in production.
+  * **Rate Limiting:** Sliding-window IP rate limiters on general API (120/min), order creation (15/10min), and contact inquiries (8/10min).
+  * **Safe Error Handling:** Masks database connection details and Postgres internals; never leaks stack traces.
 * **Core Responsibilities:**
-  1. **Product Retrieval:** Serves verified catalog items via `/api/products` (Supabase query with fallback to static catalog).
-  2. **Order Validation & Price Verification:** Recomputes product line totals from database values, computes subtotals, applies zero shipping fee (complimentary shipping across India), and generates a human-readable order number (`HM-YYYYMMDD-XXXX`).
-  3. **Razorpay Payment Preparation:** Creates official Razorpay order instances in paise via Razorpay Node SDK.
-  4. **Payment Signature Verification:** Cryptographically verifies incoming `razorpay_signature` using HMAC SHA256 before updating order status to `paid`.
-  5. **Contact Inquiries:** Persists form submissions directly to the `contact_inquiries` table.
+  1. **Product Retrieval:** Serves verified catalog items via `GET /api/products` (Supabase query with fallback to static catalog).
+  2. **Order Validation & Price Authority:** Recomputes product line totals from database values, validates inventory, computes subtotals, applies shipping policy (free above ₹2000, else ₹150 flat), generates human-readable order number (`HM-YYYYMMDD-XXXX`), and initializes order with `payment_status: 'pending'` and `order_status: 'pending'`.
+  3. **Cart Integration:** Frontend sends only product IDs and quantities; backend calculates authentic totals.
+  4. **Contact Inquiries:** Validates and persists customer inquiries in `contact_inquiries` table with anti-spam honeypot defense.
 * **API Endpoints:**
-  * `GET /api/health` — Integration status check (Supabase & Razorpay connection states).
+  * `GET /api/health` — Integration status check (Supabase & server uptime).
   * `GET /api/products` — Retrieve all active products.
   * `GET /api/products/:identifier` — Retrieve single product by slug or ID.
-  * `POST /api/orders/create` — Validates cart items, verifies prices, creates Razorpay order, persists order to Supabase.
-  * `POST /api/orders/verify` — Validates HMAC SHA256 payment signature and marks order as paid.
+  * `POST /api/orders` (and `/api/orders/create`) — Validates cart items, verifies prices, and creates order in database with pending status.
   * `GET /api/orders/:identifier` — Safe order receipt lookup for the order-success screen.
+  * `POST /api/orders/verify` — Validates HMAC SHA256 payment signature (prepared for upcoming Razorpay stage).
   * `POST /api/contact` — Receives and stores customer inquiries.
 
 ### 4. Database Layer (Supabase PostgreSQL)

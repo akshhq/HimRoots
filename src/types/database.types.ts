@@ -13,7 +13,7 @@ export type Json =
 export type StockStatus = 'in_stock' | 'low_stock' | 'out_of_stock';
 export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded';
 export type EmailStatus = 'pending' | 'sent' | 'failed';
-export type OrderStatus = 'received' | 'processing' | 'packed' | 'shipped' | 'delivered' | 'cancelled';
+export type OrderStatus = 'pending' | 'paid' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'received' | 'packed';
 export type InquiryStatus = 'unread' | 'read' | 'responded' | 'archived';
 
 export interface Database {

@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS public.orders (
     discount NUMERIC(10, 2) NOT NULL DEFAULT 0.00 CHECK (discount >= 0),
     total NUMERIC(10, 2) NOT NULL CHECK (total >= 0),
     payment_status TEXT NOT NULL DEFAULT 'pending' CHECK (payment_status IN ('pending', 'paid', 'failed', 'refunded')),
-    order_status TEXT NOT NULL DEFAULT 'received' CHECK (order_status IN ('received', 'processing', 'packed', 'shipped', 'delivered', 'cancelled')),
+    order_status TEXT NOT NULL DEFAULT 'pending' CHECK (order_status IN ('pending', 'paid', 'processing', 'shipped', 'delivered', 'cancelled', 'received', 'packed')),
     razorpay_order_id TEXT,
     razorpay_payment_id TEXT,
     email_status TEXT NOT NULL DEFAULT 'pending' CHECK (email_status IN ('pending', 'sent', 'failed')),
