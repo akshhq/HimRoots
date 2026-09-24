@@ -16,6 +16,7 @@ The entire full-stack e-commerce architecture has been integrated, audited, and 
 - [x] **Contact & Support Portal (`src/pages/Contact.tsx`)**: Comprehensive inquiry form supporting 7 support categories, optional order reference ID, honeypot anti-spam trap, and submission status feedback.
 - [x] **Navigation Bar**: Pure black theme applied with seamless mobile drawer and desktop navigation links.
 - [x] **Static Fallbacks**: Graceful degradation throughout all UI components if backend or database services are temporarily offline.
+- [x] **Apache `.htaccess` SPA Routing (`public/.htaccess`)**: Configured `mod_rewrite` for Apache `/public_html/` deployments to rewrite direct client route requests (e.g. `/cart`, `/products`, `/about`, `/contact`, `/checkout`) to `/index.html` without changing the browser URL, while continuing to serve real static assets directly. Automatically copied to `dist/.htaccess` during `npm run build`.
 
 ### Backend / API Layer (`server/`)
 - [x] **Express Application Architecture (`server/index.ts`)**: Structured Node.js + Express backend with JSON body parsing, CORS middleware, request logging, and unified error handling.
@@ -162,8 +163,9 @@ The developer or DevOps engineer must configure the deployment environment and p
    - If deploying on a Node.js VPS (e.g. Ubuntu + Nginx): Configure PM2 or Systemd process supervisor (`pm2 start server/index.ts --name himroots-api`).
    - If deploying on containerized cloud (Render, Railway, Fly.io): Set build command `npm run build` and start command `npm run server`.
    - If deploying on Serverless (e.g. Vercel): Configure `/api` rewrite rules to route Express handlers through Vercel Serverless Functions.
-4. **Static Frontend CDN & Proxy**:
+4. **Static Frontend CDN & Proxy / Apache `.htaccess` Upload**:
    - Point production frontend API requests to the production backend URL (`VITE_API_BASE_URL=https://api.himroots.com` or use relative `/api` with reverse proxy).
+   - Ensure the `.htaccess` file generated in `dist/` is uploaded to `/public_html/`. (Note: Since dotfiles are hidden by default in FTP and cPanel, verify that "Show Hidden Files" is enabled so `.htaccess` is not omitted).
 5. **HTTPS Enforcement**:
    - Ensure SSL/TLS certificate is active on both frontend and backend domains. Razorpay Checkout modal requires HTTPS in production.
 

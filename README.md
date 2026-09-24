@@ -367,6 +367,12 @@ To preview the compiled production distribution locally:
 npm run preview
 ```
 
+### Apache / cPanel / `public_html/` SPA Routing Configuration
+For Apache shared hosting or VPS environments serving static files out of `/public_html/`:
+* The application uses **HTML5 History API (`BrowserRouter`)**. When a visitor directly navigates to or refreshes a client-side route (e.g. `/cart`, `/shop`, `/products`, `/about`, `/contact`, `/checkout`), Apache must rewrite the request internally to `/index.html` rather than returning a 404.
+* An optimized `.htaccess` configuration is maintained in [`public/.htaccess`](public/.htaccess) and automatically copied to `dist/.htaccess` upon running `npm run build`.
+* **Important Deployment Note:** Because files starting with `.` are considered hidden files, ensure your FTP client or cPanel File Manager displays hidden files, and upload `.htaccess` directly into `/public_html/` alongside `index.html` and the `assets/` directory.
+
 ---
 
 ## Product Data Schema
