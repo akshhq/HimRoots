@@ -71,8 +71,8 @@ export default function Home() {
   return (
     <>
       <SEO
-        title="Himroots Wellness | Seabuckthorn Goldenberry Titan - The Elixir of the Himalayas"
-        description="Experience the untouched nutritional vitality of wild-harvested Himalayan Seabuckthorn Goldenberry Titan from 12,000+ feet in Ladakh and Spiti. Raw, pure, and rich in rare Omega-7 and Vitamin C."
+        title="Himroots Wellness | Seabuckthorn Goldenberry - The Elixir of the Himalayas"
+        description="Experience the untouched nutritional vitality of wild-harvested Himalayan Seabuckthorn Goldenberry from 12,000+ feet in Ladakh and Spiti. Raw, pure, and rich in rare Omega-7 and Vitamin C."
         canonical="/"
         type="website"
         structuredData={[organizationSchema, websiteSchema]}
@@ -112,7 +112,7 @@ export default function Home() {
                 <div className="mb-4 sm:mb-5">
                   {/* Primary: Dominant Hero Focus */}
                   <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-2 sm:mb-3 leading-[1.14] font-serif">
-                    Seabuckthorn Goldenberry Titan
+                    Seabuckthorn Goldenberry
                   </h1>
                   {/* Secondary: Prominent Supporting Statement */}
                   <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight text-gold-gradient font-serif leading-snug">
@@ -277,7 +277,7 @@ export default function Home() {
         {/* 4. AVAILABLE FORMULATIONS SECTION (IMAGE LEFT, CONTENT RIGHT)  */}
         {/* ============================================================== */}
         <section className="py-16 sm:py-20 md:py-24 bg-[var(--color-background)]">
-          <div className="max-w-5xl mx-auto px-4 sm:px-8 text-center">
+          <div className="max-w-6xl mx-auto px-4 sm:px-8 text-center">
             
             <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-2 block">
               Available Formulations
@@ -289,13 +289,13 @@ export default function Home() {
               Crafted exclusively from wild Himalayan sea buckthorn, tailored for your daily wellness ritual.
             </p>
 
-            {/* Formulations List: Image on LEFT, Content on RIGHT */}
-            <div className="flex flex-col gap-8 sm:gap-10 max-w-4xl mx-auto mb-12 text-left">
+            {/* Formulations List: 2 Products Side-by-Side */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-6xl mx-auto mb-12 text-left">
               
               {/* Formulation 1: Pure Pulp */}
-              <div className="rounded-2xl bg-[var(--color-card)] border border-[var(--color-border-gold)]/50 shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12 hover:border-[var(--color-primary)] transition-all duration-300 group">
-                {/* Left: Product Formulation Image */}
-                <div className="md:col-span-5 relative overflow-hidden bg-black/40 min-h-[240px] sm:min-h-[280px] md:min-h-full">
+              <div className="rounded-2xl bg-[var(--color-card)] border border-[var(--color-border-gold)]/50 shadow-2xl overflow-hidden flex flex-col justify-between hover:border-[var(--color-primary)] transition-all duration-300 group h-full">
+                {/* Top: Product Formulation Image */}
+                <div className="relative overflow-hidden bg-black/40 h-64 sm:h-72 w-full flex-shrink-0">
                   <img 
                     src="/images/himroots-sea-buckthorn-pulp.jpg" 
                     alt="Himalayan Pure Pulp with Curcumin" 
@@ -306,8 +306,8 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Right: Existing Formulation Information */}
-                <div className="md:col-span-7 p-6 sm:p-8 flex flex-col justify-between">
+                {/* Content: Formulation Information */}
+                <div className="p-6 sm:p-8 flex flex-col justify-between flex-1">
                   <div>
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-[10px] uppercase font-bold tracking-widest text-[var(--color-primary)]">
@@ -337,7 +337,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-[var(--color-border)] flex items-center justify-between">
+                  <div className="pt-4 border-t border-[var(--color-border)] flex items-center justify-between mt-auto">
                     <span className="text-xs text-[var(--color-primary-light)] font-semibold uppercase tracking-wider">
                       Pure Unfiltered Pulp
                     </span>
@@ -352,9 +352,9 @@ export default function Home() {
               </div>
 
               {/* Formulation 2: Capsules */}
-              <div className="rounded-2xl bg-[var(--color-card)] border border-[var(--color-border-gold)]/50 shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12 hover:border-[var(--color-primary)] transition-all duration-300 group">
-                {/* Left: Product Formulation Image */}
-                <div className="md:col-span-5 relative overflow-hidden bg-black/40 min-h-[240px] sm:min-h-[280px] md:min-h-full">
+              <div className="rounded-2xl bg-[var(--color-card)] border border-[var(--color-border-gold)]/50 shadow-2xl overflow-hidden flex flex-col justify-between hover:border-[var(--color-primary)] transition-all duration-300 group h-full">
+                {/* Top: Product Formulation Image */}
+                <div className="relative overflow-hidden bg-black/40 h-64 sm:h-72 w-full flex-shrink-0">
                   <img 
                     src="/images/himroots-sea-buckthorn-capsules.jpg" 
                     alt="Sea Buckthorn Oil Capsules" 
@@ -365,8 +365,8 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Right: Existing Formulation Information */}
-                <div className="md:col-span-7 p-6 sm:p-8 flex flex-col justify-between">
+                {/* Content: Formulation Information */}
+                <div className="p-6 sm:p-8 flex flex-col justify-between flex-1">
                   <div>
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-[10px] uppercase font-bold tracking-widest text-[var(--color-primary)]">
@@ -396,7 +396,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-[var(--color-border)] flex items-center justify-between">
+                  <div className="pt-4 border-t border-[var(--color-border)] flex items-center justify-between mt-auto">
                     <span className="text-xs text-[var(--color-primary-light)] font-semibold uppercase tracking-wider">
                       Cold-Pressed Seed & Berry Oil
                     </span>

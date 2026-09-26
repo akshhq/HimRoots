@@ -47,21 +47,21 @@ export function Navbar() {
       <header
         className={`sticky top-0 w-full z-50 ${
           isScrolled 
-            ? "bg-black py-2.5 sm:py-3 shadow-xl shadow-black/50 border-b border-[var(--color-border-gold)]" 
-            : "bg-black py-3 sm:py-4 border-b border-[var(--color-border)]"
+            ? "bg-black/95 backdrop-blur-md py-1 shadow-xl shadow-black/50 border-b border-[var(--color-border-gold)]" 
+            : "bg-black py-1 sm:py-1.5 border-b border-[var(--color-border)]"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
           <div className="flex items-center justify-between gap-3 sm:gap-4">
             
-            {/* Prominent Navbar Logo - Always visible, increased size */}
+            {/* Prominent Navbar Logo - Sits close to top and bottom borders */}
             <div className="flex items-center">
               <Link 
                 to="/" 
                 aria-label="Himroots Home"
-                className="flex items-center gap-2 group"
+                className="flex items-center group py-0.5"
               >
-                <BrandLogo size="md" imgClassName="h-14 sm:h-16 md:h-20 lg:h-[84px] w-auto" showSubtitle={false} />
+                <BrandLogo size="md" imgClassName="h-14 sm:h-16 md:h-[74px] lg:h-[82px] w-auto object-contain" showSubtitle={false} />
               </Link>
             </div>
 
