@@ -37,9 +37,10 @@ export function Navbar() {
   return (
     <>
       {/* Top Banner */}
-      <div className="bg-black border-b border-[var(--color-border)] text-[10px] sm:text-xs text-[var(--color-muted-foreground)] py-1.5 sm:py-2 px-3 sm:px-6 text-center tracking-[0.14em] sm:tracking-[0.18em] uppercase flex items-center justify-center gap-2">
+      <div className="bg-black border-b border-[var(--color-border)] text-[10px] sm:text-xs text-[var(--color-muted-foreground)] py-1.5 sm:py-2 px-3 sm:px-6 text-center tracking-[0.12em] sm:tracking-[0.18em] uppercase flex items-center justify-center gap-2">
         <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[var(--color-primary)] flex-shrink-0" />
-        <span className="truncate">Pure Himalayan Sea Buckthorn Formulations — Free Shipping Across India</span>
+        <span className="hidden sm:inline">Pure Himalayan Sea Buckthorn Formulations — Free Shipping Across India</span>
+        <span className="sm:hidden">Free Shipping Across India • 100% Wild Harvested</span>
         <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[var(--color-primary)] hidden sm:inline flex-shrink-0" />
       </div>
 
@@ -132,7 +133,7 @@ export function Navbar() {
 
         {/* Mobile Menu Drawer */}
         {isMobileMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 w-full bg-black border-t border-[var(--color-border)] px-6 py-8 flex flex-col gap-6 shadow-2xl">
+          <div className="md:hidden absolute top-full left-0 w-full bg-black border-t border-[var(--color-border)] px-6 py-6 flex flex-col gap-6 shadow-2xl max-h-[calc(100dvh-80px)] overflow-y-auto">
             <div className="flex flex-col gap-4">
               {navLinks.map((link) => {
                 const isActive = location.pathname === link.path;

@@ -430,7 +430,7 @@ export default function ProductDetails() {
         </div>
 
         {/* Breadcrumb Navigation Bar */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 pt-5 pb-3">
           <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-2 text-gray-400">
               <Link to="/" className="hover:text-[var(--color-primary)]">Home</Link>
@@ -455,7 +455,7 @@ export default function ProductDetails() {
         {/* ============================================================== */}
         {/* SECTION 3: PRODUCT HERO SECTION (Above The Fold)               */}
         {/* ============================================================== */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <section className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 py-4 sm:py-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
             
             {/* LEFT: 18-Slide Image Carousel */}
@@ -1033,7 +1033,7 @@ export default function ProductDetails() {
         {/* SECTION 4: PRODUCT FEATURES BANNER (Iconography USPs)          */}
         {/* ============================================================== */}
         <section className="bg-[#050505] border-y border-[#1f1f1f] py-8 my-8">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
             <div className="text-center mb-6">
               <span className="text-xs uppercase font-bold tracking-[0.2em] text-[var(--color-primary)] block">
                 Pure Formulation Standards
@@ -1100,7 +1100,7 @@ export default function ProductDetails() {
         {/* ============================================================== */}
         {/* SECTION 5: CLAIMS & BENEFITS GRID                             */}
         {/* ============================================================== */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <section className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 py-12 sm:py-16">
           <div className="text-center max-w-2xl mx-auto mb-10">
             <span className="text-xs uppercase font-bold tracking-[0.2em] text-[var(--color-primary)] block">
               Multi-System Efficacy
@@ -1182,7 +1182,7 @@ export default function ProductDetails() {
         {/* SECTION 6: DETAILED BENEFIT COPY (Omega Profile & Vitamin C)   */}
         {/* ============================================================== */}
         <section className="bg-[#050505] border-y border-[#1f1f1f] py-12 sm:py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               
               <div className="lg:col-span-6 space-y-4">
@@ -1257,7 +1257,7 @@ export default function ProductDetails() {
         {/* ============================================================== */}
         {/* BANNER & LIFESTYLE GRAPHICS (Card_1, Card_2, Card_3 & Banner)  */}
         {/* ============================================================== */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <section className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 py-12 sm:py-16">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             
             {/* Card 1 */}
@@ -1320,7 +1320,7 @@ export default function ProductDetails() {
           </div>
 
           {/* Web_Banner_2 & Mob_Banner_2: Full-width Lifestyle Banner */}
-          <div className="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-[#0a0a0a] via-[#050505] to-black border border-[var(--color-border-gold)] text-center relative overflow-hidden">
+          <div className="p-5 sm:p-12 rounded-3xl bg-gradient-to-r from-[#0a0a0a] via-[#050505] to-black border border-[var(--color-border-gold)] text-center relative overflow-hidden">
             <div className="max-w-3xl mx-auto space-y-4">
               <span className="text-xs uppercase font-bold tracking-[0.25em] text-[var(--color-primary)] block">
                 The Himalayan Philosophy
@@ -1339,7 +1339,7 @@ export default function ProductDetails() {
         {/* SECTION 7: BRAND TRUST BADGES                                  */}
         {/* ============================================================== */}
         <section className="bg-[#050505] border-y border-[#1f1f1f] py-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
               
               <div className="p-4">
@@ -1381,7 +1381,7 @@ export default function ProductDetails() {
         {/* ============================================================== */}
         {/* SECTION 8: INGREDIENTS BREAKDOWN                              */}
         {/* ============================================================== */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <section className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 py-12 sm:py-16">
           <div className="text-center max-w-2xl mx-auto mb-10">
             <span className="text-xs uppercase font-bold tracking-[0.2em] text-[var(--color-primary)] block">
               Botanical Profiling
@@ -1471,7 +1471,7 @@ export default function ProductDetails() {
         {/* SECTION 9: SCIENTIFIC EVIDENCE SLIDER                         */}
         {/* ============================================================== */}
         <section className="bg-[#050505] border-y border-[#1f1f1f] py-12 sm:py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
             
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
               <div>
@@ -1542,7 +1542,7 @@ export default function ProductDetails() {
         {/* ============================================================== */}
         {/* SECTION 10: CUSTOMER REVIEWS SECTION                          */}
         {/* ============================================================== */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <section className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 py-12 sm:py-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
             {/* Left: Aggregated Ratings & Score Bars */}
@@ -1674,7 +1674,7 @@ export default function ProductDetails() {
         {/* SECTION 11: CERTIFICATIONS & LAB REPORTS                       */}
         {/* ============================================================== */}
         <section className="bg-[#050505] border-t border-[#1f1f1f] py-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 text-center">
             
             <span className="text-xs uppercase font-bold tracking-[0.2em] text-[var(--color-primary)] block mb-2">
               Quality Assurance & Certifications

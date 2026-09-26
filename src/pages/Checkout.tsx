@@ -303,8 +303,8 @@ export default function Checkout() {
         canonical="/checkout"
         noindex={true}
       />
-      <div className="py-12 md:py-20 bg-[var(--color-background)]">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+      <div className="py-10 sm:py-16 md:py-20 bg-[var(--color-background)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
         <Link
           to="/cart"
           className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] transition-colors mb-8"
@@ -346,7 +346,7 @@ export default function Checkout() {
           <div className="lg:w-2/3">
             <form id="checkout-form" onSubmit={handlePayment} className="flex flex-col gap-8">
               {/* Contact Information */}
-              <div className="bg-[var(--color-secondary)] p-6 md:p-8 rounded-lg border border-[var(--color-border)]">
+              <div className="bg-[var(--color-secondary)] p-4 sm:p-6 md:p-8 rounded-lg border border-[var(--color-border)]">
                 <h2 className="text-xl font-bold mb-6 uppercase tracking-wider flex items-center gap-2">
                   <span className="w-6 h-6 rounded-full bg-[var(--color-primary)] text-black flex items-center justify-center text-sm">
                     1
@@ -406,7 +406,7 @@ export default function Checkout() {
               </div>
 
               {/* Shipping Destination */}
-              <div className="bg-[var(--color-secondary)] p-6 md:p-8 rounded-lg border border-[var(--color-border)]">
+              <div className="bg-[var(--color-secondary)] p-4 sm:p-6 md:p-8 rounded-lg border border-[var(--color-border)]">
                 <h2 className="text-xl font-bold mb-6 uppercase tracking-wider flex items-center gap-2">
                   <span className="w-6 h-6 rounded-full bg-[var(--color-primary)] text-black flex items-center justify-center text-sm">
                     2
@@ -477,7 +477,7 @@ export default function Checkout() {
               </div>
 
               {/* Payment Gateway Section */}
-              <div className="bg-[var(--color-secondary)] p-6 md:p-8 rounded-lg border border-[var(--color-border)]">
+              <div className="bg-[var(--color-secondary)] p-4 sm:p-6 md:p-8 rounded-lg border border-[var(--color-border)]">
                 <h2 className="text-xl font-bold mb-6 uppercase tracking-wider flex items-center gap-2">
                   <span className="w-6 h-6 rounded-full bg-[var(--color-primary)] text-black flex items-center justify-center text-sm">
                     3
@@ -485,17 +485,17 @@ export default function Checkout() {
                   Payment Gateway
                 </h2>
 
-                <div className="border border-[var(--color-primary)]/30 bg-black/40 p-6 rounded-lg mb-4">
+                <div className="border border-[var(--color-primary)]/30 bg-black/40 p-4 sm:p-6 rounded-lg mb-4">
                   <div className="flex items-center gap-3 mb-2">
                     <ShieldCheck className="w-5 h-5 text-[var(--color-primary)]" />
                     <span className="font-bold text-white">Razorpay Secure Checkout</span>
                   </div>
-                  <p className="text-sm text-gray-300 ml-8 leading-relaxed">
+                  <p className="text-sm text-gray-300 sm:ml-8 leading-relaxed">
                     UPI (Google Pay, PhonePe, Paytm), Debit/Credit Cards (Visa, Mastercard, RuPay), and NetBanking from all major Indian banks.
                   </p>
                 </div>
 
-                <div className="flex items-center gap-3 text-xs text-gray-400 ml-1">
+                <div className="flex items-center gap-3 text-xs text-gray-400 sm:ml-1">
                   <CheckCircle2 className="w-4 h-4 text-green-500" />
                   <span>256-bit SSL encrypted • Backend signature verification • Zero card storage</span>
                 </div>
@@ -505,7 +505,7 @@ export default function Checkout() {
 
           {/* Order Summary sidebar */}
           <div className="lg:w-1/3">
-            <div className="bg-[var(--color-secondary)] border border-[var(--color-border)] rounded-lg p-6 sticky top-28 shadow-xl">
+            <div className="bg-[var(--color-secondary)] border border-[var(--color-border)] rounded-lg p-4 sm:p-6 sticky top-28 shadow-xl">
               <div className="flex items-center justify-between border-b border-[var(--color-border)] pb-4 mb-6">
                 <h2 className="text-lg font-bold uppercase tracking-wider">Order Summary</h2>
                 <span className="text-xs text-[var(--color-primary)] font-semibold tracking-wider uppercase">

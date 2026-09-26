@@ -144,7 +144,7 @@ export default function OrderSuccess() {
         </div>
 
         {/* Main Order Card */}
-        <div className="bg-[var(--color-secondary)] p-6 md:p-8 rounded-xl border border-[var(--color-border)] mb-8 shadow-2xl">
+        <div className="bg-[var(--color-secondary)] p-4 sm:p-6 md:p-8 rounded-xl border border-[var(--color-border)] mb-8 shadow-2xl">
           {/* Top Order Metadata Bar */}
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--color-border)] pb-6 mb-6">
             <div>
@@ -254,7 +254,7 @@ export default function OrderSuccess() {
         </div>
 
         {/* Customer Support & Help Options */}
-        <div className="bg-[var(--color-secondary)]/60 p-6 rounded-lg border border-[var(--color-border)] mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="bg-[var(--color-secondary)]/60 p-4 sm:p-6 rounded-lg border border-[var(--color-border)] mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <HelpCircle className="w-5 h-5 text-[var(--color-primary)] flex-shrink-0 mt-0.5" />
             <div>

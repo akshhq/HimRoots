@@ -238,7 +238,7 @@ export default function Contact() {
           </div>
 
           {/* Right Column: Contact Inquiry Form */}
-          <div className="lg:col-span-7 bg-[var(--color-card)] border border-[var(--color-border)] rounded-2xl p-5 sm:p-8 md:p-10 shadow-2xl">
+          <div className="lg:col-span-7 bg-[var(--color-card)] border border-[var(--color-border)] rounded-2xl p-4 sm:p-8 md:p-10 shadow-2xl">
             <div className="flex items-center gap-3 mb-6 pb-4 border-b border-[var(--color-border)]">
               <MessageSquare className="w-6 h-6 text-[var(--color-primary)]" />
               <div>

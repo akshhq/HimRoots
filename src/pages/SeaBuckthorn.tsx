@@ -282,7 +282,7 @@ export default function SeaBuckthorn() {
         </section>
 
         {/* Section 2: The Omega 3-6-7-9 Profile */}
-        <section className="mb-20 sm:mb-28 bg-[var(--color-card)] border border-[var(--color-border-gold)] rounded-3xl p-6 sm:p-10 md:p-14 shadow-2xl">
+        <section className="mb-20 sm:mb-28 bg-[var(--color-card)] border border-[var(--color-border-gold)] rounded-3xl p-4 sm:p-10 md:p-14 shadow-2xl">
           <div className="max-w-6xl mx-auto">
             <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14">
               <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-2 block">
@@ -324,7 +324,7 @@ export default function SeaBuckthorn() {
             </div>
 
             {/* Structured Table: Natural Omega Composition */}
-            <div className="bg-[var(--color-background)]/80 border border-[var(--color-border-gold)] rounded-2xl p-6 sm:p-8 mb-8 overflow-x-auto">
+            <div className="bg-[var(--color-background)]/80 border border-[var(--color-border-gold)] rounded-2xl p-4 sm:p-8 mb-8 overflow-x-auto">
               <h3 className="text-lg sm:text-xl font-bold font-serif text-white mb-2 flex items-center gap-2">
                 <FlaskConical className="w-5 h-5 text-[var(--color-primary)]" />
                 Understanding the Natural Omega Composition
@@ -640,7 +640,7 @@ export default function SeaBuckthorn() {
         </section>
 
         {/* Section 8: Experience HIMROOTS WELLNESS (CTA & Products) */}
-        <section className="bg-[var(--color-card)] border border-[var(--color-border-gold)] rounded-3xl p-8 sm:p-12 md:p-16 max-w-5xl mx-auto shadow-2xl text-center">
+        <section className="bg-[var(--color-card)] border border-[var(--color-border-gold)] rounded-3xl p-5 sm:p-12 md:p-16 max-w-5xl mx-auto shadow-2xl text-center">
           <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-2 block">
             Section 8 • Experience Himroots
           </span>
