@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 
 export function Footer() {
@@ -42,11 +42,11 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Footer 4-Column Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12 mb-12">
+        {/* Footer 3-Column Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12 mb-10">
           
           {/* Brand Info */}
-          <div className="lg:col-span-4 flex flex-col items-start">
+          <div className="lg:col-span-5 flex flex-col items-start">
             <Link to="/" className="inline-flex flex-col items-start group mb-3">
               <span className="text-2xl font-serif font-bold text-gold-gradient tracking-[0.2em] uppercase">
                 HIMROOTS
@@ -56,7 +56,7 @@ export function Footer() {
               </span>
             </Link>
 
-            <p className="text-gray-400 text-sm leading-relaxed mb-4">
+            <p className="text-gray-400 text-sm leading-relaxed mb-4 max-w-sm">
               Himroots brings the untouched vitality of wild-foraged Himalayan Sea Buckthorn directly to your daily routine. Ethically sourced from 12,000+ feet altitude in Ladakh and Spiti.
             </p>
 
@@ -75,7 +75,7 @@ export function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-4">
             <h4 className="text-white font-serif font-bold uppercase tracking-wider text-sm mb-5 text-[var(--color-primary-light)]">
               Navigation
             </h4>
@@ -109,10 +109,10 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Formulations */}
-          <div className="lg:col-span-2">
+          {/* Formulations & Contact */}
+          <div className="lg:col-span-3">
             <h4 className="text-white font-serif font-bold uppercase tracking-wider text-sm mb-5 text-[var(--color-primary-light)]">
-              Formulations
+              Formulations & Contact
             </h4>
             <ul className="space-y-3">
               <li>
@@ -130,29 +130,11 @@ export function Footer() {
                   View Cart
                 </Link>
               </li>
+              <li className="pt-2 text-xs text-gray-500">
+                <span className="block text-gray-400">Support: support@himroots.in</span>
+                <span>Dharamshala, Himachal Pradesh</span>
+              </li>
             </ul>
-          </div>
-
-          {/* Newsletter / Stay Connected */}
-          <div className="lg:col-span-3">
-            <h4 className="text-white font-serif font-bold uppercase tracking-wider text-sm mb-5 text-[var(--color-primary-light)]">
-              Join the Himalayan Journey
-            </h4>
-            <p className="text-gray-400 text-sm mb-4">Subscribe for seasonal wild harvest updates and exclusive wellness insights.</p>
-            <form className="flex flex-col gap-3" onSubmit={(e) => e.preventDefault()}>
-              <input 
-                type="email" 
-                placeholder="Enter your email address" 
-                className="bg-black/60 border border-[var(--color-border)] text-white px-4 py-2.5 text-sm rounded-lg focus:outline-none focus:border-[var(--color-primary)] transition-colors"
-                required
-              />
-              <button 
-                type="submit"
-                className="bg-gold-gradient text-black font-bold text-xs uppercase tracking-widest px-4 py-2.5 rounded-lg hover:opacity-95 transition-opacity flex items-center justify-center gap-2"
-              >
-                Subscribe <ArrowRight className="w-4 h-4" />
-              </button>
-            </form>
           </div>
 
         </div>

@@ -45,23 +45,27 @@ export function Navbar() {
       </div>
 
       <header
-        className={`sticky top-0 w-full z-50 ${
+        className={`sticky top-0 w-full z-50 transition-colors duration-200 ${
           isScrolled 
-            ? "bg-black/95 backdrop-blur-md py-1 shadow-xl shadow-black/50 border-b border-[var(--color-border-gold)]" 
-            : "bg-black py-1 sm:py-1.5 border-b border-[var(--color-border)]"
+            ? "bg-black/95 backdrop-blur-md shadow-xl shadow-black/50 border-b border-[var(--color-border-gold)]" 
+            : "bg-black border-b border-[var(--color-border)]"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
-          <div className="flex items-center justify-between gap-3 sm:gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 h-16 sm:h-20 lg:h-[84px] flex items-center">
+          <div className="flex items-center justify-between w-full gap-3 sm:gap-4">
             
-            {/* Prominent Navbar Logo - Sits close to top and bottom borders */}
-            <div className="flex items-center">
+            {/* Prominent Navbar Logo - Vertically fills the navbar close to top & bottom borders */}
+            <div className="flex items-center h-full">
               <Link 
                 to="/" 
                 aria-label="Himroots Home"
-                className="flex items-center group py-0.5"
+                className="flex items-center h-full py-0.5 group"
               >
-                <BrandLogo size="md" imgClassName="h-14 sm:h-16 md:h-[74px] lg:h-[82px] w-auto object-contain" showSubtitle={false} />
+                <BrandLogo 
+                  size="md" 
+                  imgClassName="h-13 sm:h-16 md:h-[68px] lg:h-[76px] w-auto max-h-full object-contain" 
+                  showSubtitle={false} 
+                />
               </Link>
             </div>
 
