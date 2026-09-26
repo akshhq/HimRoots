@@ -42,11 +42,11 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Footer 3-Column Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12 mb-10">
+        {/* Footer 4-Column Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 mb-10">
           
           {/* Brand Info */}
-          <div className="lg:col-span-5 flex flex-col items-start">
+          <div className="lg:col-span-4 flex flex-col items-start">
             <Link to="/" className="inline-flex flex-col items-start group mb-3">
               <span className="text-2xl font-serif font-bold text-gold-gradient tracking-[0.2em] uppercase">
                 HIMROOTS
@@ -75,7 +75,7 @@ export function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-3">
             <h4 className="text-white font-serif font-bold uppercase tracking-wider text-sm mb-5 text-[var(--color-primary-light)]">
               Navigation
             </h4>
@@ -87,7 +87,7 @@ export function Footer() {
               </li>
               <li>
                 <Link to="/about" className="text-gray-400 hover:text-[var(--color-primary)] text-sm transition-colors">
-                  About Us
+                  Our Himalayan Story
                 </Link>
               </li>
               <li>
@@ -96,23 +96,23 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-gray-400 hover:text-[var(--color-primary)] text-sm transition-colors">
-                  Contact Us
-                </Link>
-              </li>
-              <li>
                 <Link to="/about-sea-buckthorn" className="text-gray-400 hover:text-[var(--color-primary)] text-sm transition-colors flex items-center gap-1.5">
                   <span>About Sea Buckthorn</span>
                   <span className="text-[9px] text-[var(--color-primary)] bg-[var(--color-primary)]/15 border border-[var(--color-border-gold)]/60 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">Guide</span>
                 </Link>
               </li>
+              <li>
+                <Link to="/cart" className="text-gray-400 hover:text-[var(--color-primary)] text-sm transition-colors">
+                  Shopping Bag
+                </Link>
+              </li>
             </ul>
           </div>
 
-          {/* Formulations & Contact */}
-          <div className="lg:col-span-3">
+          {/* Formulations */}
+          <div className="lg:col-span-2">
             <h4 className="text-white font-serif font-bold uppercase tracking-wider text-sm mb-5 text-[var(--color-primary-light)]">
-              Formulations & Contact
+              Formulations
             </h4>
             <ul className="space-y-3">
               <li>
@@ -126,24 +126,72 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/cart" className="text-gray-400 hover:text-[var(--color-primary)] text-sm transition-colors">
-                  View Cart
+                <Link to="/shop" className="text-gray-400 hover:text-[var(--color-primary)] text-sm transition-colors">
+                  All Formulations
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Customer Care & Legal Policies (Razorpay Mandatory) */}
+          <div className="lg:col-span-3">
+            <h4 className="text-white font-serif font-bold uppercase tracking-wider text-sm mb-5 text-[var(--color-primary-light)]">
+              Support & Policies
+            </h4>
+            <ul className="space-y-3">
+              <li>
+                <Link to="/contact" className="text-gray-400 hover:text-[var(--color-primary)] text-sm transition-colors">
+                  Contact Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/refund-policy" className="text-gray-400 hover:text-[var(--color-primary)] text-sm transition-colors">
+                  Cancellation & Refund Policy
+                </Link>
+              </li>
+              <li>
+                <Link to="/terms-and-conditions" className="text-gray-400 hover:text-[var(--color-primary)] text-sm transition-colors">
+                  Terms & Conditions
+                </Link>
+              </li>
+              <li>
+                <Link to="/privacy-policy" className="text-gray-400 hover:text-[var(--color-primary)] text-sm transition-colors">
+                  Privacy Policy
                 </Link>
               </li>
               <li className="pt-2 text-xs text-gray-500">
-                <span className="block text-gray-400">Support: support@himroots.in</span>
-                <span>Dharamshala, Himachal Pradesh</span>
+                <span className="block text-gray-400 font-medium">Care Desk: support@himroots.in</span>
+                <span>Solan / Shimla, Himachal Pradesh</span>
               </li>
             </ul>
           </div>
 
         </div>
 
-        {/* Bottom Bar */}
+        {/* Bottom Bar with Compliance Links */}
         <div className="border-t border-[var(--color-border)] pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
           <p className="text-center md:text-left">
             &copy; {new Date().getFullYear()} Himroots Wellness. All rights reserved.
           </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs">
+            <Link to="/terms-and-conditions" className="text-gray-400 hover:text-[var(--color-primary)] transition-colors">
+              Terms & Conditions
+            </Link>
+            <span className="text-gray-700">•</span>
+            <Link to="/refund-policy" className="text-gray-400 hover:text-[var(--color-primary)] transition-colors">
+              Refund Policy
+            </Link>
+            <span className="text-gray-700">•</span>
+            <Link to="/privacy-policy" className="text-gray-400 hover:text-[var(--color-primary)] transition-colors">
+              Privacy Policy
+            </Link>
+            <span className="text-gray-700">•</span>
+            <Link to="/contact" className="text-gray-400 hover:text-[var(--color-primary)] transition-colors">
+              Contact Us
+            </Link>
+          </div>
+
           <div className="flex items-center gap-6">
             <a 
               href="https://www.instagram.com/himroots.wellness/" 
@@ -154,7 +202,7 @@ export function Footer() {
               <InstagramIcon className="w-3.5 h-3.5" />
               <span>Instagram</span>
             </a>
-            <span>Wild-Foraged in the Himalayas</span>
+            <span className="hidden sm:inline">Wild-Foraged in the Himalayas</span>
           </div>
         </div>
 

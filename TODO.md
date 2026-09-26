@@ -57,6 +57,15 @@
 - [x] **Contact Inquiries:** Automated forwarding of customer contact submissions.
 - [x] **Non-Blocking Resilience:** Email dispatch failures never block or invalidate payment verification.
 
+### Legal & Razorpay Merchant Compliance
+- [x] **Standard Placeholder Policy Pages:** Created dedicated, responsive pages for:
+  - `/refund-policy` (and `/cancellation-and-refund`) — Cancellation & Refund Policy
+  - `/terms-and-conditions` (and `/terms`) — Terms & Conditions
+  - `/privacy-policy` (and `/privacy`) — Privacy Policy
+  - `/contact` (and `/contact-us`) — Contact Us
+- [x] **Compliance Navigation & Footer Links:** Integrated policy links into the desktop & mobile Footer grid, Footer bottom copyright bar, and the Checkout purchase confirmation line.
+- [x] **XML Sitemap Indexing:** Added all policy endpoints to `public/sitemap.xml`.
+
 ### SEO & Performance
 - [x] **Search Metadata:** Dynamic title and description tags across all key views.
 - [x] **Social Sharing:** Open Graph and Twitter Card tags configured with brand imagery.
@@ -67,7 +76,12 @@
 ## 2. Launch Action Items
 
 ### Client Actions (Before Live Launch)
-- [ ] **Razorpay Live Activation:** Complete business KYC and activate live API keys (`rzp_live_...`).
+- [ ] **Update Placeholder Policies with Real Legal Content (High Priority for Razorpay):**
+  - [ ] **Cancellation & Refund Policy (`src/pages/RefundPolicy.tsx`):** Review and update return window (currently 7 days placeholder), replacement rules, and fulfillment policy.
+  - [ ] **Terms & Conditions (`src/pages/TermsAndConditions.tsx`):** Add official registered legal business/proprietorship entity name, GSTIN, registered corporate address, and Grievance Officer contact details.
+  - [ ] **Privacy Policy (`src/pages/PrivacyPolicy.tsx`):** Review user data collection policies and ensure alignment with official business practices.
+  - [ ] **Contact Us (`src/pages/Contact.tsx`):** Verify official customer care phone number, email inboxes, and physical sourcing/dispatch address.
+- [ ] **Razorpay Live Activation:** Submit the website (`https://himroots.in`) with active policy links to Razorpay compliance team, complete business KYC, and activate live API keys (`rzp_live_...`).
 - [ ] **Email Domain Authentication:** Configure SPF, DKIM, and DMARC DNS records for `himroots.in` via Resend or Brevo.
 - [ ] **Mailbox Setup:** Verify incoming and outgoing inboxes for `orders@himroots.in` and `support@himroots.in`.
 - [ ] **Domain Binding:** Attach production domain `himroots.in` (and `www.himroots.in`) in the hosting panel.

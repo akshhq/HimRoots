@@ -11,6 +11,9 @@ import PaymentFailed from "./pages/PaymentFailed";
 import About from "./pages/About";
 import SeaBuckthorn from "./pages/SeaBuckthorn";
 import Contact from "./pages/Contact";
+import RefundPolicy from "./pages/RefundPolicy";
+import TermsAndConditions from "./pages/TermsAndConditions";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -33,6 +36,12 @@ function App() {
             <Route path="sea-buckthorn" element={<SeaBuckthorn />} />
             <Route path="about-sea-buckthorn" element={<SeaBuckthorn />} />
             <Route path="himalayan-seabuckthorn-juice" element={<SeaBuckthorn />} />
+            <Route path="refund-policy" element={<RefundPolicy />} />
+            <Route path="cancellation-and-refund" element={<RefundPolicy />} />
+            <Route path="terms" element={<TermsAndConditions />} />
+            <Route path="terms-and-conditions" element={<TermsAndConditions />} />
+            <Route path="privacy" element={<PrivacyPolicy />} />
+            <Route path="privacy-policy" element={<PrivacyPolicy />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

@@ -570,9 +570,18 @@ export default function Checkout() {
                 )}
               </Button>
 
-              <div className="text-xs text-center text-gray-500 flex flex-col items-center gap-2">
-                <p>By proceeding, you agree to Himroots terms & conditions.</p>
-                <div className="flex items-center gap-2 mt-1">
+              <div className="text-xs text-center text-gray-400 flex flex-col items-center gap-2">
+                <p className="leading-relaxed">
+                  By clicking Pay, you agree to Himroots{" "}
+                  <Link to="/terms-and-conditions" target="_blank" className="text-[var(--color-primary)] hover:underline">
+                    Terms & Conditions
+                  </Link>{" "}
+                  and{" "}
+                  <Link to="/refund-policy" target="_blank" className="text-[var(--color-primary)] hover:underline">
+                    Cancellation & Refund Policy
+                  </Link>.
+                </p>
+                <div className="flex items-center gap-2 mt-1 text-gray-500">
                   <span className="px-2 py-0.5 bg-black rounded border border-[var(--color-border)]">100% Secure</span>
                   <span className="px-2 py-0.5 bg-black rounded border border-[var(--color-border)]">Verified API</span>
                 </div>
