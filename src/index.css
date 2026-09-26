@@ -26,9 +26,9 @@
   --color-border-gold: rgba(223, 183, 108, 0.3);
   --color-border-gold-strong: rgba(223, 183, 108, 0.65);
 
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-serif: 'Marcellus', 'Cinzel', Georgia, serif;
-  --font-tagline: 'Marcellus', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-tagline: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 }
 
 @layer base {
@@ -45,16 +45,24 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  h1, h2, h3, h4, .font-serif-luxury {
+  h1, h2 {
     font-family: var(--font-serif);
-    letter-spacing: 0.03em;
+    letter-spacing: -0.01em;
+  }
+  h3, h4, h5, h6 {
+    font-family: var(--font-sans);
+    letter-spacing: -0.01em;
+  }
+  .font-serif-luxury {
+    font-family: var(--font-serif);
+    letter-spacing: -0.01em;
   }
 }
 
-/* Luxury Foil, Tagline & Gradient Utilities */
+/* Luxury Tagline & Gradient Utilities */
 .font-tagline {
   font-family: var(--font-tagline);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
 }
 
 /* Remove all animations across the entire application */
