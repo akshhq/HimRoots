@@ -14,26 +14,25 @@ export const config = {
   
   // Supabase Configuration
   supabase: {
-    url: process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '',
+    url: process.env.SUPABASE_URL || '',
     serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
-    anonKey: process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || '',
   },
   
   // Razorpay Configuration
   razorpay: {
-    keyId: process.env.RAZORPAY_KEY_ID || process.env.VITE_RAZORPAY_KEY_ID || '',
+    keyId: process.env.RAZORPAY_KEY_ID || '',
     keySecret: process.env.RAZORPAY_KEY_SECRET || '',
     webhookSecret: process.env.RAZORPAY_WEBHOOK_SECRET || '',
   },
   
   // Secret for signing order access tokens (IDOR protection)
-  orderSecret: process.env.ORDER_ACCESS_SECRET || process.env.SUPABASE_JWT_SECRET || process.env.RAZORPAY_KEY_SECRET || 'himroots_order_access_secret_salt',
+  orderSecret: process.env.RAZORPAY_KEY_SECRET || 'himroots_order_access_secret_salt',
 
   // Email Configuration (Resend or Brevo)
   email: {
-    apiKey: process.env.EMAIL_API_KEY || process.env.RESEND_API_KEY || process.env.BREVO_API_KEY || '',
-    from: process.env.EMAIL_FROM || process.env.SENDER_EMAIL || 'Himroots Wellness <orders@himroots.in>',
-    clientOrderEmail: process.env.CLIENT_ORDER_EMAIL || process.env.CLIENT_NOTIFICATION_EMAIL || 'orders@himroots.in',
+    apiKey: process.env.EMAIL_API_KEY || '',
+    from: process.env.EMAIL_FROM || 'Himroots Wellness <orders@himroots.in>',
+    clientOrderEmail: process.env.CLIENT_ORDER_EMAIL || 'orders@himroots.in',
     clientSupportEmail: process.env.CLIENT_SUPPORT_EMAIL || 'support@himroots.in',
     provider: (process.env.EMAIL_PROVIDER || 'resend').toLowerCase() as 'resend' | 'brevo',
   },

@@ -141,7 +141,6 @@ npm start
 NODE_ENV=production
 PORT=5000
 CORS_ORIGIN=https://himroots.in,https://www.himroots.in
-ORDER_SECRET=your_long_random_hmac_secret_key
 
 SUPABASE_URL=https://your-project-id.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=eyJ...your-service-role-key...
@@ -174,8 +173,8 @@ CLIENT_SUPPORT_EMAIL=support@himroots.in
 2. Go to SQL Editor and run `supabase/schema.sql` to create all tables and RLS policies.
 3. Optionally run `supabase/seed.sql` to seed product data.
 4. Go to Project Settings > API and copy:
-   - **Project URL** → `SUPABASE_URL` and `VITE_SUPABASE_URL`
-   - **anon/public key** → `VITE_SUPABASE_ANON_KEY`
+   - **Project URL** → `SUPABASE_URL` (backend) and `VITE_SUPABASE_URL` (frontend)
+   - **anon/public key** → `VITE_SUPABASE_ANON_KEY` (frontend)
    - **service_role key** → `SUPABASE_SERVICE_ROLE_KEY` (backend only, never expose to frontend)
 
 ### Database tables
@@ -215,8 +214,10 @@ CLIENT_SUPPORT_EMAIL=support@himroots.in
 
 1. Sign up at resend.com.
 2. Add and verify domain `himroots.in` (adds DNS records: SPF, DKIM).
-3. Create API key > copy to `EMAIL_API_KEY` and `RESEND_API_KEY` on backend.
-4. Set `EMAIL_FROM=Himroots Wellness <orders@himroots.in>`.
+3. Create API key > copy to `EMAIL_API_KEY` on backend.
+4. Set `EMAIL_PROVIDER=resend`.
+5. Set `EMAIL_FROM=Himroots Wellness <orders@himroots.in>`.
+6. Set `CLIENT_ORDER_EMAIL=orders@himroots.in` and `CLIENT_SUPPORT_EMAIL=support@himroots.in`.
 
 ### Brevo (Alternative)
 
