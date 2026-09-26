@@ -138,11 +138,11 @@ export default function Contact() {
                   Email Support
                 </div>
                 <div className="flex flex-col gap-1 text-sm font-medium text-gray-200">
-                  <a href="mailto:support@himroots.com" className="hover:text-[var(--color-primary)] transition-colors">
-                    support@himroots.com
+                  <a href="mailto:support@himroots.in" className="hover:text-[var(--color-primary)] transition-colors">
+                    support@himroots.in
                   </a>
-                  <a href="mailto:orders@himroots.com" className="text-xs text-gray-400 hover:text-[var(--color-primary)] transition-colors">
-                    orders@himroots.com (Order Tracking)
+                  <a href="mailto:orders@himroots.in" className="text-xs text-gray-400 hover:text-[var(--color-primary)] transition-colors">
+                    orders@himroots.in (Order Tracking)
                   </a>
                 </div>
                 <p className="text-[11px] text-gray-500 mt-1">Typical response within 24 business hours</p>

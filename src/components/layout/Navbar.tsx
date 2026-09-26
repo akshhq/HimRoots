@@ -3,7 +3,6 @@ import { Link, useLocation } from "react-router-dom";
 import { ShoppingBag, Menu, X, Sparkles } from "lucide-react";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { useCartStore } from "@/store/cartStore";
-import { BrandLogo } from "@/components/ui/BrandLogo";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -51,23 +50,23 @@ export function Navbar() {
             : "bg-black border-b border-[var(--color-border)]"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 h-16 sm:h-20 lg:h-[84px] flex items-center">
-          <div className="flex items-center justify-between w-full gap-3 sm:gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 py-1 sm:py-1.5">
+          <div className="flex items-center justify-between gap-3 sm:gap-4">
             
-            {/* Prominent Navbar Logo - Vertically fills the navbar close to top & bottom borders */}
-            <div className="flex items-center h-full">
-              <Link 
-                to="/" 
-                aria-label="Himroots Home"
-                className="flex items-center h-full py-0.5 group"
-              >
-                <BrandLogo 
-                  size="md" 
-                  imgClassName="h-13 sm:h-16 md:h-[68px] lg:h-[76px] w-auto max-h-full object-contain" 
-                  showSubtitle={false} 
-                />
-              </Link>
-            </div>
+            {/* Prominent Navbar Logo - ~1.5x rendered size, sitting close to top & bottom borders */}
+            <div className="flex items-center">
+            <Link 
+              to="/" 
+              aria-label="Himroots Home"
+              className="flex items-center group py-0.5"
+            >
+              <img
+                src="/images/himroots-logo.png"
+                alt="Himroots Wellness"
+                className="h-[68px] sm:h-[74px] md:h-[80px] lg:h-[84px] w-auto object-contain filter drop-shadow-[0_2px_8px_rgba(223,183,108,0.25)]"
+              />
+            </Link>
+          </div>
 
             {/* Desktop Navigation Links */}
             <nav className="hidden md:flex items-center gap-8 lg:gap-10">

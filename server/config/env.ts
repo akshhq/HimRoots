@@ -28,9 +28,9 @@ export const config = {
   // Email Configuration (Resend or Brevo)
   email: {
     apiKey: process.env.EMAIL_API_KEY || process.env.RESEND_API_KEY || process.env.BREVO_API_KEY || '',
-    from: process.env.EMAIL_FROM || process.env.SENDER_EMAIL || 'Himroots Wellness <orders@himroots.com>',
-    clientOrderEmail: process.env.CLIENT_ORDER_EMAIL || process.env.CLIENT_NOTIFICATION_EMAIL || 'orders@himroots.com',
-    clientSupportEmail: process.env.CLIENT_SUPPORT_EMAIL || 'support@himroots.com',
+    from: process.env.EMAIL_FROM || process.env.SENDER_EMAIL || 'Himroots Wellness <orders@himroots.in>',
+    clientOrderEmail: process.env.CLIENT_ORDER_EMAIL || process.env.CLIENT_NOTIFICATION_EMAIL || 'orders@himroots.in',
+    clientSupportEmail: process.env.CLIENT_SUPPORT_EMAIL || 'support@himroots.in',
     provider: (process.env.EMAIL_PROVIDER || 'resend').toLowerCase() as 'resend' | 'brevo',
   },
 };

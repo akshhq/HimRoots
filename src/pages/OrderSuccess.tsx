@@ -267,10 +267,10 @@ export default function OrderSuccess() {
 
           <div className="flex flex-wrap gap-2 text-xs w-full md:w-auto">
             <a
-              href="mailto:support@himroots.com"
+              href="mailto:support@himroots.in"
               className="inline-flex items-center gap-1.5 px-3 py-2 bg-black hover:bg-[var(--color-primary)] hover:text-black border border-[var(--color-border)] rounded text-gray-200 transition-colors"
             >
-              <Mail className="w-3.5 h-3.5" /> support@himroots.com
+              <Mail className="w-3.5 h-3.5" /> support@himroots.in
             </a>
             <Link
               to="/contact"
