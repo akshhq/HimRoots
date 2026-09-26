@@ -130,7 +130,7 @@ export default function OrderSuccess() {
         <div className="container mx-auto px-4 max-w-3xl">
         {/* Success Header Icon & Title */}
         <div className="text-center mb-10">
-          <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-500/30 animate-scaleUp">
+          <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-500/30">
             <CheckCircle2 className="w-10 h-10 text-green-400" />
           </div>
 

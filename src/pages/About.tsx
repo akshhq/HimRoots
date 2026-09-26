@@ -58,7 +58,7 @@ export default function About() {
             {/* Elegant Tagline Quote Box */}
             <div className="p-4 sm:p-5 rounded-xl bg-[var(--color-card)] border border-[var(--color-border-gold)]">
               <span className="font-tagline text-sm sm:text-base md:text-lg text-[var(--color-primary-light)] font-medium uppercase tracking-[0.15em] block mb-1.5">
-                "Nature's Goodness in Every Sip"
+                "SIP THE POWER OF HIMALAYAS"
               </span>
               <p className="text-xs text-gray-400">
                 A simple promise to deliver the wild vitality of the Himalayas directly to your daily routine.

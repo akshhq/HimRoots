@@ -17,7 +17,7 @@ export default function NotFound() {
           
           {/* Subtle Icon Badge */}
           <div className="w-20 h-20 rounded-full bg-[var(--color-secondary)] border border-[var(--color-border-gold)] flex items-center justify-center mx-auto mb-6 shadow-2xl">
-            <Compass className="w-10 h-10 text-[var(--color-primary)] animate-pulse" />
+            <Compass className="w-10 h-10 text-[var(--color-primary)]" />
           </div>
 
           <span className="text-xs uppercase font-bold tracking-[0.25em] text-[var(--color-primary)] block mb-2">

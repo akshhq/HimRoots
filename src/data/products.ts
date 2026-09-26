@@ -33,7 +33,7 @@ export const products: Product[] = [
     id: "prod_001",
     name: "Himroots Pure Sea Buckthorn Pulp",
     tagline: "Nature's Shield for Better Health",
-    scriptQuote: "Nature's Goodness in Every Sip",
+    scriptQuote: "SIP THE POWER OF HIMALAYAS",
     slug: "sea-buckthorn-pulp",
     volume: "500 ml",
     description: "HIMROOTS Sea Buckthorn Pulp is made from handpicked, wild-harvested Himalayan sea buckthorn berries, rich in essential nutrients, vitamins and antioxidants. Formulated with 90% pure berry pulp and 5 synergistic Ayurvedic botanicals to nourish your body, boost immunity and support overall wellness.",

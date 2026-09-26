@@ -40,12 +40,12 @@ export function BrandLogo({ className = "", imgClassName, size = "md", showSubti
       <img
         src="/images/himroots-logo.png"
         alt="HIMROOTS — Pure • Natural • Wild"
-        className={`${imgClassName || current.imgClass} object-contain transition-all duration-300 filter drop-shadow-[0_2px_8px_rgba(223,183,108,0.25)] group-hover:drop-shadow-[0_4px_16px_rgba(223,183,108,0.5)]`}
+        className={`${imgClassName || current.imgClass} object-contain filter drop-shadow-[0_2px_8px_rgba(223,183,108,0.25)]`}
       />
 
       {showSubtitle && (
         <span
-          className={`uppercase text-[var(--color-primary)] font-semibold mt-1.5 opacity-90 transition-opacity group-hover:opacity-100 ${current.subClass}`}
+          className={`uppercase text-[var(--color-primary)] font-semibold mt-1.5 opacity-90 ${current.subClass}`}
         >
           PURE • NATURAL • WILD
         </span>

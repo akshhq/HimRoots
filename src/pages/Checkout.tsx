@@ -316,7 +316,7 @@ export default function Checkout() {
 
         {/* Status / Error Alerts */}
         {errorMessage && (
-          <div className="mb-8 p-4 rounded-lg bg-red-950/40 border border-red-500/50 flex items-start gap-3 text-red-200 animate-fadeIn">
+          <div className="mb-8 p-4 rounded-lg bg-red-950/40 border border-red-500/50 flex items-start gap-3 text-red-200">
             <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
             <div className="flex-1 text-sm leading-relaxed">{errorMessage}</div>
             <button
@@ -329,7 +329,7 @@ export default function Checkout() {
         )}
 
         {infoMessage && (
-          <div className="mb-8 p-4 rounded-lg bg-amber-950/40 border border-amber-500/50 flex items-start gap-3 text-amber-200 animate-fadeIn">
+          <div className="mb-8 p-4 rounded-lg bg-amber-950/40 border border-amber-500/50 flex items-start gap-3 text-amber-200">
             <Info className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
             <div className="flex-1 text-sm leading-relaxed">{infoMessage}</div>
             <button

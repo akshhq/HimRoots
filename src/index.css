@@ -1,29 +1,29 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #120e0b; /* Deep warm mountain bronze/earth charcoal */
+  --color-background: #000000; /* Pitch black */
   --color-foreground: #f6f1ea; /* Soft warm ivory */
   
-  --color-card: #1c1510;       /* Rich warm craft canister brown */
+  --color-card: #050505;       /* Pitch black */
   --color-card-foreground: #f6f1ea;
   
   --color-primary: #dfb76c;    /* Himalayan golden foil */
   --color-primary-light: #f5dc9e;
   --color-primary-dark: #b88a38;
-  --color-primary-foreground: #120e0b;
+  --color-primary-foreground: #000000;
   
-  --color-secondary: #241b14;  /* Deep kraft bronze */
+  --color-secondary: #0a0a0a;  /* Pitch black subtle shade */
   --color-secondary-foreground: #f6f1ea;
   
-  --color-muted: #2e231b;
+  --color-muted: #141414;
   --color-muted-foreground: #a89886;
   
   --color-accent: #ea580c;     /* Wild Himalayan Sea Buckthorn berry orange */
   --color-accent-light: #fb923c;
   --color-accent-foreground: #ffffff;
 
-  --color-border: #382b21;     /* Warm dark wood/kraft border */
-  --color-border-gold: rgba(223, 183, 108, 0.35);
+  --color-border: #1f1f1f;     /* Crisp pitch dark border */
+  --color-border-gold: rgba(223, 183, 108, 0.3);
   --color-border-gold-strong: rgba(223, 183, 108, 0.65);
 
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
@@ -35,8 +35,11 @@
   * {
     border-color: var(--color-border);
   }
+  html, body, #root {
+    background-color: #000000;
+  }
   body {
-    background-color: var(--color-background);
+    background-color: #000000;
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -54,14 +57,29 @@
   letter-spacing: 0.08em;
 }
 
-/* Subtle red visual treatment for the hero logo */
-.hero-logo-red-treatment {
-  filter: drop-shadow(0 0 24px rgba(225, 29, 72, 0.38)) drop-shadow(0 4px 16px rgba(223, 183, 108, 0.28));
-  transition: filter 0.4s ease, transform 0.4s ease;
+/* Remove all animations across the entire application */
+*, *::before, *::after {
+  animation: none !important;
+  transition: none !important;
 }
-.hero-logo-red-treatment:hover {
-  filter: drop-shadow(0 0 32px rgba(225, 29, 72, 0.55)) drop-shadow(0 6px 20px rgba(223, 183, 108, 0.4));
-  transform: translateY(-2px);
+
+/* Allow spinner animation for active form / payment submissions */
+.animate-spin {
+  animation: spin 1s linear infinite !important;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Crisp drop-shadow for the hero logo without hover animation */
+.hero-logo-red-treatment {
+  filter: drop-shadow(0 0 16px rgba(223, 183, 108, 0.25));
 }
 
 .text-gold-gradient {
@@ -100,12 +118,12 @@
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-background);
+  background: #000000;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-muted);
+  background: #1f1f1f;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-border);
+  background: #333333;
 }

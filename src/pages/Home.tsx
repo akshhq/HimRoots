@@ -95,33 +95,26 @@ export default function Home() {
       <div className="flex flex-col bg-[var(--color-background)]">
       
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-1 sm:pt-2 pb-16 md:pb-24 border-b border-[var(--color-border)]">
-        {/* Subtle Ambient Glows */}
-        <div className="absolute top-1/4 left-1/3 w-[600px] h-[600px] bg-[var(--color-primary)]/10 rounded-full blur-[160px] pointer-events-none" />
-        <div className="absolute bottom-10 right-1/4 w-[450px] h-[450px] bg-[var(--color-accent)]/10 rounded-full blur-[140px] pointer-events-none" />
-        
-        {/* Authentic Himalayan Peaks Background */}
-        <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
+      <section className="relative overflow-hidden pt-1 sm:pt-2 pb-16 md:pb-24 border-b border-[var(--color-border)] bg-black">
+        {/* Authentic Himalayan Peaks Background - Subtle and deep black */}
+        <div className="absolute inset-0 z-0 opacity-10 pointer-events-none">
           <img 
             src="/images/himalayan-hero-peaks.jpg" 
             alt="Pristine Himalayan Mountain Peaks in Ladakh" 
             className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-background)] via-[var(--color-background)]/80 to-[var(--color-background)]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-black" />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 relative z-10">
           
-          {/* Centered Main Website Logo with subtle red visual treatment */}
+          {/* Centered Main Website Logo */}
           <div 
             ref={heroLogoRef}
             className="flex flex-col items-center justify-center text-center pt-1 pb-4 sm:pb-6"
           >
-            <div className="relative group inline-block">
-              {/* Subtle ambient warm red berry aura */}
-              <div className="absolute -inset-4 sm:-inset-6 rounded-full bg-gradient-to-r from-red-600/20 via-rose-500/25 to-amber-500/15 blur-2xl pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity duration-700" />
-              
-              {/* Prominent Hero Logo with subtle red tint/drop-shadow */}
+            <div className="relative inline-block">
+              {/* Prominent Hero Logo */}
               <BrandLogo 
                 size="xl" 
                 imgClassName="h-[68px] sm:h-36 md:h-44 w-auto hero-logo-red-treatment"
@@ -134,7 +127,7 @@ export default function Home() {
             <div className="mt-3 sm:mt-4 flex items-center justify-center gap-2 sm:gap-3">
               <span className="h-[1px] w-6 sm:w-16 bg-gradient-to-r from-transparent via-[var(--color-primary)] to-transparent" />
               <span className="font-tagline text-xs sm:text-base md:text-lg tracking-[0.16em] sm:tracking-[0.22em] uppercase text-[var(--color-primary-light)] font-medium">
-                Nature's Goodness in Every Sip
+                SIP THE POWER OF HIMALAYAS
               </span>
               <span className="h-[1px] w-6 sm:w-16 bg-gradient-to-r from-transparent via-[var(--color-primary)] to-transparent" />
             </div>
@@ -149,11 +142,11 @@ export default function Home() {
               {/* High Altitude Terroir Badge */}
               <Link 
                 to="/about-sea-buckthorn"
-                className="group inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-[var(--color-secondary)] border border-[var(--color-border-gold)] text-[9px] sm:text-[10px] md:text-xs font-semibold tracking-[0.16em] sm:tracking-[0.2em] text-[var(--color-primary)] uppercase mb-4 sm:mb-5 hover:border-[var(--color-primary)] hover:bg-[var(--color-secondary)]/80 transition-all"
+                className="group inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-[var(--color-secondary)] border border-[var(--color-border-gold)] text-[9px] sm:text-[10px] md:text-xs font-semibold tracking-[0.16em] sm:tracking-[0.2em] text-[var(--color-primary)] uppercase mb-4 sm:mb-5 hover:border-[var(--color-primary)]"
               >
                 <Mountain className="w-3.5 h-3.5 flex-shrink-0" />
                 <span>Wild-Harvested at 12,000+ Feet in Ladakh & Spiti</span>
-                <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                <ArrowRight className="w-3 h-3" />
               </Link>
 
               {/* Main Heading */}
@@ -188,7 +181,7 @@ export default function Home() {
                 <Button 
                   size="lg" 
                   asChild
-                  className="w-full sm:w-auto uppercase tracking-widest text-xs font-bold bg-gold-gradient hover:opacity-95 text-black shadow-lg shadow-[var(--color-primary)]/20 px-8 py-4 sm:py-5"
+                  className="w-full sm:w-auto uppercase tracking-widest text-xs font-bold bg-gold-gradient text-black shadow-lg shadow-[var(--color-primary)]/20 px-8 py-4 sm:py-5"
                 >
                   <a href="#products">
                     Explore 2 Formulations <ArrowRight className="w-4 h-4 ml-2" />
@@ -198,7 +191,7 @@ export default function Home() {
                   variant="outline" 
                   size="lg" 
                   asChild 
-                  className="w-full sm:w-auto uppercase tracking-widest text-xs font-bold border-[var(--color-border-gold)] hover:bg-[var(--color-primary)]/10 text-white px-8 py-4 sm:py-5"
+                  className="w-full sm:w-auto uppercase tracking-widest text-xs font-bold border-[var(--color-border-gold)] text-white px-8 py-4 sm:py-5"
                 >
                   <Link to="/about">
                     Our Himalayan Story
@@ -211,23 +204,19 @@ export default function Home() {
             {/* Right Column: Freshly Harvested Berries Image with Luxury Border */}
             <div className="lg:col-span-5 relative mt-4 lg:mt-0">
               <div className="relative group">
-                
-                {/* Ambient Glow */}
-                <div className="absolute -inset-2 rounded-3xl bg-gradient-to-tr from-[var(--color-primary)]/30 via-[var(--color-accent)]/20 to-transparent blur-xl opacity-75 group-hover:opacity-100 transition duration-700 pointer-events-none" />
-                
                 {/* Border Container */}
                 <div className="relative rounded-2xl overflow-hidden border-2 border-[var(--color-border-gold)] bg-[var(--color-card)] shadow-2xl">
                   <img 
                     src="/images/himroots-harvest-berries.jpg" 
                     alt="Freshly Harvested Himalayan Sea Buckthorn Berries in Wooden Bowl" 
-                    className="w-full h-[260px] sm:h-[400px] lg:h-[480px] object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-[260px] sm:h-[400px] lg:h-[480px] object-cover object-center"
                   />
                   <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-4 sm:p-6 flex items-end justify-between">
                     <div>
                       <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[var(--color-primary)] block">Handpicked Daily</span>
                       <h3 className="text-sm sm:text-base font-serif font-bold text-white">Wild Trans-Himalayan Berries</h3>
                     </div>
-                    <span className="text-[10px] text-gray-300 bg-black/60 backdrop-blur-sm px-2.5 py-1 rounded-full border border-white/10">100% Raw</span>
+                    <span className="text-[10px] text-gray-300 bg-black/60 px-2.5 py-1 rounded-full border border-white/10">100% Raw</span>
                   </div>
                 </div>
               </div>

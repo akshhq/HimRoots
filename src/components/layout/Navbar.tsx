@@ -3,7 +3,6 @@ import { Link, useLocation } from "react-router-dom";
 import { ShoppingBag, Menu, X, Sparkles } from "lucide-react";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { useCartStore } from "@/store/cartStore";
-import { useLogoStore } from "@/store/logoStore";
 import { BrandLogo } from "@/components/ui/BrandLogo";
 
 export function Navbar() {
@@ -12,12 +11,6 @@ export function Navbar() {
   const location = useLocation();
   const { getTotals } = useCartStore();
   const { itemsCount } = getTotals();
-  const isHeroLogoVisible = useLogoStore((state) => state.isHeroLogoVisible);
-
-  const isHomePage = location.pathname === "/";
-  // The logo should smoothly appear inside the navbar only when scrolled past hero on Home,
-  // or always on any internal page.
-  const showNavLogo = !isHomePage || !isHeroLogoVisible;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -52,7 +45,7 @@ export function Navbar() {
       </div>
 
       <header
-        className={`sticky top-0 w-full z-50 transition-all duration-300 ${
+        className={`sticky top-0 w-full z-50 ${
           isScrolled 
             ? "bg-black py-2.5 sm:py-3 shadow-xl shadow-black/50 border-b border-[var(--color-border-gold)]" 
             : "bg-black py-3 sm:py-4 border-b border-[var(--color-border)]"
@@ -61,18 +54,14 @@ export function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
           <div className="flex items-center justify-between gap-3 sm:gap-4">
             
-            {/* Logo Slot - Dynamically revealed on scroll or internal pages */}
-            <div className="flex items-center min-w-[130px] sm:min-w-[160px]">
+            {/* Prominent Navbar Logo - Always visible, increased size */}
+            <div className="flex items-center">
               <Link 
                 to="/" 
                 aria-label="Himroots Home"
-                className={`flex items-center gap-2 group transition-all duration-500 ease-in-out ${
-                  showNavLogo
-                    ? "opacity-100 translate-y-0 scale-100 pointer-events-auto"
-                    : "opacity-0 -translate-y-2 scale-95 pointer-events-none select-none"
-                }`}
+                className="flex items-center gap-2 group"
               >
-                <BrandLogo size="sm" imgClassName="h-11 sm:h-13 md:h-[56px] w-auto" showSubtitle={false} />
+                <BrandLogo size="md" imgClassName="h-14 sm:h-16 md:h-20 lg:h-[84px] w-auto" showSubtitle={false} />
               </Link>
             </div>
 
@@ -84,7 +73,7 @@ export function Navbar() {
                   <Link
                     key={link.path}
                     to={link.path}
-                    className={`text-xs font-semibold uppercase tracking-[0.2em] transition-colors relative py-1 hover:text-[var(--color-primary)] ${
+                    className={`text-xs font-semibold uppercase tracking-[0.2em] relative py-1 hover:text-[var(--color-primary)] ${
                       isActive ? "text-[var(--color-primary)]" : "text-gray-300"
                     }`}
                   >
@@ -106,7 +95,7 @@ export function Navbar() {
                 rel="noopener noreferrer"
                 title="Follow Himroots on Instagram (@himroots.wellness)"
                 aria-label="Follow Himroots on Instagram"
-                className="text-gray-300 hover:text-[var(--color-primary)] transition-all duration-300 p-1.5 rounded-full hover:bg-[var(--color-secondary)]"
+                className="text-gray-300 hover:text-[var(--color-primary)] p-1.5 rounded-full hover:bg-[var(--color-secondary)]"
               >
                 <InstagramIcon className="w-5 h-5" />
               </a>
@@ -115,7 +104,7 @@ export function Navbar() {
               <Link 
                 to="/cart" 
                 aria-label="Shopping Cart"
-                className="relative text-gray-300 hover:text-[var(--color-primary)] transition-colors p-1.5 rounded-full hover:bg-[var(--color-secondary)]"
+                className="relative text-gray-300 hover:text-[var(--color-primary)] p-1.5 rounded-full hover:bg-[var(--color-secondary)]"
               >
                 <ShoppingBag className="w-5 h-5" />
                 {itemsCount > 0 && (
@@ -127,7 +116,7 @@ export function Navbar() {
               
               {/* Mobile Menu Toggle */}
               <button 
-                className="md:hidden text-gray-300 hover:text-[var(--color-primary)] transition-colors p-1 rounded-md"
+                className="md:hidden text-gray-300 hover:text-[var(--color-primary)] p-1 rounded-md"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
               >
@@ -140,7 +129,7 @@ export function Navbar() {
 
         {/* Mobile Menu Drawer */}
         {isMobileMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 w-full bg-black border-t border-[var(--color-border)] px-6 py-8 flex flex-col gap-6 shadow-2xl animate-in slide-in-from-top-2 duration-200">
+          <div className="md:hidden absolute top-full left-0 w-full bg-black border-t border-[var(--color-border)] px-6 py-8 flex flex-col gap-6 shadow-2xl">
             <div className="flex flex-col gap-4">
               {navLinks.map((link) => {
                 const isActive = location.pathname === link.path;
@@ -149,7 +138,7 @@ export function Navbar() {
                     key={link.path}
                     to={link.path}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={`text-base font-medium uppercase tracking-[0.2em] py-2 border-b border-[var(--color-border)]/50 transition-colors ${
+                    className={`text-base font-medium uppercase tracking-[0.2em] py-2 border-b border-[var(--color-border)]/50 ${
                       isActive ? "text-[var(--color-primary)] font-bold" : "text-gray-200 hover:text-[var(--color-primary)]"
                     }`}
                   >
