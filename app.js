@@ -1,6 +1,5 @@
 import { products, getProduct, carouselSlides, clinicalStudies, customerReviews } from './data.js';
 
-const app = document.querySelector('#app');
 const cartKey = 'himroots-cart-storage';
 let cart = JSON.parse(localStorage.getItem(cartKey) || '[]');
 let lastOrder = JSON.parse(sessionStorage.getItem('himroots-last-order') || 'null');
@@ -135,7 +134,8 @@ function globalFooter() {
 }
 
 function layout(content) {
-  app.innerHTML = `${globalHeader()}<main>${content}</main>${globalFooter()}`;
+  const container = document.querySelector('#app') || document.body;
+  container.innerHTML = `${globalHeader()}<main>${content}</main>${globalFooter()}`;
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
@@ -1443,4 +1443,9 @@ document.addEventListener('submit', async (event) => {
 });
 
 window.addEventListener('popstate', render);
-render();
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', render);
+} else {
+  render();
+}
