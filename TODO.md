@@ -90,14 +90,34 @@
 | Credential | Current State | Action Required |
 |---|---|---|
 | **Supabase URL & Keys** | Developer's temp project (`grcpnlnjpgecdssedwxn`) | Client creates their own Supabase project → replace all `SUPABASE_*` and `VITE_SUPABASE_*` env vars |
-| **Postgres Password** | Developer's DB password committed in `.env` | Rotate after client Supabase project is set up |
-| **Razorpay Keys** | Still using placeholder test values | Client provides live Razorpay keys after KYC |
-| **Resend API Key** | Still using placeholder | Client creates Resend account → provides `re_...` key |
-| **Email From Address** | `orders@himroots.in` placeholder | Client sets up Hostinger mailbox + Resend domain verification |
+| **Postgres Password** | Developer's DB password in `.env` | Rotate after client Supabase project is set up |
+| **Razorpay Keys** | Placeholder test values | Client provides live Razorpay keys after KYC |
+| **Resend API Key** | Developer's personal key (`re_GzAzHrtt_...`) | Client creates their own Resend account → replaces `RESEND_API_KEY` and `EMAIL_API_KEY` |
+| **Email From Address** | `orders@himroots.in` (not verified yet) | Client must complete Resend domain verification for `himroots.in` |
+
+### What's Needed for Resend to Work Fully
+
+Before transactional emails will actually send in production, the client must complete all of the following on their own Resend account:
+
+- [ ] **Create Resend account** at [resend.com](https://resend.com) using a business email
+- [ ] **Add domain** `himroots.in` in Resend Dashboard → Domains → Add Domain
+- [ ] **Add DNS records** that Resend provides — paste these into Hostinger DNS panel:
+  - `TXT` record for **SPF** (authorises Resend to send from `himroots.in`)
+  - `CNAME` records for **DKIM** (cryptographically signs outgoing emails — prevents spam flagging)
+  - `TXT` record for **DMARC** (tells receiving servers what to do with unauthenticated mail)
+- [ ] **Wait for DNS propagation** (5 minutes to 48 hours)
+- [ ] **Verify domain status** turns green in Resend dashboard
+- [ ] **Get API Key** from Resend Dashboard → API Keys → Create Key
+- [ ] Replace `RESEND_API_KEY` and `EMAIL_API_KEY` in Vercel environment variables with client's key
+- [ ] Replace `EMAIL_FROM` with `Himroots Wellness <orders@himroots.in>` using client's verified domain
+- [ ] Send a test email via the Resend dashboard to confirm delivery
+
+> ⚠️ **Until the domain is verified on the client's Resend account**, emails either won't send at all or will be sent from a Resend fallback address (e.g. `onboarding@resend.dev`), not from `orders@himroots.in`.
 
 > ✅ The `.env` file is gitignored — no secrets are committed to the repository.  
 > ❌ Do NOT push `.env` to GitHub. Do NOT share it over chat or email.  
 > ✅ When deploying to Vercel, set each variable directly in the Vercel dashboard → Environment Variables.
+
 
 ---
 
