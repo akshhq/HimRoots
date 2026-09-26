@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/Button";
 import { CheckCircle2, ArrowRight, ShieldCheck, Mail, ShoppingBag, HelpCircle, Clock } from "lucide-react";
-import { apiUrl } from "@/lib/api";
+import { apiFetch } from "@/lib/api";
 import { SEO } from "@/components/common/SEO";
 
 interface OrderSuccessState {
   orderId?: string;
   orderNumber?: string;
+  orderToken?: string;
   total?: number;
   subtotal?: number;
   shippingFee?: number;
@@ -49,12 +50,13 @@ export default function OrderSuccess() {
       return;
     }
 
-    // Fallback: Check if accessed via URL search query params e.g. /order-success?orderNumber=HM-...
+    // Fallback: Check if accessed via URL search query params e.g. /order-success?orderNumber=HM-...&token=...
     const searchParams = new URLSearchParams(location.search);
     const identifier = searchParams.get("orderNumber") || searchParams.get("orderId");
+    const token = searchParams.get("token") || searchParams.get("orderToken");
 
-    if (identifier) {
-      fetch(apiUrl(`/api/orders/${encodeURIComponent(identifier)}`))
+    if (identifier && token) {
+      apiFetch(`/api/orders/${encodeURIComponent(identifier)}?token=${encodeURIComponent(token)}`)
         .then((res) => (res.ok ? res.json() : null))
         .then((data) => {
           if (data && data.success && data.order) {

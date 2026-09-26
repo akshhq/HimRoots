@@ -53,18 +53,39 @@ CREATE INDEX IF NOT EXISTS idx_products_stock_status ON public.products(stock_st
 
 -- =============================================================================
 -- 2. ORDER NUMBER GENERATOR FUNCTION
--- Format: HM-YYYYMMDD-XXXX (e.g., HM-20260924-4821)
--- Uses UTC date + random 4-digit token to guarantee uniqueness under concurrency
+-- Format: HM-YYYYMMDD-XXXXX (e.g., HM-20260924-01042)
+-- Uses UTC date + atomic sequence to guarantee strict uniqueness without race conditions.
+-- Includes a loop guard against direct invocation collisions.
 -- =============================================================================
+CREATE SEQUENCE IF NOT EXISTS public.order_number_seq START WITH 1001;
+
 CREATE OR REPLACE FUNCTION public.generate_order_number()
 RETURNS TEXT AS $$
 DECLARE
     v_date TEXT;
-    v_suffix TEXT;
+    v_seq BIGINT;
+    v_num TEXT;
+    v_exists BOOLEAN;
+    v_tries INTEGER := 0;
 BEGIN
     v_date := to_char(timezone('utc'::text, now()), 'YYYYMMDD');
-    v_suffix := lpad(floor(random() * 9000 + 1000)::text, 4, '0');
-    RETURN 'HM-' || v_date || '-' || v_suffix;
+    LOOP
+        v_seq := nextval('public.order_number_seq');
+        v_num := 'HM-' || v_date || '-' || lpad((v_seq % 100000)::text, 5, '0');
+        
+        -- Guard against collisions if called directly or sequence wrapped
+        SELECT EXISTS(SELECT 1 FROM public.orders WHERE order_number = v_num) INTO v_exists;
+        IF NOT v_exists THEN
+            RETURN v_num;
+        END IF;
+
+        v_tries := v_tries + 1;
+        IF v_tries > 10 THEN
+            -- High concurrency fallback: append random 3-digit entropy
+            v_num := 'HM-' || v_date || '-' || lpad((v_seq % 100000)::text, 5, '0') || '-' || lpad(floor(random() * 900 + 100)::text, 3, '0');
+            RETURN v_num;
+        END IF;
+    END LOOP;
 END;
 $$ LANGUAGE plpgsql VOLATILE;
 
@@ -282,3 +303,70 @@ CREATE POLICY "Service role has full access to contact inquiries"
     TO service_role
     USING (true)
     WITH CHECK (true);
+
+-- =============================================================================
+-- 8. PAYMENT IDEMPOTENCY TABLE
+-- Stores processed Razorpay payment IDs & webhook event IDs to prevent duplicate
+-- processing across multi-instance or serverless deployments.
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS public.payment_idempotency (
+    key TEXT PRIMARY KEY,
+    order_id TEXT,
+    event_type TEXT,
+    status TEXT NOT NULL DEFAULT 'completed',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+CREATE INDEX IF NOT EXISTS idx_payment_idempotency_created_at ON public.payment_idempotency(created_at DESC);
+
+ALTER TABLE public.payment_idempotency ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Deny public access to payment idempotency" ON public.payment_idempotency;
+CREATE POLICY "Deny public access to payment idempotency"
+    ON public.payment_idempotency
+    FOR ALL
+    TO anon, authenticated
+    USING (false);
+
+DROP POLICY IF EXISTS "Service role manages idempotency" ON public.payment_idempotency;
+CREATE POLICY "Service role manages idempotency"
+    ON public.payment_idempotency
+    FOR ALL
+    TO service_role
+    USING (true)
+    WITH CHECK (true);
+
+-- =============================================================================
+-- 9. DISTRIBUTED RATE LIMITING TABLE
+-- Timestamped request logs keyed by client IP or identifier for multi-instance rate limiting.
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS public.rate_limits (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    key TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+CREATE INDEX IF NOT EXISTS idx_rate_limits_key_created ON public.rate_limits(key, created_at DESC);
+
+CREATE OR REPLACE FUNCTION public.prune_rate_limits()
+RETURNS void AS $$
+BEGIN
+    DELETE FROM public.rate_limits WHERE created_at < (now() - interval '1 hour');
+END;
+$$ LANGUAGE plpgsql;
+
+ALTER TABLE public.rate_limits ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Deny public access to rate limits" ON public.rate_limits;
+CREATE POLICY "Deny public access to rate limits"
+    ON public.rate_limits
+    FOR ALL
+    TO anon, authenticated
+    USING (false);
+
+DROP POLICY IF EXISTS "Service role manages rate limits" ON public.rate_limits;
+CREATE POLICY "Service role manages rate limits"
+    ON public.rate_limits
+    FOR ALL
+    TO service_role
+    USING (true)
+    WITH CHECK (true);
+

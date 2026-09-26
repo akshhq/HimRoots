@@ -1,24 +1,28 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Search, Filter, Check, ShoppingBag, ShieldCheck, Truck, Sparkles, ArrowRight } from "lucide-react";
-import { products as fallbackProducts, type Product } from "@/data/products";
+// Primary data source: GET /api/products via getStoreProducts()
+// src/data/products.ts is strictly retained as an offline/error fallback
+import { products as offlineFallbackProducts, type Product } from "@/data/products";
 import { getStoreProducts } from "@/lib/supabase";
 import { Button } from "@/components/ui/Button";
 import { useCartStore } from "@/store/cartStore";
 import { SEO } from "@/components/common/SEO";
 
 export default function Shop() {
-  const [productList, setProductList] = useState<Product[]>(fallbackProducts);
+  // Initial fallback ensures instant UI rendering; immediately hydrated from authoritative backend /api/products
+  const [productList, setProductList] = useState<Product[]>(offlineFallbackProducts);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
   const { addItem } = useCartStore();
 
   useEffect(() => {
+    // Connect to GET /api/products as primary authoritative data source
     getStoreProducts()
       .then((items) => {
         if (items && items.length > 0) setProductList(items);
       })
-      .catch(() => setProductList(fallbackProducts));
+      .catch(() => setProductList(offlineFallbackProducts));
   }, []);
 
   const categories = ["All", ...Array.from(new Set(productList.map(p => p.category)))];

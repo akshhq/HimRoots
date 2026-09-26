@@ -59,56 +59,85 @@ function mapProductRowToProduct(row: ProductRow): Product {
   };
 }
 
+import { apiFetch } from '@/lib/api';
+
 /**
- * Fetch products from Supabase with graceful fallback to the existing static dataset.
- * This guarantees the storefront remains fully functional even before Supabase is connected.
+ * Primary product catalog loader:
+ * Queries GET /api/products as the authoritative primary data source, ensuring price,
+ * stock status, and descriptions displayed to the customer match the backend validator.
+ * Retains Supabase client as secondary and src/data/products.ts strictly as an offline/error fallback.
  */
 export async function getStoreProducts(): Promise<Product[]> {
-  if (!supabase || !isSupabaseConfigured) {
-    return staticProducts;
-  }
-
   try {
-    const { data, error } = await supabase
-      .from('products')
-      .select('*')
-      .order('is_featured', { ascending: false });
-
-    if (error || !data || data.length === 0) {
-      console.warn('Supabase query returned error or empty list, falling back to static products:', error);
-      return staticProducts;
+    const res = await apiFetch('/api/products');
+    if (res.ok) {
+      const json = await res.json();
+      if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
+        return json.data;
+      }
     }
-
-    return (data as unknown as ProductRow[]).map(mapProductRowToProduct);
   } catch (err) {
-    console.error('Unexpected error fetching from Supabase, using static products:', err);
-    return staticProducts;
+    console.warn('API /api/products unreachable, attempting Supabase client fallback:', err);
   }
+
+  // Secondary check: Direct Supabase client query
+  if (supabase && isSupabaseConfigured) {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('is_featured', { ascending: false });
+
+      if (!error && data && data.length > 0) {
+        return (data as unknown as ProductRow[]).map(mapProductRowToProduct);
+      }
+    } catch (err) {
+      console.warn('Supabase client error, falling back to static products:', err);
+    }
+  }
+
+  // OFFLINE / ERROR FALLBACK ONLY: src/data/products.ts
+  return staticProducts;
 }
 
 /**
- * Fetch a single product by its slug with fallback to static dataset.
+ * Primary product detail loader:
+ * Queries GET /api/products/:slug as the authoritative primary data source.
+ * Retains src/data/products.ts strictly as an offline/error fallback.
  */
 export async function getStoreProductBySlug(slug: string): Promise<Product | undefined> {
   const normalizedSlug = slug === 'sea-buckthorn-juice' ? 'sea-buckthorn-pulp' : slug;
-  
-  if (!supabase || !isSupabaseConfigured) {
-    return staticProducts.find((p) => p.slug === normalizedSlug);
-  }
 
   try {
-    const { data, error } = await supabase
-      .from('products')
-      .select('*')
-      .eq('slug', normalizedSlug)
-      .single();
-
-    if (error || !data) {
-      return staticProducts.find((p) => p.slug === normalizedSlug);
+    const res = await apiFetch(`/api/products/${encodeURIComponent(normalizedSlug)}`);
+    if (res.ok) {
+      const json = await res.json();
+      if (json && json.success && json.data) {
+        return json.data;
+      }
     }
-
-    return mapProductRowToProduct(data as unknown as ProductRow);
-  } catch {
-    return staticProducts.find((p) => p.slug === normalizedSlug);
+  } catch (err) {
+    console.warn(`API /api/products/${normalizedSlug} unreachable, attempting Supabase fallback:`, err);
   }
+
+  // Secondary check: Direct Supabase client query
+  if (supabase && isSupabaseConfigured) {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('slug', normalizedSlug)
+        .single();
+
+      if (!error && data) {
+        return mapProductRowToProduct(data as unknown as ProductRow);
+      }
+    } catch {
+      // Fall through to offline fallback
+    }
+  }
+
+  // OFFLINE / ERROR FALLBACK ONLY: src/data/products.ts
+  return staticProducts.find((p) => p.slug === normalizedSlug);
 }
+

@@ -14,6 +14,7 @@ node_modules/
 
 # Production & Build outputs
 dist
+dist-server
 dist-ssr
 build
 coverage

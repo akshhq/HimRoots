@@ -5,9 +5,52 @@ export interface ValidationErrorDetails {
 }
 
 /**
+ * Strips dangerous HTML tags, attributes, event handlers, and script/style/iframe blocks
+ * to prevent Stored XSS attacks in databases and dashboards.
+ */
+export function sanitizeText(input: unknown): string {
+  if (typeof input !== 'string') return '';
+  return input
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Strip script tags and their content
+    .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')   // Strip style tags and their content
+    .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '') // Strip iframe tags and their content
+    .replace(/<[^>]*>?/gm, '') // Strip any remaining HTML tags
+    .replace(/javascript\s*:/gi, '')
+    .replace(/vbscript\s*:/gi, '')
+    .replace(/data\s*:\s*text\/html/gi, '')
+    .replace(/on\w+\s*=/gi, '') // Strip inline event handlers (e.g. onload=, onerror=)
+    .replace(/\s+/g, ' ')       // Normalize spaces
+    .trim();
+}
+
+/**
  * Validate customer and shipping address inputs for order creation
  */
 export function validateCreateOrder(req: Request, res: Response, next: NextFunction): void {
+  // Deep input sanitization against XSS/HTML injection on free-text inputs
+  if (req.body.customer && typeof req.body.customer === 'object') {
+    if (typeof req.body.customer.name === 'string') {
+      req.body.customer.name = sanitizeText(req.body.customer.name);
+    }
+  }
+  if (req.body.shipping && typeof req.body.shipping === 'object') {
+    if (typeof req.body.shipping.address === 'string') {
+      req.body.shipping.address = sanitizeText(req.body.shipping.address);
+    }
+    if (typeof req.body.shipping.city === 'string') {
+      req.body.shipping.city = sanitizeText(req.body.shipping.city);
+    }
+    if (typeof req.body.shipping.state === 'string') {
+      req.body.shipping.state = sanitizeText(req.body.shipping.state);
+    }
+    if (typeof req.body.shipping.pincode === 'string') {
+      req.body.shipping.pincode = sanitizeText(req.body.shipping.pincode);
+    }
+  }
+  if (req.body.notes && typeof req.body.notes === 'string') {
+    req.body.notes = sanitizeText(req.body.notes);
+  }
+
   const { items, customer, shipping } = req.body;
   const errors: ValidationErrorDetails = {};
 
@@ -94,6 +137,12 @@ export function validateCreateOrder(req: Request, res: Response, next: NextFunct
  * Validate contact inquiry form
  */
 export function validateContactInquiry(req: Request, res: Response, next: NextFunction): void {
+  // Deep input sanitization against XSS/HTML injection on contact form inputs
+  if (typeof req.body.name === 'string') req.body.name = sanitizeText(req.body.name);
+  if (typeof req.body.message === 'string') req.body.message = sanitizeText(req.body.message);
+  if (typeof req.body.phone === 'string') req.body.phone = sanitizeText(req.body.phone);
+  if (typeof req.body.orderId === 'string') req.body.orderId = sanitizeText(req.body.orderId);
+
   const { name, email, message } = req.body;
   const errors: ValidationErrorDetails = {};
 
@@ -121,3 +170,4 @@ export function validateContactInquiry(req: Request, res: Response, next: NextFu
 
   next();
 }
+

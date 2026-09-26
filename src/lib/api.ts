@@ -15,3 +15,22 @@ export function apiUrl(endpoint: string): string {
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
   return `${API_BASE_URL}${cleanEndpoint}`;
 }
+
+/**
+ * Global fetch wrapper that automatically prepends VITE_API_BASE_URL to all request paths.
+ */
+export async function apiFetch(input: string | URL | Request, init?: RequestInit): Promise<Response> {
+  let url: string;
+  if (typeof input === 'string') {
+    url = apiUrl(input);
+  } else if (input instanceof URL) {
+    url = input.toString();
+  } else if (input instanceof Request) {
+    url = apiUrl(input.url);
+  } else {
+    url = apiUrl(String(input));
+  }
+  return fetch(url, init);
+}
+
+export default apiFetch;

@@ -111,7 +111,7 @@ async function runTests() {
 
     // When modal is cancelled, frontend does NOT call /verify
     // Verify order initial payment_status remains 'pending'
-    const orderFetch = await fetch(`${BASE_URL}/orders/${order.id}`);
+    const orderFetch = await fetch(`${BASE_URL}/orders/${order.id}?token=${order.orderToken}`);
     const orderDetails = await orderFetch.json();
 
     const statusIsPending = order.paymentStatus === 'pending' || orderDetails?.order?.payment_status === 'pending';

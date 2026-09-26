@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { getProductBySlug as getFallbackProductBySlug, type Product } from "@/data/products";
+// Primary data source: GET /api/products/:slug via getStoreProductBySlug()
+// src/data/products.ts is strictly retained as an offline/error fallback
+import { getProductBySlug as getOfflineFallbackProductBySlug, type Product } from "@/data/products";
 import { getStoreProductBySlug } from "@/lib/supabase";
 import { useCartStore } from "@/store/cartStore";
 import { Button } from "@/components/ui/Button";
@@ -182,11 +184,13 @@ const CAROUSEL_SLIDES: CarouselSlide[] = [
 export default function ProductDetails() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const [product, setProduct] = useState<Product | undefined>(() => getFallbackProductBySlug(slug || ""));
+  // Initial fallback avoids layout shift; immediately hydrated from authoritative backend /api/products/:slug
+  const [product, setProduct] = useState<Product | undefined>(() => getOfflineFallbackProductBySlug(slug || ""));
   const { addItem } = useCartStore();
 
   useEffect(() => {
     if (slug) {
+      // Connect to GET /api/products/:slug as primary authoritative data source
       getStoreProductBySlug(slug).then((liveProduct) => {
         if (liveProduct) setProduct(liveProduct);
       });

@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCartStore } from "@/store/cartStore";
 import { Button } from "@/components/ui/Button";
 import { loadRazorpayScript, type RazorpayOptions, type RazorpaySuccessResponse } from "@/lib/razorpay";
-import { apiUrl } from "@/lib/api";
+import { apiFetch } from "@/lib/api";
 import { ArrowLeft, Lock, ShieldCheck, AlertCircle, Info, CheckCircle2 } from "lucide-react";
 import { SEO } from "@/components/common/SEO";
 
@@ -113,7 +113,7 @@ export default function Checkout() {
         },
       };
 
-      const response = await fetch(apiUrl("/api/orders"), {
+      const response = await apiFetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderPayload),
@@ -158,7 +158,7 @@ export default function Checkout() {
           handler: async function (paymentResponse: RazorpaySuccessResponse) {
             try {
               // 4. Server-Side HMAC SHA256 Signature Verification
-              const verifyRes = await fetch(apiUrl("/api/orders/verify"), {
+              const verifyRes = await apiFetch("/api/orders/verify", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -182,6 +182,7 @@ export default function Checkout() {
                 state: {
                   orderId: order.id,
                   orderNumber: order.orderNumber,
+                  orderToken: order.orderToken,
                   total: order.total,
                   subtotal: order.subtotal,
                   shippingFee: order.shippingFee,
@@ -235,57 +236,10 @@ export default function Checkout() {
         return;
       }
 
-      // If in production without live keys:
-      if (!import.meta.env.DEV) {
-        setIsProcessing(false);
-        setErrorMessage("Payment gateway is temporarily unavailable. Please try again shortly or contact support.");
-        return;
-      }
-
-      // 4. Fallback / Test Simulation Mode (ONLY in local development when running without live Razorpay API keys)
-      const mockPaymentId = `pay_sim_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 7)}`;
-      const verifyRes = await fetch(apiUrl("/api/orders/verify"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          orderId: order.id,
-          razorpayOrderId: razorpay?.orderId || "order_test_sim",
-          razorpayPaymentId: mockPaymentId,
-          razorpaySignature: "simulated_test_signature",
-        }),
-      });
-
-      const verifyData = await verifyRes.json();
-      if (!verifyRes.ok || !verifyData.success) {
-        throw new Error(verifyData.error || "Simulated payment verification failed.");
-      }
-
-      isOrderCompletedRef.current = true;
-      clearCart();
-      navigate("/order-success", {
-        state: {
-          orderId: order.id,
-          orderNumber: order.orderNumber,
-          total: order.total,
-          subtotal: order.subtotal,
-          shippingFee: order.shippingFee,
-          discount: order.discount,
-          paymentId: mockPaymentId,
-          paymentStatus: "Paid",
-          orderStatus: "processing",
-          customer: {
-            firstName: formData.firstName.trim(),
-            lastName: formData.lastName.trim(),
-            email: formData.email.trim(),
-            phone: formData.phone.trim(),
-            address: formData.address.trim(),
-            city: formData.city.trim(),
-            state: formData.state.trim(),
-            pincode: formData.pincode.trim(),
-          },
-          items: order.items,
-        },
-      });
+      // If Razorpay failed to load or key is missing, block checkout completion and show clear error
+      setIsProcessing(false);
+      setErrorMessage("Payment could not be initialized, please retry or contact support.");
+      return;
     } catch (err: any) {
       console.error("Order submission error:", err);
       setIsProcessing(false);

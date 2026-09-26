@@ -113,3 +113,54 @@ export async function getVerifiedProductsByIds(
 
   return productMap;
 }
+
+/**
+ * Decrement inventory stock atomically for purchased items when an order is paid.
+ */
+export async function decrementProductStock(
+  items: { productId?: string; quantity: number }[]
+): Promise<void> {
+  for (const item of items) {
+    if (!item.productId || item.quantity <= 0) continue;
+    const targetId = item.productId === 'sea-buckthorn-juice' ? 'sea-buckthorn-pulp' : item.productId;
+
+    // 1. Decrement in Supabase if configured
+    if (supabaseAdmin) {
+      try {
+        const { data: prod } = await (supabaseAdmin as any)
+          .from('products')
+          .select('id, stock_quantity')
+          .or(`id.eq.${targetId},slug.eq.${targetId}`)
+          .maybeSingle();
+
+        if (prod) {
+          const currentStock = typeof prod.stock_quantity === 'number' ? prod.stock_quantity : 50;
+          const newStock = Math.max(0, currentStock - item.quantity);
+          const newStatus = newStock === 0 ? 'out_of_stock' : newStock <= 10 ? 'low_stock' : 'in_stock';
+
+          await (supabaseAdmin as any)
+            .from('products')
+            .update({
+              stock_quantity: newStock,
+              stock_status: newStatus,
+            })
+            .eq('id', prod.id);
+        }
+      } catch (err) {
+        console.error(`Error decrementing stock for product [${targetId}] in Supabase:`, err);
+      }
+    }
+
+    // 2. Decrement in fallback memory catalog
+    const fallback = fallbackProducts.find(
+      (p) =>
+        p.id === targetId ||
+        p.slug === targetId ||
+        (targetId === 'prod_sea_buckthorn_pulp' && p.id === 'prod_001') ||
+        (targetId === 'prod_sea_buckthorn_oil_capsules' && p.id === 'prod_002')
+    );
+    if (fallback && typeof fallback.stock === 'number') {
+      fallback.stock = Math.max(0, fallback.stock - item.quantity);
+    }
+  }
+}

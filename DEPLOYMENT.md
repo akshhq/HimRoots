@@ -110,16 +110,30 @@ The Express backend (`server/`) MUST be deployed to a Node.js platform.
 
 ### Render Deployment (Recommended for simplicity)
 
-1. Push code to GitHub (already done).
+1. Push code to GitHub.
 2. Create a new Render account at render.com.
 3. Click "New Web Service" > Connect GitHub > Select the HimRoots repo.
 4. Configure:
    - **Environment**: Node
-   - **Build Command**: `npm install`
-   - **Start Command**: `npm start` (runs `tsx server/index.ts`)
+   - **Build Command**: `npm install && npm run build:server` (or `npm run build` to build both client and server)
+   - **Start Command**: `npm start` (executes `node dist-server/index.js` using vanilla Node without devDependencies)
    - **Root Directory**: (leave blank — uses project root)
 5. Add all environment variables from `.env.example` in the Render dashboard.
 6. Deploy. Render will give you a URL like: `https://himroots-api.onrender.com`
+
+### Production Server Standalone Execution
+
+The backend includes a zero-runtime-dependency esbuild bundle step:
+```bash
+# Build production server bundle
+npm run build:server
+# Result: dist-server/index.js (single bundled Node executable)
+
+# Production runtime (no devDependencies needed):
+npm install --omit=dev
+npm start
+# Runs: node dist-server/index.js
+```
 
 ### Required environment variables on the backend platform
 
@@ -127,12 +141,14 @@ The Express backend (`server/`) MUST be deployed to a Node.js platform.
 NODE_ENV=production
 PORT=5000
 CORS_ORIGIN=https://himroots.in,https://www.himroots.in
+ORDER_SECRET=your_long_random_hmac_secret_key
 
 SUPABASE_URL=https://your-project-id.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=eyJ...your-service-role-key...
 
 RAZORPAY_KEY_ID=rzp_live_...
 RAZORPAY_KEY_SECRET=your_razorpay_secret_key
+RAZORPAY_WEBHOOK_SECRET=your_razorpay_webhook_secret
 
 EMAIL_PROVIDER=resend
 EMAIL_API_KEY=re_...
@@ -140,6 +156,13 @@ EMAIL_FROM=Himroots Wellness <orders@himroots.in>
 CLIENT_ORDER_EMAIL=orders@himroots.in
 CLIENT_SUPPORT_EMAIL=support@himroots.in
 ```
+
+### Webhook Configuration (Razorpay Dashboard)
+1. Go to Razorpay Dashboard > Settings > Webhooks > Add New Webhook.
+2. Webhook URL: `https://api.himroots.in/api/webhooks/razorpay` (or your Render URL: `https://himroots-api.onrender.com/api/webhooks/razorpay`).
+3. Secret: Enter a strong random secret and copy it into `RAZORPAY_WEBHOOK_SECRET`.
+4. Active Events: Select `payment.captured` and `order.paid`.
+5. Save. The backend will verify raw HMAC-SHA256 signatures and atomically mark orders paid & decrement inventory even if customers close their browser tab.
 
 ---
 

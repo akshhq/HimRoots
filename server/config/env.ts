@@ -23,8 +23,12 @@ export const config = {
   razorpay: {
     keyId: process.env.RAZORPAY_KEY_ID || process.env.VITE_RAZORPAY_KEY_ID || '',
     keySecret: process.env.RAZORPAY_KEY_SECRET || '',
+    webhookSecret: process.env.RAZORPAY_WEBHOOK_SECRET || '',
   },
   
+  // Secret for signing order access tokens (IDOR protection)
+  orderSecret: process.env.ORDER_ACCESS_SECRET || process.env.SUPABASE_JWT_SECRET || process.env.RAZORPAY_KEY_SECRET || 'himroots_order_access_secret_salt',
+
   // Email Configuration (Resend or Brevo)
   email: {
     apiKey: process.env.EMAIL_API_KEY || process.env.RESEND_API_KEY || process.env.BREVO_API_KEY || '',
@@ -49,8 +53,19 @@ export const isRazorpayConfigured = Boolean(
   !config.razorpay.keySecret.includes('your_razorpay_key_secret_here')
 );
 
+export const isRazorpayLiveConfigured = Boolean(
+  isRazorpayConfigured &&
+  config.razorpay.keyId.startsWith('rzp_live_')
+);
+
+export const isRazorpayWebhookConfigured = Boolean(
+  config.razorpay.webhookSecret &&
+  !config.razorpay.webhookSecret.includes('your_razorpay_webhook_secret_here')
+);
+
 export const isEmailConfigured = Boolean(
   config.email.apiKey &&
   !config.email.apiKey.includes('your_') &&
   !config.email.apiKey.includes('re_your_')
 );
+

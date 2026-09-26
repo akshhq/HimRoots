@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { supabaseAdmin } from '../lib/supabase';
 import { sendClientSupportInquiryEmail } from '../services/emailService';
+import { sanitizeText } from '../middleware/validation';
 
 export const VALID_CATEGORIES = [
   'Order Support',
@@ -49,11 +50,11 @@ export async function submitContactInquiry(req: Request, res: Response, next: Ne
       }
     }
 
-    const cleanName = name.trim();
+    const cleanName = sanitizeText(name);
     const cleanEmail = email.trim().toLowerCase();
-    const cleanPhone = phone ? String(phone).trim() : null;
-    const cleanOrderId = orderId ? String(orderId).trim().toUpperCase() : null;
-    const cleanMessage = message.trim();
+    const cleanPhone = phone ? sanitizeText(phone) : null;
+    const cleanOrderId = orderId ? sanitizeText(orderId).toUpperCase() : null;
+    const cleanMessage = sanitizeText(message);
     const submittedAt = new Date().toLocaleString('en-IN', {
       timeZone: 'Asia/Kolkata',
       dateStyle: 'medium',

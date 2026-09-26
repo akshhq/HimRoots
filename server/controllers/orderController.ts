@@ -4,6 +4,7 @@ import {
   getOrderByIdOrNumber,
   verifyPaymentSignature,
   updateOrderEmailStatus,
+  verifyOrderAccessToken,
 } from '../services/orderService';
 import {
   sendClientOrderNotificationEmail,
@@ -48,6 +49,7 @@ export async function createOrder(req: Request, res: Response, next: NextFunctio
       order: {
         id: order.id,
         orderNumber: order.orderNumber,
+        orderToken: order.orderToken,
         subtotal: order.subtotal,
         shippingFee: order.shippingFee,
         discount: order.discount,
@@ -71,16 +73,35 @@ export async function createOrder(req: Request, res: Response, next: NextFunctio
  * Controller for Order Lookup
  * Handles GET /api/orders/:identifier
  * Safe lookup for order success screen and order status checking.
+ * IDOR Protected: requires valid signed order access token.
  */
 export async function getOrderByIdentifier(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const { identifier } = req.params;
+    const token = (req.query.token as string) || (req.headers['x-order-token'] as string);
+
+    if (!token) {
+      res.status(401).json({
+        success: false,
+        error: 'Access denied: valid order access token is required to view order details.',
+      });
+      return;
+    }
+
     const fullOrder = await getOrderByIdOrNumber(identifier);
 
     if (!fullOrder) {
       res.status(404).json({
         success: false,
         error: `Order with reference '${identifier}' was not found.`,
+      });
+      return;
+    }
+
+    if (!verifyOrderAccessToken(fullOrder, token)) {
+      res.status(403).json({
+        success: false,
+        error: 'Access denied: invalid or unauthorized order access token.',
       });
       return;
     }
@@ -120,6 +141,7 @@ export async function getOrderByIdentifier(req: Request, res: Response, next: Ne
     next(error);
   }
 }
+
 
 /**
  * Controller for Payment Verification (for future Razorpay stage)
