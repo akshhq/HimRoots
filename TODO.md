@@ -8,12 +8,17 @@
 ## 1. Completed Implementations
 
 ### Frontend & Brand Experience (React + Vite)
-- [x] **Full Responsive Design:** Home, Shop / Products, ProductDetails, About Sea Buckthorn, Contact, Cart, Checkout, OrderSuccess.
-- [x] **Brand Styling:** Luxury dark theme, typography (Marcellus, Cinzel, Plus Jakarta Sans), Framer Motion micro-animations.
-- [x] **Header & Navigation:** Responsive Navbar with scroll-based logo scaling and dynamic backdrop.
+- [x] **Universal Responsive Layouts:** All 9 primary pages audited and optimized for Mobile (360px–502px) and Laptop (1024px–1536px) with zero horizontal overflow (`scrollWidth <= window.innerWidth`).
+- [x] **Standardized Container Gutters:** Unified `px-4 sm:px-8 lg:px-12` across all views for balanced margin rhythm.
+- [x] **Brand Styling & Editorial Purity:** Luxury dark theme, high-contrast serif typography (Marcellus, Cinzel, Plus Jakarta Sans), pure static editorial presentation (unnecessary animations removed for calm, grounded luxury).
+- [x] **Prominent Navbar Logo:** Emblem sized to ~1.5× (`h-[68px] sm:h-[74px] md:h-[80px] lg:h-[84px]`), sitting close to navbar borders without expanding navbar height; separate hero top logo and "Wild Harvested" top badge removed.
+- [x] **Hero Content Hierarchy:** Primary "Seabuckthorn Goldenberry", secondary "The Elixir of the Himalayas" in clean two-tier typography.
+- [x] **Side-by-Side Formulations:** Available Formulations displayed side-by-side in responsive grid.
+- [x] **Touch-Friendly Overflow Wrappers:** The scientific Omega fatty-acid profile table in `/about-sea-buckthorn` and the 18-slide thumbnail gallery in `/products/:slug` utilize smooth horizontal touch-scrolling (`overflow-x-auto`) to protect outer page layout.
+- [x] **Mobile Drawer Navigation:** Full slide-out mobile drawer with dynamic viewport height clamping (`max-h-[calc(100dvh-80px)] overflow-y-auto`) and immediate access to social profiles and cart count.
 - [x] **Brand Watermark:** Subtle site-wide brand watermark integrated across pages.
-- [x] **Cart Architecture:** Persistent Zustand state store, responsive slide-out cart drawer, and dedicated `/cart` route.
-- [x] **Checkout Flow:** Form validation (shipping info, pin code, phone), live order summary calculation.
+- [x] **Cart Architecture:** Persistent Zustand state store, responsive mobile cards, and dedicated `/cart` route.
+- [x] **Checkout Flow:** Responsive form cards (`p-4 sm:p-6 md:p-8`), form validation, and live order summary calculation.
 - [x] **Sea Buckthorn Content:** Updated copy aligned with `HIMROOTS_Seabuckthorn_Juice_Website_Content.md`.
 - [x] **Favicon & Web App Manifest:** Authentic Himroots brand logo exported to `favicon.ico`, `favicon-16x16.png`, `favicon-32x32.png`, `favicon-48x48.png`, `apple-touch-icon.png` (180x180), Android Chrome icons (192x192, 512x512), vector `favicon.svg`, and `site.webmanifest`.
 

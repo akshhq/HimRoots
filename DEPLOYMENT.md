@@ -234,7 +234,7 @@ CLIENT_SUPPORT_EMAIL=support@himroots.in
 - [ ] Frontend built with VITE_API_BASE_URL pointing to live backend
 - [ ] dist/ uploaded to /public_html/ via FTP
 - [ ] .htaccess present in /public_html/
-- [ ] Test all SPA routes: /, /shop, /products, /about, /contact, /cart, /checkout, /order-success
+- [ ] Test all SPA routes: /, /shop, /products/:slug, /about, /about-sea-buckthorn, /contact, /cart, /checkout, /order-success, /payment-failed
 
 ### Client
 

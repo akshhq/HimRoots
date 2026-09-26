@@ -400,7 +400,7 @@ These tasks must be performed by the client/business owner:
 
 ### C. Transactional Email (Resend or Brevo)
 1. Register at [resend.com](https://resend.com) (recommended) or [brevo.com](https://brevo.com).
-2. Add domain: `himroots.com` (or `himroots.in`).
+2. Add domain: `himroots.in`.
 3. Add DNS records at domain registrar:
    - **DKIM** (TXT/CNAME)
    - **SPF** (TXT)

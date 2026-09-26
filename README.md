@@ -121,21 +121,21 @@ This platform is structured for a lean, production-grade e-commerce model where 
 * **Provider Support:** Seamless transactional delivery via **Resend** (default) or **Brevo** via native REST APIs with zero SDK bloat.
 * **Security & Architectural Rules:**
   1. **Strict Decoupling from Payments:** Payment verification and email dispatch are segregated. If the email provider encounters an API rate limit, downtime, or invalid credentials, the order **remains paid** and the failure is recorded in server logs and stored under `email_status = 'failed'` in the database.
-  2. **Client Order Notification:** Dispatches `New Order - {Order Number}` to `CLIENT_ORDER_EMAIL` (`orders@himroots.com`) containing complete customer info, shipping destination, itemized product breakdown, unit prices, subtotal, shipping fee, total paid, and Razorpay Order/Payment IDs.
+  2. **Client Order Notification:** Dispatches `New Order - {Order Number}` to `CLIENT_ORDER_EMAIL` (`orders@himroots.in`) containing complete customer info, shipping destination, itemized product breakdown, unit prices, subtotal, shipping fee, total paid, and Razorpay Order/Payment IDs.
   3. **Customer Confirmation Receipt:** Dispatches clean order confirmation to `customer.email` with order reference, items purchased, and customer care contact details.
   4. **Direct Contact / Support Portal:**
      * Connects `/contact` to `POST /api/contact`.
      * Supports categories: `Order Support`, `Payment Issue`, `Delivery Issue`, `Return/Refund`, `Product Query`, `General Enquiry`, `Other`.
      * Accepts optional Order Reference ID (`orderId`).
      * Persists inquiry in Supabase `contact_inquiries` table.
-     * Forwards inquiry to `CLIENT_SUPPORT_EMAIL` (`support@himroots.com`) with customer's email set as `reply_to` for one-click manual replies.
+     * Forwards inquiry to `CLIENT_SUPPORT_EMAIL` (`support@himroots.in`) with customer's email set as `reply_to` for one-click manual replies.
      * Protected by sliding-window rate limiting (max 5 requests / 15 min per IP/email), honeypot bot trap (`website_source_ref`), and strict server validation.
 * **Manual Setup & Domain Verification:**
   1. Create account on [Resend](https://resend.com) or [Brevo](https://brevo.com).
-  2. Add sending domain (e.g. `himroots.com`) and add DNS records (DKIM, SPF, MX/TXT) at your domain registrar.
+  2. Add sending domain (e.g. `himroots.in`) and add DNS records (DKIM, SPF, MX/TXT) at your domain registrar.
   3. Generate API Key and set `EMAIL_API_KEY=re_...` in `.env`.
-  4. Configure `EMAIL_FROM=Himroots Wellness <orders@himroots.com>`.
-  5. Configure `CLIENT_ORDER_EMAIL=orders@himroots.com` and `CLIENT_SUPPORT_EMAIL=support@himroots.com`.
+  4. Configure `EMAIL_FROM=Himroots Wellness <orders@himroots.in>`.
+  5. Configure `CLIENT_ORDER_EMAIL=orders@himroots.in` and `CLIENT_SUPPORT_EMAIL=support@himroots.in`.
 
 ### 7. Required Client Accounts
 * **Supabase:** Managed PostgreSQL database (`orders`, `order_items`, `products`, `contact_inquiries`).
@@ -165,7 +165,7 @@ Himroots focuses exclusively on two specialized, lab-verified formulations:
 
 | Formulation | Category | Net Volume | Price | Highlights |
 | :--- | :--- | :--- | :--- | :--- |
-| **Himroots Pure Sea Buckthorn Pulp** | Liquid Elixir | 500 ml | ₹999 <del>₹1,299</del> | 90% wild Himalayan raw berry pulp + 5 synergistic Ayurvedic herbs (*Bhoomi Amla, Ashwagandha, Makoy, Punarva, Safed Musli*). Formulated for morning vitality, liver detox, digestive balance, and immune defense. |
+| **Himroots Pure Sea Buckthorn Pulp with Curcumin** | Liquid Elixir | 500 ml | ₹899 <del>₹1,199</del> | 95% wild Himalayan raw berry pulp + standardized Curcumin extract. Formulated for cellular vitality, liver detox, digestive balance, and immune defense. |
 | **Himroots Pure Sea Buckthorn Capsules** | Omega Softgels | 60 Softgels | ₹1,199 <del>₹1,499</del> | 100% pure cold-pressed seed & berry oil encapsulated in vegetarian softgels. Peak concentration of rare Omega-7, Omegas 3, 6, 9, and natural Vitamin E for deep cellular hydration, dry eye relief, and radiant skin glow. |
 
 ---
@@ -206,17 +206,19 @@ The application houses a dedicated, multi-chapter illustrated botanical monograp
 
 ## Key Features & Architecture
 
-### 1. Single Dynamic Logo Presentation
-Per brand requirements, the website **never displays the logo twice simultaneously**:
-* **Home Page Hero Section:** The primary logo emblem is centered prominently in the hero section with a warm botanical aura.
-* **Sticky Navbar:** Using an `IntersectionObserver` paired with Zustand (`src/store/logoStore.ts`), the top navigation logo remains hidden while the hero logo is on screen. The moment the user scrolls past the hero emblem, the navbar logo smoothly animates into view.
-* **Internal Pages:** Automatically reveals the navbar logo on all secondary pages (`/shop`, `/products/:slug`, `/about-sea-buckthorn`, `/about`, `/contact`, `/cart`).
+### 1. Prominent Unified Navbar Logo
+Per updated brand design requirements:
+* **Exclusive Single Location:** The brand logo emblem exists exclusively in the fixed navbar (`BrandLogo.tsx`). The separate large hero emblem and top "Wild Harvested" badge have been removed for a clean, editorial Himalayan luxury presence.
+* **Maximized Prominence:** The navbar logo is scaled to ~1.5× (`h-[68px] sm:h-[74px] md:h-[80px] lg:h-[84px]`), sitting snugly close to the top and bottom borders without increasing the overall navbar height or crowding desktop navigation links.
+* **Persistent Visibility:** Present across all primary and secondary routes (`/`, `/shop`, `/products/:slug`, `/about`, `/about-sea-buckthorn`, `/contact`, `/cart`, `/checkout`).
 
-### 2. Comprehensive Mobile & Desktop Responsiveness
-* Optimized for mobile devices (390px, 412px, 768px, 1024px, 1440px+).
-* Zero dead whitespace above the hero (tightened < 1cm / 12–16px vertical gap between sticky navbar and emblem).
-* Slide-out mobile navigation drawer with active route indicators and quick links to Instagram.
-* Responsive product gallery with smooth thumbnail scrolling and touch-friendly controls.
+### 2. Comprehensive Mobile & Laptop Screen Responsiveness
+* **Universal Screen Adaptation:** Optimized across all viewport widths with primary focus on mobile phones (360px–502px) and laptops/desktops (1024px–1536px+).
+* **Consistent Grid Gutters:** Standardized container gutters (`px-4 sm:px-8 lg:px-12`) across all views to guarantee comfortable breathing room without horizontal scrolling.
+* **Zero Horizontal Overflow:** Guaranteed `document.documentElement.scrollWidth <= window.innerWidth` across all pages.
+* **Touch-Friendly Overflow Wrappers:** The scientific Omega fatty-acid profile table in `/about-sea-buckthorn` and the 18-slide thumbnail gallery in `/products/:slug` utilize smooth horizontal touch-scrolling (`overflow-x-auto`) to protect outer page layout.
+* **Mobile Drawer Navigation:** Full slide-out mobile drawer with dynamic viewport height clamping (`max-h-[calc(100dvh-80px)] overflow-y-auto`) and immediate access to social profiles and cart count.
+* **Static Editorial Polish:** Built with clean static layouts and micro-interactions, completely eliminating unnecessary animations for a dignified, calm Himalayan aesthetic.
 
 ### 3. Full-Featured Product Discovery & Detail Pages
 * **Product Catalog (`/shop`):** Real-time text search, category filters (*All*, *Liquid Elixirs*, *Omega Softgels*), price strike-throughs, and free shipping assurances.

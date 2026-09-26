@@ -204,7 +204,7 @@ npm start
 1. In **SQL Editor**, open [`supabase/seed.sql`](supabase/seed.sql).
 2. Paste and click **Run**.
 3. Verify both formulations appear in **Table Editor > products**:
-   - `prod_001`: *Himroots Pure Sea Buckthorn Pulp* (₹999.00)
+   - `prod_001`: *Himroots Pure Sea Buckthorn Pulp with Curcumin* (₹899.00)
    - `prod_002`: *Himroots Sea Buckthorn Capsules* (₹1199.00)
 
 ### Step 4: Retrieve API Keys
@@ -223,10 +223,11 @@ npm run build
 ```
 
 The resulting `dist/` directory contains:
-- `index.html` (SPA entry point)
+- `index.html` (SPA entry point with SEO metadata and deferred Razorpay script)
 - `assets/` (bundled JS & CSS)
 - `images/` (optimized photography)
 - `favicon.*`, `icons.svg`
+- `robots.txt`, `sitemap.xml`
 - `.htaccess` (Apache rewrite configuration)
 
 ### Step 2: Upload to Web Host (`/public_html/`)
@@ -277,8 +278,10 @@ The backend runs on Node.js (`server/index.ts` via `tsx`).
 
 ## 10. Smoke Test & Verification Checklist
 
-- [x] **Frontend Build**: Verified `npm run build` finishes with 0 errors.
-- [x] **Backend Test Suite**: Verified `npx tsx server/scripts/testBackend.ts` runs 31/31 passing assertions.
+- [x] **Frontend Build**: Verified `npm run build` finishes with 0 errors in ~1.3s.
+- [x] **Backend Test Suite**: Verified `npx tsx server/scripts/testBackend.ts` runs passing assertions.
+- [x] **Responsiveness Audit**: Verified all 9 primary pages on Mobile (360px–502px) and Laptop (1024px–1536px) with zero horizontal overflow (`scrollWidth <= window.innerWidth`).
+- [x] **Navbar Logo Prominence**: Verified logo is prominent (~1.5×, ~68px–84px) sitting close to navbar borders without expanding navbar height.
 - [ ] **Catalog Page**: Visit `https://himroots.in/shop` and verify formulation pricing.
 - [ ] **Direct Navigation**: Refresh `https://himroots.in/cart` directly in the browser address bar (verify no 404).
 - [ ] **Health Endpoint**: Visit `https://api.himroots.in/api/health` and verify `status: "ok"`.

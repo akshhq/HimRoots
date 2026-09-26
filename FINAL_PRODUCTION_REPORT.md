@@ -15,8 +15,7 @@ FRONTEND (SPA)                    BACKEND (API)                 THIRD-PARTY
 React 19 + Vite 8                 Express 5 + Node.js           Supabase (Postgres)
 react-router-dom v7               TypeScript / tsx              Razorpay (Payments)
 Zustand (cart)                    server/                       Resend / Brevo (Email)
-Framer Motion
-Tailwind CSS v4
+Tailwind CSS v4 (vanilla tokens)
 
 Hosted on:                        Hosted on:                    Hosted on:
 Apache / cPanel                   Render / Railway              Supabase Cloud
@@ -25,19 +24,17 @@ Apache / cPanel                   Render / Railway              Supabase Cloud
 
 ---
 
-## 2. FILES CHANGED IN THIS AUDIT PASS
+## 2. RECENT REFINEMENTS IN THIS AUDIT & RESPONSIVENESS PASS
 
-| File | Change |
-|------|--------|
-| server/services/orderService.ts | SECURITY FIX: Test-mode payment bypass blocked in production |
-| index.html | FIX: Razorpay SDK script uses defer (non-blocking) |
-| index.html | ADD: Open Graph, Twitter Card, canonical URL meta tags |
-| vite.config.ts | FIX: Replaced deprecated __dirname with import.meta.dirname |
-| public/robots.txt | ADD: SEO robot rules |
-| public/sitemap.xml | ADD: XML sitemap for all public routes |
-| SECURITY_AUDIT.md | ADD: Full security audit report |
-| DEPLOYMENT.md | ADD: Deployment guide |
-| TODO.md | UPDATE: Final status of all completed / pending items |
+| Area | Refinements Applied |
+|------|---------------------|
+| Navbar & Branding | Logo enlarged to prominent ~1.5× (`h-[68px] sm:h-[84px]`) close to borders without expanding navbar height; hero top logo removed |
+| Hero Section | Hierarchy updated to primary "Seabuckthorn Goldenberry" and secondary "The Elixir of the Himalayas"; top badge removed |
+| Formulation Grid | Available formulations aligned side-by-side in responsive 2-column layout |
+| Responsiveness & Spacing | Standardized gutters (`px-4 sm:px-8 lg:px-12`) across all 9 pages; mobile card optimizations for Cart & Checkout |
+| Touch Overflow Wrappers | Omega composition table and product gallery thumbnails use responsive horizontal touch-scrolling |
+| Static Editorial Aesthetic | Deliberate animations removed for a clean, dignified, high-altitude editorial feel |
+| SEO & Domain | Official domain references standardized to `himroots.in` |
 
 ---
 
@@ -176,7 +173,7 @@ See DEPLOYMENT.md for the full step-by-step deployment guide.
 | Email delivery | NOT TESTED — requires live email credentials + domain |
 | Supabase integration | NOT TESTED — requires live Supabase project |
 | Direct URL navigation | NOT TESTED — requires live Apache deployment |
-| Mobile viewport | DESIGNED AND BUILT — visual testing on localhost confirmed |
+| Mobile & Laptop viewports | VERIFIED — automated browser audit across 390px (mobile) and 1440px (laptop) confirmed zero horizontal overflow, clean touch scrolling, and responsive layouts |
 
 ---
 
