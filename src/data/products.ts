@@ -31,83 +31,73 @@ export interface Product {
 export const products: Product[] = [
   {
     id: "prod_001",
-    name: "Himroots Pure Sea Buckthorn Pulp",
-    tagline: "Nature's Shield for Better Health",
+    name: "Himalayan Sea Buckthorn Juice (Pulp) with Curcumin Extract | 500ml",
+    tagline: "For Energy, Immunity & Skin Health",
     scriptQuote: "SIP THE POWER OF HIMALAYAS",
     slug: "sea-buckthorn-pulp",
     volume: "500 ml",
-    description: "HIMROOTS Sea Buckthorn Pulp is made from handpicked, wild-harvested Himalayan sea buckthorn berries, rich in essential nutrients, vitamins and antioxidants. Formulated with 90% pure berry pulp and 5 synergistic Ayurvedic botanicals to nourish your body, boost immunity and support overall wellness.",
-    price: 999,
-    originalPrice: 1299,
+    description: "Himroots Himalayan Sea Buckthorn Juice (Pulp) with Curcumin Extract is a liquid pulp concentrate, wild-harvested from the pristine Himalayan region of Ladakh at ~12,000 ft. Revered for centuries in Tibetan medicine, this ancient berry now meets rigorous modern science, bringing time-tested wisdom to the challenges of contemporary health. Cold-pressed and unfiltered to preserve its naturally occurring nutrient richness, it contains no added sugar or fillers. Naturally rich in Vitamin C and powered by 190+ bioactives, including Vitamins C & E, carotenoids, polyphenols, plant sterols, and a rare full-spectrum Omega 3, 6, 7 & 9 profile, it delivers comprehensive support for healthy skin, immunity, liver function, cholesterol balance, gut health, and antioxidant defence.",
+    price: 899,
+    originalPrice: 1199,
     images: [
       "/images/himroots-sea-buckthorn-pulp.jpg",
       "/images/himroots-sea-buckthorn-juice.jpg",
       "/images/pulp-serving-ritual.jpg",
-      "/images/himroots-harvest-berries.jpg"
+      "/images/himroots-harvest-berries.jpg",
+      "/images/sea-buckthorn-frost-harvest.jpg",
+      "/images/himalayan-hero-peaks.jpg"
     ],
     category: "Wild Himalayan Pulp & Juice",
     ingredients: [
-      "90% Wild Sea Buckthorn (Rich in Vitamin C, E & K)",
-      "2% Bhoomi Amla (Liver health & Digestion)",
-      "2% Makoy (Eye health & Respiratory wellness)",
-      "2% Punarva (Kidney health & Natural detox)",
-      "2% Ashwagandha (Stress reduction & Stamina)",
-      "2% Safed Musli (Vitality & Overall wellness)"
+      "Pure Wild Himalayan Sea Buckthorn Pulp (Rich in Vitamin C, Omegas 3, 6, 7 & 9)",
+      "Curcumin Extract (Standardized Curcuminoids for Enhanced Bioavailability)",
+      "Naturally Occurring Plant Sterols, Polyphenols & Carotenoids"
     ],
     detailedIngredients: [
       {
-        name: "Sea Buckthorn",
-        percentage: "90%",
-        benefits: ["Rich in Vitamin C, E & K", "Boosts immunity & skin health", "Powerful antioxidant"]
+        name: "Wild Sea Buckthorn Pulp",
+        percentage: "95%",
+        benefits: [
+          "Rare full-spectrum Omega 3, 6, 7 & 9 profile",
+          "Up to 28x more Vitamin C than oranges",
+          "190+ active phytonutrients and plant sterols"
+        ]
       },
       {
-        name: "Bhoomi Amla",
-        percentage: "2%",
-        benefits: ["Supports liver health", "Improves digestion", "Rich in natural antioxidants"]
-      },
-      {
-        name: "Makoy",
-        percentage: "2%",
-        benefits: ["Enhances eye health", "Rich in Vitamin A & antioxidants", "Supports respiratory wellness"]
-      },
-      {
-        name: "Punarva",
-        percentage: "2%",
-        benefits: ["Supports kidney & urinary health", "Reduces inflammation", "Aids natural detoxification"]
-      },
-      {
-        name: "Ashwagandha",
-        percentage: "2%",
-        benefits: ["Reduces stress & fatigue", "Boosts energy & stamina", "Supports hormonal balance"]
-      },
-      {
-        name: "Safed Musli",
-        percentage: "2%",
-        benefits: ["Enhances vitality & strength", "Supports reproductive health", "Improves overall wellness"]
+        name: "Standardized Curcumin Extract",
+        percentage: "5%",
+        benefits: [
+          "Potent anti-inflammatory compound",
+          "Neutralises systemic oxidative stress",
+          "Synergistic cellular uptake with berry lipids"
+        ]
       }
     ],
     benefits: [
-      "Rich in Vitamin C & Bioactive Nutrients",
-      "Antioxidant Powerhouse",
-      "Supports Immune Health & Vitality",
-      "Wild-Harvested Himalayan Purity",
-      "Zero Added Sugar or Preservatives"
+      "Helps Support Energy & Vitality",
+      "Helps Reduce Inflammation",
+      "Helps Promote Skin Health",
+      "Helps Aid Gut & Digestive Health",
+      "Helps Support Liver Function",
+      "Helps Reduce Oxidative Stress"
     ],
     certifications: [
-      "100% Natural",
-      "No Added Sugar",
-      "No Preservatives",
-      "Vegan Friendly"
+      "Cold Pressed & Unfiltered",
+      "Zero Added Sugar",
+      "Heavy Metal Free",
+      "Contaminant Free"
     ],
     directions: [
-      "Shake well before use",
-      "Best served chilled",
-      "Take 30ml with equal parts lukewarm or fresh water daily in the morning on an empty stomach"
+      "Shake the bottle well before use",
+      "Mix 10 ml (2 tsp) in 200 ml of fresh or lukewarm water",
+      "Take twice daily, before meals for optimal absorption",
+      "Note: Natural black residue is due to unfiltered sea buckthorn seed particles",
+      "Once opened, refrigerate and consume within 60 days"
     ],
-    packagingFeature: "Premium cylindrical kraft canister with embossed gold foil logo & golden foil lid",
-    stock: 50,
-    rating: 4.9,
-    reviews: 148,
+    packagingFeature: "UV-protected amber canister with tamper-evident seal protecting active Omegas and Vitamin C",
+    stock: 40,
+    rating: 4.73,
+    reviews: 11,
     featured: true
   },
   {
