@@ -82,6 +82,25 @@
 
 ---
 
+## ⚠️ TEMPORARY CREDENTIALS — Must Replace Before Handover
+
+> The `.env` file currently uses the **developer's personal Supabase account** as a temporary database.  
+> These credentials **must be replaced** with the client's own accounts before final deployment and handover.
+
+| Credential | Current State | Action Required |
+|---|---|---|
+| **Supabase URL & Keys** | Developer's temp project (`grcpnlnjpgecdssedwxn`) | Client creates their own Supabase project → replace all `SUPABASE_*` and `VITE_SUPABASE_*` env vars |
+| **Postgres Password** | Developer's DB password committed in `.env` | Rotate after client Supabase project is set up |
+| **Razorpay Keys** | Still using placeholder test values | Client provides live Razorpay keys after KYC |
+| **Resend API Key** | Still using placeholder | Client creates Resend account → provides `re_...` key |
+| **Email From Address** | `orders@himroots.in` placeholder | Client sets up Hostinger mailbox + Resend domain verification |
+
+> ✅ The `.env` file is gitignored — no secrets are committed to the repository.  
+> ❌ Do NOT push `.env` to GitHub. Do NOT share it over chat or email.  
+> ✅ When deploying to Vercel, set each variable directly in the Vercel dashboard → Environment Variables.
+
+---
+
 ## 3. Post-Launch Roadmap (Out of Scope for Initial Launch)
 
 > The initial launch utilizes an agile, streamlined operational model. The following enhancements are planned for future phases:
