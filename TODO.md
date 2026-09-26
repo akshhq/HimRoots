@@ -110,3 +110,23 @@ Himroots operations team packs & ships via designated courier
        ↓
 Tracking details shared with customer via support@himroots.in
 ```
+
+---
+
+## 4. Accounts & Services Required from Client
+
+To launch the Himroots Wellness store with real online payments, order storage, and automated emails, the client must provide access or credentials for the following platforms:
+
+| # | Service / Platform | Purpose | Required Credentials / Details Needed | Setup Status |
+|---|---|---|---|---|
+| **1** | **Domain Registrar & DNS** <br>*(e.g., GoDaddy, Namecheap, Hostinger, Cloudflare)* | Connect `himroots.in` & `www.himroots.in` to frontend and backend | • DNS management access (or client adds provided A/CNAME/TXT records)<br>• SSL certificate enabled | [ ] Pending |
+| **2** | **Razorpay** <br>*(Payment Gateway)* | Process live customer payments (Cards, UPI, Netbanking) | • Business KYC completed & activated for Live Mode<br>• `Key ID` (`rzp_live_...`)<br>• `Key Secret` | [ ] Pending |
+| **3** | **Supabase** <br>*(Database BaaS)* | Store products, orders, customer details, and contact inquiries | • Supabase project invited as admin or:<br>• `Project URL`<br>• `anon` public key<br>• `service_role` secret key | [ ] Pending |
+| **4** | **Transactional Email** <br>*(Resend or Brevo)* | Send order confirmation emails to customers and new-order alerts to store team | • Account login or API Key (`re_...` or `xkeysib-...`)<br>• Domain verification (SPF, DKIM, DMARC added to DNS) | [ ] Pending |
+| **5** | **Business Email Inboxes** <br>*(e.g., Google Workspace, Zoho Mail, cPanel)* | Operational mailboxes for fulfillment and customer support | • `orders@himroots.in` (receives paid order notices)<br>• `support@himroots.in` (receives contact form submissions) | [ ] Pending |
+| **6** | **Cloud Backend Hosting** <br>*(e.g., Render, Railway, Fly.io)* | Run the Node.js / Express production API | • Account access or team invite to deploy the backend server | [ ] Pending |
+| **7** | **Frontend Hosting** <br>*(Vercel)* | Host the React + Vite static single-page application | • Client Vercel account / team invite (if transferring from developer Vercel) | [ ] Pending |
+| **8** | **Courier / Shipping Partner** <br>*(e.g., Shiprocket, Delhivery, India Post, Blue Dart)* | Physical packaging and dispatching of juice bottles | • Operational business shipping account to generate waybills and ship bottles | [ ] Pending |
+
+> **Security Note:** Sensitive credentials (such as `Razorpay Key Secret` and `Supabase Service Role Key`) should only be configured inside the encrypted environment variables of the production backend hosting dashboard (e.g. Render/Railway), and never shared over unencrypted channels or committed to Git.
+
