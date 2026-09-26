@@ -1,42 +1,35 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Wild-foraged Himalayan Sea Buckthorn wellness formulations. Liquid pulp concentrate & rare Omega-7 softgels.">
+    <meta name="theme-color" content="#000000">
+    
     <!-- Favicon & Brand Icons -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/site.webmanifest" />
-    <meta name="msapplication-TileColor" content="#120e0b" />
-    <meta name="msapplication-TileImage" content="/android-chrome-192x192.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Himroots | Pure Himalayan Sea Buckthorn Juice & Wellness</title>
-    <meta name="description" content="Pure, natural, wild-foraged Himalayan Sea Buckthorn juice packed with vital antioxidants, vitamins C, E & K, and rare Omega-7. Nature's goodness in every sip." />
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+    <link rel="manifest" href="/assets/site.webmanifest">
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@500;600;700;800;900&family=Marcellus&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Open Graph / Social Sharing -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://himroots.in/" />
-    <meta property="og:title" content="Himroots | Pure Himalayan Sea Buckthorn Juice & Wellness" />
-    <meta property="og:description" content="Pure, natural, wild-foraged Himalayan Sea Buckthorn juice packed with vital antioxidants, vitamins C, E & K, and rare Omega-7. Nature's goodness in every sip." />
-    <meta property="og:image" content="https://himroots.in/images/himroots-harvest-berries.jpg" />
-    <meta property="og:site_name" content="Himroots Wellness" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Himroots | Pure Himalayan Sea Buckthorn Juice & Wellness" />
-    <meta name="twitter:description" content="Wild-foraged Himalayan Sea Buckthorn juice. Rich in Omega-7, Vitamin C & E. Direct from the mountains." />
-    <meta name="twitter:image" content="https://himroots.in/images/himroots-harvest-berries.jpg" />
-    <meta name="theme-color" content="#120e0b" />
-    <link rel="canonical" href="https://himroots.in/" />
-    <!-- Razorpay Checkout SDK (deferred — does not block HTML parsing) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Marcellus&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <title>Himroots | Pure Himalayan Sea Buckthorn Juice & Wellness</title>
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/styles.css">
+    
+    <!-- Razorpay Checkout SDK (deferred) -->
     <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <div id="app"></div>
+    <script type="module" src="/app.js"></script>
   </body>
 </html>
-
