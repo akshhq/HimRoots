@@ -169,3 +169,30 @@ To launch the Himroots Wellness store with real online payments, order storage, 
 
 > **Security Note:** Sensitive credentials (such as `Razorpay Key Secret` and `Supabase Service Role Key`) should only be configured inside the encrypted environment variables of the production backend hosting dashboard (e.g. Render/Railway), and never shared over unencrypted channels or committed to Git.
 
+---
+
+## 5. Required Email IDs — Create Before Launch
+
+All three email inboxes below must exist on the client's email hosting (Hostinger Web Mail, Google Workspace, or Zoho Mail) **before** going live. Each serves a distinct technical role in the application.
+
+| # | Email Address | Role | Used Where | Must-Have? |
+|---|---|---|---|---|
+| **1** | `orders@himroots.in` | **Order notification inbox** — receives a new-order alert every time a customer places a paid order | `CLIENT_ORDER_EMAIL` env var → `emailService.ts` sends order details here automatically | ✅ Critical |
+| **2** | `support@himroots.in` | **Customer support inbox** — receives all contact form submissions from the website's Contact Us page; `Reply-To` is set to the customer's email for one-click replies | `CLIENT_SUPPORT_EMAIL` env var → `emailService.ts` routes contact form here | ✅ Critical |
+| **3** | `orders@himroots.in` *(as sender)* | **Transactional sender address** — the "From" address shown to customers on their order confirmation emails. Must be verified on Resend for `himroots.in` | `EMAIL_FROM` env var = `Himroots Wellness <orders@himroots.in>` | ✅ Critical (needs Resend DNS verification) |
+
+> **Note:** Inboxes #1 and #3 use the **same address** (`orders@himroots.in`) — it's both the sender of customer confirmations *and* the recipient of internal order alerts. Only **one** mailbox to create, but it needs to be set up in *both* the email host (to receive) and verified in Resend (to send).
+
+### Email IDs Checklist
+
+- [ ] Create `orders@himroots.in` mailbox on Hostinger (Panel → Emails → Create Mailbox)
+- [ ] Create `support@himroots.in` mailbox on Hostinger
+- [ ] Verify `himroots.in` domain on Resend (add SPF / DKIM / DMARC DNS records in Hostinger DNS)
+- [ ] Add `orders@himroots.in` as a verified sender in Resend dashboard
+- [ ] Set `EMAIL_FROM=Himroots Wellness <orders@himroots.in>` in Vercel env vars
+- [ ] Set `CLIENT_ORDER_EMAIL=orders@himroots.in` in Vercel env vars
+- [ ] Set `CLIENT_SUPPORT_EMAIL=support@himroots.in` in Vercel env vars
+- [ ] Send a test order and confirm receipt at `orders@himroots.in`
+- [ ] Submit contact form and confirm receipt at `support@himroots.in`
+
+> ⚠️ **Hostinger Note:** Hostinger includes free business email with domains — use it to *receive* mail. For *sending* transactional emails from the app, you still need **Resend** (Hostinger webmail alone cannot be used as an API sender).
