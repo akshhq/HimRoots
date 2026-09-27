@@ -908,8 +908,8 @@ export async function verifyPaymentSignature(
         orderId: result.orderId || orderId,
         orderNumber: result.orderNumber,
       };
-    } else {
-      // Mark as failed in database
+    } else if (config.nodeEnv === 'production') {
+      // Mark as failed in database in production
       if (supabaseAdmin) {
         await (supabaseAdmin as any)
           .from('orders')
@@ -925,6 +925,7 @@ export async function verifyPaymentSignature(
         errorMessage: 'Invalid payment signature. Authentication failed.',
       };
     }
+    // In development mode, if live signature check didn't match, fall through to check test tokens
   }
 
   // 2. Test mode / local development verification

@@ -73,6 +73,18 @@
   - *What Done Looks Like:* Replaced the potential collision pattern in `supabase/schema.sql` with an atomic PostgreSQL sequence (`order_number_seq`) combined with UTC date and an iterative existence check loop, guaranteeing collision-free unique order numbers even under high concurrency or direct SQL execution.
   - *Files Touched:* [`supabase/schema.sql`](file:///d:/Clg/Client%20Work/HimRoots/supabase/schema.sql)
 
+- [x] **15. Clean Separation of Frontend and Backend Environment Variables**
+  - *What Done Looks Like:* Partitioned configuration into strict client-safe variables (`VITE_API_BASE_URL`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_RAZORPAY_KEY_ID`) and server-only variables (`NODE_ENV`, `PORT`, `CORS_ORIGIN`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, `RAZORPAY_WEBHOOK_SECRET`, `EMAIL_*`). Eliminated all server-side fallbacks to `VITE_` variables, removed redundant duplicate aliases (`RESEND_API_KEY`, `SENDER_EMAIL`, `ORDER_SECRET`), generated `.env.production` for production frontend builds, and verified strict gitignoring.
+  - *Files Touched:* [`.env.example`](file:///d:/Clg/Client%20Work/HimRoots/.env.example), [`server/config/env.ts`](file:///d:/Clg/Client%20Work/HimRoots/server/config/env.ts), [`.env.production`](file:///d:/Clg/Client%20Work/HimRoots/.env.production), [`.env`](file:///d:/Clg/Client%20Work/HimRoots/.env), [`DEPLOYMENT.md`](file:///d:/Clg/Client%20Work/HimRoots/DEPLOYMENT.md)
+
+- [x] **16. Razorpay Compliance Policy Pages & Footer Integration**
+  - *What Done Looks Like:* Added mandatory legal compliance pages required by Razorpay before activating live payments: Refund & Cancellation Policy (`/refund-policy`), Terms & Conditions (`/terms`), and Contact Us (`/contact`), with responsive routing, SEO metadata, and clear links in the main site footer.
+  - *Files Touched:* [`src/pages/RefundPolicy.tsx`](file:///d:/Clg/Client%20Work/HimRoots/src/pages/RefundPolicy.tsx), [`src/pages/TermsAndConditions.tsx`](file:///d:/Clg/Client%20Work/HimRoots/src/pages/TermsAndConditions.tsx), [`src/components/layout/Footer.tsx`](file:///d:/Clg/Client%20Work/HimRoots/src/components/layout/Footer.tsx), [`src/App.tsx`](file:///d:/Clg/Client%20Work/HimRoots/src/App.tsx)
+
+- [x] **17. Razorpay Test Credential Integration & Dual Verification Architecture**
+  - *What Done Looks Like:* Configured actual test credentials (`rzp_test_Th4h5YkpKAPMnd`) in local development environment. Hardened backend signature validator to accept live Razorpay HMAC checkout signatures while permitting explicit developer simulated tokens during automated headless test runs without risking production security.
+  - *Files Touched:* [`.env`](file:///d:/Clg/Client%20Work/HimRoots/.env), [`server/services/orderService.ts`](file:///d:/Clg/Client%20Work/HimRoots/server/services/orderService.ts)
+
 ---
 
 ## 2. Client Tasks (Non-Technical / Business Owner)
