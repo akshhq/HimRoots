@@ -22,6 +22,7 @@ export interface Product {
   certifications: string[];
   directions: string[];
   packagingFeature: string;
+  shelfLife?: string;
   stock: number;
   rating: number;
   reviews: number;
@@ -49,27 +50,36 @@ export const products: Product[] = [
     ],
     category: "Wild Himalayan Pulp & Juice",
     ingredients: [
-      "Pure Wild Himalayan Sea Buckthorn Pulp (Rich in Vitamin C, Omegas 3, 6, 7 & 9)",
-      "Curcumin Extract (Standardized Curcuminoids for Enhanced Bioavailability)",
-      "Naturally Occurring Plant Sterols, Polyphenols & Carotenoids"
+      "Sea Buckthorn (Hippophae rhamnoides) Pulp",
+      "Curcumin Extract (Curcuma longa)",
+      "Potassium Sorbate & Sodium Benzoate (preservatives)",
+      "Demineralized water"
     ],
     detailedIngredients: [
       {
-        name: "Wild Sea Buckthorn Pulp",
-        percentage: "95%",
+        name: "Sea Buckthorn (Hippophae rhamnoides) Pulp",
+        percentage: "94%",
         benefits: [
           "Rare full-spectrum Omega 3, 6, 7 & 9 profile",
           "Up to 28x more Vitamin C than oranges",
-          "190+ active phytonutrients and plant sterols"
+          "190+ active phytonutrients, polyphenols and plant sterols"
         ]
       },
       {
-        name: "Standardized Curcumin Extract",
+        name: "Curcumin Extract (Curcuma longa)",
         percentage: "5%",
         benefits: [
-          "Potent anti-inflammatory compound",
+          "Standardized curcuminoids for maximum anti-inflammatory support",
           "Neutralises systemic oxidative stress",
-          "Synergistic cellular uptake with berry lipids"
+          "Synergistic cellular uptake amplified by berry lipids"
+        ]
+      },
+      {
+        name: "Demineralized Water & Permitted Preservatives",
+        percentage: "1%",
+        benefits: [
+          "Potassium Sorbate & Sodium Benzoate to preserve active botanical freshness",
+          "Maintains sterile stability across 12-month shelf life"
         ]
       }
     ],
@@ -82,20 +92,24 @@ export const products: Product[] = [
       "Helps Reduce Oxidative Stress"
     ],
     certifications: [
-      "Cold Pressed & Unfiltered",
+      "Cold Pressed",
+      "Unfiltered",
       "Zero Added Sugar",
+      "Liquid Pulp Concentrate",
       "Heavy Metal Free",
-      "Contaminant Free"
+      "Contaminant Free",
+      "Non-GMO, Third-Party Tested & cGMP Certified"
     ],
     directions: [
-      "Shake the bottle well before use",
-      "Mix 10 ml (2 tsp) in 200 ml of fresh or lukewarm water",
-      "Take twice daily, before meals for optimal absorption",
-      "Note: Natural black residue is due to unfiltered sea buckthorn seed particles",
+      "Mix 10ml in 200ml water, twice daily",
+      "Best taken before meals (empty stomach for max absorption)",
+      "Shake well before use (natural sediment is expected — sign of being unfiltered, not a defect)",
+      "Benefits are cumulative — consistency over several weeks recommended",
       "Once opened, refrigerate and consume within 60 days"
     ],
     packagingFeature: "UV-protected amber canister with tamper-evident seal protecting active Omegas and Vitamin C",
-    stock: 40,
+    shelfLife: "12 months from manufacture",
+    stock: 30,
     rating: 4.73,
     reviews: 11,
     featured: true

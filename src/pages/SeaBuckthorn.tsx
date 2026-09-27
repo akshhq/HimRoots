@@ -12,7 +12,14 @@ import {
   FlaskConical, 
   HelpCircle, 
   Clock, 
-  Wine 
+  Wine,
+  Rocket,
+  Mountain,
+  Trophy,
+  Snowflake,
+  Trees,
+  Swords,
+  ScrollText
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { products } from "@/data/products";
@@ -183,6 +190,21 @@ export default function SeaBuckthorn() {
       question: "Why is seabuckthorn juice naturally tangy?",
       answer:
         "Seabuckthorn is naturally rich in organic plant acids (such as malic acid and quinic acid) and concentrated vitamin C, giving it a bright, bracing, and intensely tart flavor. This tangy kick is the authentic hallmark of pure, unadulterated high-altitude Himalayan berries without added artificial sugars or synthetic flavorings."
+    },
+    {
+      question: "Why is it named 'Sea Buckthorn' if it grows in the Himalayas?",
+      answer:
+        "Sea buckthorn (Hippophae rhamnoides) is not an ocean plant. The common name traces to its historical presence along the coastal dunes of Eurasia, but its most nutrient-dense, medicinal habitat is the high-altitude cold deserts of the Himalayas (Ladakh and Spiti) at ~12,000 ft, where extreme UV and freezing temperatures concentrate its active bioactives."
+    },
+    {
+      question: "What does the botanical genus name 'Hippophae' mean?",
+      answer:
+        "Hippophae translates from Ancient Greek as 'shining horse' (hippo = horse, phaos = shine). Ancient Greeks and Alexander the Great noticed that horses grazing on wild sea buckthorn bushes experienced rapid muscle recovery and developed dazzlingly glossy, radiant coats. In Greek mythology, it was also celebrated as the preferred diet of Pegasus, the winged horse."
+    },
+    {
+      question: "How are delicate sea buckthorn berries harvested without bursting?",
+      answer:
+        "Because the juicy berries grow in dense clusters between long, rigid thorns, attempting to hand-pluck them bursts the thin fruit skin. Harvesters utilize two specialized methods: 'The Winter Shake' (waiting for the first hard frost to freeze berries rock-solid before gently tapping branches onto tarps) and 'The Prune and Freeze' (carefully pruning fruiting branches, flash-freezing them, and mechanically vibrating them so intact berries drop off cleanly)."
     }
   ];
 
@@ -245,10 +267,10 @@ export default function SeaBuckthorn() {
                 Seabuckthorn (<em>Hippophae rhamnoides</em>) is a resilient deciduous shrub that thrives in extreme mountainous terrains, including the high-altitude Himalayan landscape of Ladakh and Spiti. Its bright orange berries have long been treasured in traditional mountain food practices and are increasingly studied for their rich nutritional and phytochemical matrix.
               </p>
               <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed mb-4">
-                Within these small berries lies an impressive combination of naturally occurring compounds, including vitamin C, carotenoids, tocopherols (vitamin E), flavonoids, organic acids, and plant lipids.
+                Within these small berries lies an impressive combination of naturally occurring compounds, including vitamin C (up to 100 times more than a lemon by weight), carotenoids, tocopherols (vitamin E), flavonoids, organic acids, and plant lipids.
               </p>
               <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed mb-6">
-                Seabuckthorn is particularly unique because its seeds and fruit pulp have distinct fatty-acid profiles: the seeds are rich in Omega-3 and Omega-6, while the pulp oil is world-renowned for its rare Omega-7 content.
+                Long before modern science analyzed its chemistry, this ancient survival plant was revered as a military ration, high-altitude tonic, and cornerstone of traditional Asian pharmacopoeia.
               </p>
 
               <div className="grid grid-cols-2 gap-3 sm:gap-4 text-xs">
@@ -272,12 +294,82 @@ export default function SeaBuckthorn() {
                 />
                 <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent p-5 sm:p-6">
                   <div className="text-[10px] uppercase font-bold tracking-widest text-[var(--color-primary)]">Hippophae rhamnoides</div>
-                  <div className="text-base sm:text-lg font-serif font-bold text-white">Wild Trans-Himalayan Golden Berries</div>
-                  <p className="text-xs text-gray-300 mt-1">Rich in botanical lipids, polyphenols, and active organic acids</p>
+                  <div className="text-base sm:text-lg font-serif font-bold text-white">The Ancient Survival Plant</div>
+                  <p className="text-xs text-gray-300 mt-1">190+ bioactives synthesized through extreme altitude and winter frost</p>
                 </div>
               </div>
             </div>
 
+          </div>
+        </section>
+
+        {/* Section 2: The "Shining Horse" of Antiquity & Legends of Empire */}
+        <section className="mb-20 sm:mb-28 bg-[var(--color-card)] border border-[var(--color-border-gold)] rounded-3xl p-6 sm:p-10 md:p-14 shadow-2xl">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14">
+              <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-2 block">
+                Mythology & Heritage • 12,000 Years of Lore
+              </span>
+              <h2 className="text-2xl sm:text-4xl font-bold font-serif text-white mb-4">
+                The "Shining Horse" of Antiquity & Legends of Empire
+              </h2>
+              <div className="w-16 sm:w-20 h-1 bg-gold-gradient mx-auto mb-4" />
+              <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed">
+                Before modern laboratories mapped its lipid structures, sea buckthorn was revered by ancient conquerors, Tibetan sages, and Greek mythologists as a divine source of stamina and recovery.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              
+              {/* Card 1: Pegasus & Greek War Horses */}
+              <div className="bg-[var(--color-secondary)]/80 border border-[var(--color-border)] hover:border-[var(--color-border-gold)] p-6 rounded-2xl flex flex-col transition-all duration-300">
+                <div className="w-12 h-12 rounded-xl bg-gold-gradient flex items-center justify-center text-black mb-4 shadow-md">
+                  <Sparkles className="w-6 h-6" />
+                </div>
+                <span className="text-[10px] uppercase font-bold text-[var(--color-primary)] tracking-wider block mb-1">
+                  Greek Antiquity • Etymology
+                </span>
+                <h3 className="text-lg font-bold font-serif text-white mb-2">
+                  Hippophae: The "Shining Horse"
+                </h3>
+                <p className="text-xs text-gray-300 leading-relaxed flex-1">
+                  The botanical genus name, <em>Hippophae</em>, translates directly from Ancient Greek as <strong>"shining horse"</strong> (<em>hippo</em> = horse, <em>phaos</em> = shine). In classical mythology, sea buckthorn was the preferred sustenance of <strong>Pegasus, the winged horse</strong>. Ancient Greeks observed that war horses grazing on wild sea buckthorn developed rapid muscle recovery and radiant, shining coats.
+                </p>
+              </div>
+
+              {/* Card 2: Alexander the Great & Marathon Runners */}
+              <div className="bg-[var(--color-secondary)]/80 border border-[var(--color-border)] hover:border-[var(--color-border-gold)] p-6 rounded-2xl flex flex-col transition-all duration-300">
+                <div className="w-12 h-12 rounded-xl bg-gold-gradient flex items-center justify-center text-black mb-4 shadow-md">
+                  <Swords className="w-6 h-6" />
+                </div>
+                <span className="text-[10px] uppercase font-bold text-[var(--color-primary)] tracking-wider block mb-1">
+                  Military Rations • Superhuman Stamina
+                </span>
+                <h3 className="text-lg font-bold font-serif text-white mb-2">
+                  Alexander the Great's Campaigns
+                </h3>
+                <p className="text-xs text-gray-300 leading-relaxed flex-1">
+                  Legend dictates that <strong>Alexander the Great</strong> fed sea buckthorn berries to his soldiers and cavalry to sustain relentless stamina across grueling Asian mountain campaigns. Ancient Greek messengers and marathon runners, including Pheidippides, reportedly consumed the sour berries to boost aerobic endurance over punishing distances.
+                </p>
+              </div>
+
+              {/* Card 3: Tibetan rGyud Bzi & Genghis Khan */}
+              <div className="bg-[var(--color-secondary)]/80 border border-[var(--color-border)] hover:border-[var(--color-border-gold)] p-6 rounded-2xl flex flex-col transition-all duration-300">
+                <div className="w-12 h-12 rounded-xl bg-gold-gradient flex items-center justify-center text-black mb-4 shadow-md">
+                  <ScrollText className="w-6 h-6" />
+                </div>
+                <span className="text-[10px] uppercase font-bold text-[var(--color-primary)] tracking-wider block mb-1">
+                  Tibetan Pharmacopoeia & Mongol Empire
+                </span>
+                <h3 className="text-lg font-bold font-serif text-white mb-2">
+                  The rGyud Bzi & Genghis Khan
+                </h3>
+                <p className="text-xs text-gray-300 leading-relaxed flex-1">
+                  By the 8th century, sea buckthorn was formally codified in the classical <strong>rGyud Bzi</strong> (The Four Books of Pharmacopoeia), establishing it as a pillar of Tibetan Sowa-Rigpa and Ayurveda for altitude sickness and digestive vitality. In the 13th century, <strong>Genghis Khan</strong> relied on sea buckthorn to fuel his cavalry, keeping soldiers robust as they conquered harsh Asian terrains.
+                </p>
+              </div>
+
+            </div>
           </div>
         </section>
 
@@ -428,6 +520,100 @@ export default function SeaBuckthorn() {
           </div>
         </section>
 
+        {/* Modern Marvels: Space, Chernobyl, Olympics & High-Altitude Extremes */}
+        <section className="mb-20 sm:mb-28">
+          <div className="max-w-4xl mx-auto text-center mb-12 sm:mb-16">
+            <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-2 block">
+              20th & 21st Century Science • Performance at the Extremes
+            </span>
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold font-serif text-white mb-4">
+              Modern Marvels: Space, Olympics & Extreme Survival
+            </h2>
+            <div className="w-16 sm:w-20 h-1 bg-gold-gradient mx-auto mb-5" />
+            <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed">
+              In the mid-20th century, rigorous scientific research transformed sea buckthorn from regional Himalayan folk medicine into an essential tool for humanity's most demanding physical frontiers.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-10">
+            
+            {/* Space Race */}
+            <div className="bg-[var(--color-card)] border border-[var(--color-border)] hover:border-[var(--color-primary)]/70 p-6 rounded-2xl flex flex-col transition-all duration-300">
+              <div className="w-12 h-12 rounded-xl bg-[var(--color-secondary)] border border-[var(--color-border-gold)] flex items-center justify-center text-[var(--color-primary)] mb-5">
+                <Rocket className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold font-serif text-white mb-1">The Space Race</h3>
+              <div className="text-[11px] font-semibold text-[var(--color-primary)] uppercase tracking-wider mb-3">
+                Cosmic Radiation Shield
+              </div>
+              <p className="text-xs text-gray-300 leading-relaxed flex-1">
+                Russian cosmonauts consumed sea buckthorn during orbital space missions to shield cellular structures against intense cosmic radiation and to treat acute operational frostbite in sub-zero environments.
+              </p>
+            </div>
+
+            {/* Chernobyl Recovery */}
+            <div className="bg-[var(--color-card)] border border-[var(--color-border)] hover:border-[var(--color-primary)]/70 p-6 rounded-2xl flex flex-col transition-all duration-300">
+              <div className="w-12 h-12 rounded-xl bg-[var(--color-secondary)] border border-[var(--color-border-gold)] flex items-center justify-center text-[var(--color-primary)] mb-5">
+                <Shield className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold font-serif text-white mb-1">Chernobyl Recovery</h3>
+              <div className="text-[11px] font-semibold text-[var(--color-primary)] uppercase tracking-wider mb-3">
+                Radiation Burn Therapy
+              </div>
+              <p className="text-xs text-gray-300 leading-relaxed flex-1">
+                Following the 1986 Chernobyl nuclear disaster, physicians therapeutically administered concentrated sea buckthorn berry and seed oils to soothe severe radiation burns and accelerate dermal tissue renewal.
+              </p>
+            </div>
+
+            {/* Olympic Endurance */}
+            <div className="bg-[var(--color-card)] border border-[var(--color-border)] hover:border-[var(--color-primary)]/70 p-6 rounded-2xl flex flex-col transition-all duration-300">
+              <div className="w-12 h-12 rounded-xl bg-[var(--color-secondary)] border border-[var(--color-border-gold)] flex items-center justify-center text-[var(--color-primary)] mb-5">
+                <Trophy className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold font-serif text-white mb-1">1992 Olympics</h3>
+              <div className="text-[11px] font-semibold text-[var(--color-primary)] uppercase tracking-wider mb-3">
+                Official Sports Drink
+              </div>
+              <p className="text-xs text-gray-300 leading-relaxed flex-1">
+                Because of its documented capacity to support cardiovascular endurance, reduce oxidative fatigue, and accelerate muscle recovery, sea buckthorn was designated the official sports beverage of the Chinese Olympic team in 1992.
+              </p>
+            </div>
+
+            {/* Mount Everest Expeditions */}
+            <div className="bg-[var(--color-card)] border border-[var(--color-border)] hover:border-[var(--color-primary)]/70 p-6 rounded-2xl flex flex-col transition-all duration-300">
+              <div className="w-12 h-12 rounded-xl bg-[var(--color-secondary)] border border-[var(--color-border-gold)] flex items-center justify-center text-[var(--color-primary)] mb-5">
+                <Mountain className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold font-serif text-white mb-1">Everest Expeditions</h3>
+              <div className="text-[11px] font-semibold text-[var(--color-primary)] uppercase tracking-wider mb-3">
+                High-Altitude Operations
+              </div>
+              <p className="text-xs text-gray-300 leading-relaxed flex-1">
+                Elite mountaineers ascending Mount Everest and Himalayan military units utilize sea buckthorn to maintain physical stamina, vascular warmth, and mental clarity in freezing, oxygen-deprived alpine zones.
+              </p>
+            </div>
+
+          </div>
+
+          {/* Ecological Healer Callout */}
+          <div className="max-w-6xl mx-auto p-6 sm:p-8 rounded-3xl bg-[var(--color-card)] border border-[var(--color-border-gold)] shadow-xl flex flex-col md:flex-row items-center gap-6">
+            <div className="w-14 h-14 rounded-2xl bg-gold-gradient flex items-center justify-center text-black shrink-0 shadow-lg">
+              <Trees className="w-7 h-7" />
+            </div>
+            <div className="flex-1 text-center md:text-left">
+              <span className="text-[10px] uppercase font-bold text-[var(--color-primary)] tracking-widest block mb-1">
+                Ecological Healer • Pioneer Botanical
+              </span>
+              <h3 className="text-lg sm:text-xl font-serif font-bold text-white mb-1.5">
+                Regenerating Earth: Deep Nitrogen Fixation & Desertification Defense
+              </h3>
+              <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                As a recognized "pioneer plant," sea buckthorn is utilized globally to halt soil erosion and reverse desertification. Its extensive root networks pull nitrogen directly from thin mountain air and fix it into barren soil, revitalizing degraded Himalayan terrain so other flora can flourish.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* Section 4: From the Himalayas, Inspired by Nature */}
         <section className="mb-20 sm:mb-28 bg-[var(--color-card)] border border-[var(--color-border-gold)] rounded-3xl p-6 sm:p-10 md:p-14 shadow-2xl">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center max-w-6xl mx-auto">
@@ -473,6 +659,76 @@ export default function SeaBuckthorn() {
               </div>
             </div>
 
+          </div>
+        </section>
+
+        {/* The Harvest: Earning the Golden Berry */}
+        <section className="mb-20 sm:mb-28 bg-[var(--color-card)] border border-[var(--color-border-gold)] rounded-3xl p-6 sm:p-10 md:p-14 shadow-2xl">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14">
+              <span className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-[0.25em] mb-2 block">
+                The Harvest Tradition • High-Altitude Fortitude
+              </span>
+              <h2 className="text-2xl sm:text-4xl font-bold font-serif text-white mb-4">
+                The Harvest: Earning the Golden Berry
+              </h2>
+              <div className="w-16 sm:w-20 h-1 bg-gold-gradient mx-auto mb-4" />
+              <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed">
+                The very same defenses that allow sea buckthorn to withstand punishing -40°C Himalayan blizzards make harvesting the fruit an extraordinary challenge. Heavily guarded by long, rigid thorns, the soft, juice-filled berries grow in tight clusters directly against the branches. Attempting to hand-pick them individually bursts the delicate skins immediately.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+              
+              {/* Method 1: The Winter Shake */}
+              <div className="bg-[var(--color-secondary)]/80 border border-[var(--color-border)] hover:border-[var(--color-border-gold)] p-6 sm:p-8 rounded-2xl flex flex-col justify-between transition-all duration-300">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[var(--color-primary)]">
+                      Method 1 • Traditional Wild Harvest
+                    </span>
+                    <Snowflake className="w-5 h-5 text-[var(--color-primary)]" />
+                  </div>
+                  <h3 className="text-xl font-bold font-serif text-white mb-3">
+                    The Winter Shake (Frost Harvesting)
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-300 leading-relaxed mb-4">
+                    In high mountain valleys where winter temperatures drop sharply, harvesters wait until the first hard frost freezes the berries rock-solid directly on the shrub. Once frozen, tarps are placed beneath the branches. Harvesters gently tap the thorny boughs, causing the intact, frozen golden spheres to dislodge and drop cleanly onto clean sheets without bursting.
+                  </p>
+                </div>
+                <div className="pt-3 border-t border-[var(--color-border)] text-[11px] text-[var(--color-primary)] font-semibold flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>Zero Skin Rupture • 100% Bioactive Integrity Preserved</span>
+                </div>
+              </div>
+
+              {/* Method 2: The Prune and Freeze */}
+              <div className="bg-[var(--color-secondary)]/80 border border-[var(--color-border)] hover:border-[var(--color-border-gold)] p-6 sm:p-8 rounded-2xl flex flex-col justify-between transition-all duration-300">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[var(--color-primary)]">
+                      Method 2 • Controlled Cold-Chain
+                    </span>
+                    <FlaskConical className="w-5 h-5 text-[var(--color-primary)]" />
+                  </div>
+                  <h3 className="text-xl font-bold font-serif text-white mb-3">
+                    The Prune and Freeze (Flash Freezing)
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-300 leading-relaxed mb-4">
+                    For pristine commercial cultivation, entire fruit-bearing branches are carefully pruned with surgical precision to safeguard the shrub's perennial vitality. These branches are immediately transported in insulated vehicles to commercial flash-freezers. Once flash-frozen, mechanical vibration gently shakes the intact, whole berries free without juice leakage or oxidation.
+                  </p>
+                </div>
+                <div className="pt-3 border-t border-[var(--color-border)] text-[11px] text-[var(--color-primary)] font-semibold flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>Surgical Pruning • Immediate Cold-Chain Stabilization</span>
+                </div>
+              </div>
+
+            </div>
+
+            <div className="p-4 sm:p-5 rounded-2xl bg-[var(--color-background)] border border-[var(--color-border-gold)]/60 text-xs sm:text-sm text-gray-300 text-center italic">
+              "This labor-intensive, patience-demanding process, combined with remote 12,000+ ft Himalayan terrain, makes true cold-pressed Sea Buckthorn one of the world's most hard-won, premium botanicals."
+            </div>
           </div>
         </section>
 

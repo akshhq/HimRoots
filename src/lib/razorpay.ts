@@ -75,18 +75,29 @@ export async function loadRazorpayScript(): Promise<boolean> {
   }
 
   return new Promise((resolve) => {
-    const existingScript = document.querySelector('script[src*="checkout.razorpay.com"]');
+    // If window.Razorpay is already present
+    if (typeof window !== 'undefined' && window.Razorpay) {
+      return resolve(true);
+    }
+
+    const existingScript = document.querySelector('script[src*="checkout.razorpay.com"]') as HTMLScriptElement | null;
     if (existingScript) {
-      existingScript.addEventListener('load', () => resolve(true));
-      existingScript.addEventListener('error', () => resolve(false));
-      // In case it already loaded
       if (window.Razorpay) return resolve(true);
+
+      existingScript.addEventListener('load', () => resolve(Boolean(window.Razorpay)));
+      existingScript.addEventListener('error', () => resolve(false));
+
+      // Check again after short tick in case load already fired
+      setTimeout(() => {
+        if (window.Razorpay) resolve(true);
+      }, 500);
+      return;
     }
 
     const script = document.createElement('script');
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
     script.async = true;
-    script.onload = () => resolve(true);
+    script.onload = () => resolve(Boolean(window.Razorpay));
     script.onerror = () => resolve(false);
     document.body.appendChild(script);
   });

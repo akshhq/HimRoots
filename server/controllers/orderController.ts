@@ -78,6 +78,7 @@ export async function createOrder(req: Request, res: Response, next: NextFunctio
 export async function getOrderByIdentifier(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const { identifier } = req.params;
+    const identifierStr = Array.isArray(identifier) ? identifier[0] : identifier;
     const token = (req.query.token as string) || (req.headers['x-order-token'] as string);
 
     if (!token) {
@@ -88,7 +89,7 @@ export async function getOrderByIdentifier(req: Request, res: Response, next: Ne
       return;
     }
 
-    const fullOrder = await getOrderByIdOrNumber(identifier);
+    const fullOrder = await getOrderByIdOrNumber(identifierStr);
 
     if (!fullOrder) {
       res.status(404).json({

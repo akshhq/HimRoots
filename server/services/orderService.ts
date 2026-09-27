@@ -7,7 +7,6 @@ import {
   sendClientOrderNotificationEmail,
   sendCustomerOrderConfirmationEmail,
 } from './emailService';
-import type { OrderRow, OrderItemRow } from '../../src/types/database.types';
 
 export interface CreateOrderItemInput {
   productId: string;
@@ -48,6 +47,33 @@ export interface CalculatedOrder {
     price: number;
     subtotal: number;
   }[];
+}
+
+export interface FullOrderDetails {
+  id: string;
+  orderNumber: string;
+  orderToken?: string;
+  customer: CustomerInput;
+  shipping: ShippingInput;
+  items: {
+    productId?: string;
+    productName: string;
+    quantity: number;
+    price: number;
+    subtotal: number;
+  }[];
+  subtotal: number;
+  shippingFee: number;
+  discount: number;
+  total: number;
+  paymentStatus: string;
+  orderStatus: string;
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
+  emailStatus: 'pending' | 'sent' | 'failed';
+  emailError?: string | null;
+  createdAt: string;
+  paidAt?: string;
 }
 
 /**
@@ -265,7 +291,7 @@ export async function persistOrderToDatabase(
   shipping: ShippingInput,
   razorpayOrderId: string,
   notes?: string
-): Promise<{ orderId: string; orderNumber: string }> {
+): Promise<{ orderId: string; orderNumber: string; orderToken: string }> {
   if (supabaseAdmin) {
     try {
       // 1. Insert into orders table
@@ -380,33 +406,6 @@ export async function persistOrderToDatabase(
     orderNumber: calculated.orderNumber,
     orderToken,
   };
-}
-
-export interface FullOrderDetails {
-  id: string;
-  orderNumber: string;
-  orderToken?: string;
-  customer: CustomerInput;
-  shipping: ShippingInput;
-  items: {
-    productId?: string;
-    productName: string;
-    quantity: number;
-    price: number;
-    subtotal: number;
-  }[];
-  subtotal: number;
-  shippingFee: number;
-  discount: number;
-  total: number;
-  paymentStatus: string;
-  orderStatus: string;
-  razorpayOrderId?: string;
-  razorpayPaymentId?: string;
-  emailStatus: 'pending' | 'sent' | 'failed';
-  emailError?: string | null;
-  createdAt: string;
-  paidAt?: string;
 }
 
 // In-memory store for orders to support retrieval and offline development

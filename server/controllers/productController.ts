@@ -20,7 +20,8 @@ export async function getProducts(_req: Request, res: Response, next: NextFuncti
 export async function getProductByIdentifier(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const { identifier } = req.params;
-    const product = await getProductBySlugOrId(identifier);
+    const identifierStr = Array.isArray(identifier) ? identifier[0] : identifier;
+    const product = await getProductBySlugOrId(identifierStr);
 
     if (!product) {
       res.status(404).json({

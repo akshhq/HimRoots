@@ -27,7 +27,9 @@ import {
   BookOpen,
   Users,
   Check,
-  Zap
+  Zap,
+  CreditCard,
+  HelpCircle
 } from "lucide-react";
 import { SEO } from "@/components/common/SEO";
 
@@ -208,6 +210,9 @@ export default function ProductDetails() {
     setOpenAccordion(prev => prev === key ? "" : key);
   };
 
+  // Product FAQ state
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+
   // Scientific Evidence Slider state
   const [activeStudyIndex, setActiveStudyIndex] = useState(0);
 
@@ -248,24 +253,44 @@ export default function ProductDetails() {
     );
   }
 
-  // Pricing calculations based on spec
-  const currentPricing = selectedVariant === "pack-1" 
-    ? {
-        price: 899,
-        originalPrice: 1199,
-        discount: "25% OFF",
-        sku: "SBP-500",
-        volume: "500ml",
-        name: "Himalayan Sea Buckthorn Juice (Pulp) with Curcumin Extract | 500ml (Pack of 1)"
-      }
-    : {
-        price: 1798,
-        originalPrice: 2398,
-        discount: "25% OFF",
-        sku: "SBP-500-2",
-        volume: "2 x 500ml",
-        name: "Himalayan Sea Buckthorn Juice (Pulp) with Curcumin Extract | 500ml (Pack of 2)"
-      };
+  const isJuice = product.id === "prod_001" || product.slug.includes("pulp") || product.slug.includes("juice");
+
+  // Dynamic pricing calculations based on summary specifications
+  const currentPricing = isJuice
+    ? (selectedVariant === "pack-1" 
+        ? {
+            price: 899,
+            originalPrice: 1199,
+            discount: "25% OFF",
+            sku: "SBP-500",
+            volume: "500ml",
+            name: "Himalayan Sea Buckthorn Juice (Pulp) with Curcumin Extract | 500ml (Pack of 1)"
+          }
+        : {
+            price: 1798,
+            originalPrice: 2398,
+            discount: "25% OFF",
+            sku: "SBP-500-2",
+            volume: "2 x 500ml",
+            name: "Himalayan Sea Buckthorn Juice (Pulp) with Curcumin Extract | 500ml (Pack of 2)"
+          })
+    : (selectedVariant === "pack-1"
+        ? {
+            price: product.price,
+            originalPrice: product.originalPrice || 1499,
+            discount: "20% OFF",
+            sku: "SBC-60",
+            volume: product.volume || "60 Softgels",
+            name: `${product.name} (Pack of 1)`
+          }
+        : {
+            price: Math.round(product.price * 2 * 0.9),
+            originalPrice: (product.originalPrice || 1499) * 2,
+            discount: "28% OFF",
+            sku: "SBC-60-2",
+            volume: `2 x ${product.volume || "60 Softgels"}`,
+            name: `${product.name} (Pack of 2)`
+          });
 
   const handleAddToCart = () => {
     const itemToAdd: Product = {
@@ -346,31 +371,77 @@ export default function ProductDetails() {
     }
   ];
 
-  // Customer Reviews from spec
+  // Customer Reviews from sea-buckthorn-juice-product-summary.md
   const customerReviews = [
     {
       name: "Ishita Gupta",
       date: "30/08/2026",
       rating: 5,
       verified: true,
+      sentiment: "Positive",
+      sentimentNote: "Likes full Omega 3/6/7/9 profile",
       headline: "Complete Omega profile - surviving startup stress & pollution",
-      text: "Love the fact that this has the complete Omega profile - 3,6,7&9. Crazy that a berry which survived the Ice Age is now helping me survive Gurgaon traffic pollution and startup stress."
+      text: "Love the fact that this has the complete Omega profile - 3, 6, 7 & 9. Crazy that a berry which survived the Ice Age is now helping me survive Gurgaon traffic pollution and startup stress."
     },
     {
       name: "Shreya Menon",
       date: "30/08/2026",
       rating: 5,
       verified: true,
+      sentiment: "Positive",
+      sentimentNote: "Bought for no added sugar, stayed for taste",
       headline: "Came for No Added Sugar, Stayed for the Taste",
-      text: "Came for No Added Sugar, Stayed for the Taste. Bought it because of the no added sugar stayed because i genuinely enjoy taking it every morning."
+      text: "Bought it because of the no added sugar, stayed because I genuinely enjoy taking it every morning. The tart natural flavor is unmatched."
     },
     {
       name: "Pooja Khanna",
       date: "30/08/2026",
       rating: 5,
       verified: true,
+      sentiment: "Positive",
+      sentimentNote: "Non-negotiable morning ritual",
       headline: "My Non-Negotiable Morning Habit",
-      text: "My Non-Negotiable Morning Habit. Im a founder and my sleep schedule is honestly terrible This has become my one non negotiable morning habit feels like im giving my body something real before the chaos starts."
+      text: "I'm a founder and my sleep schedule is honestly terrible. This has become my one non-negotiable morning habit — feels like I'm giving my body something real before the chaos starts."
+    },
+    {
+      name: "Rahul Bansal",
+      date: "14/09/2026",
+      rating: 4,
+      verified: true,
+      sentiment: "Neutral",
+      sentimentNote: "Too early to assess results, likes packaging",
+      headline: "Too early to assess results, likes packaging",
+      text: "Too early to assess systemic health results after just 10 days, but the packaging and dark amber canister feel exceptionally premium. Taste is authentic and bracing."
+    },
+    {
+      name: "Karan Malhotra",
+      date: "18/09/2026",
+      rating: 4,
+      verified: true,
+      sentiment: "Neutral",
+      sentimentNote: "Taste is different but not bad",
+      headline: "Taste is different but not bad",
+      text: "Only a week in so too early to assess long-term benefits, but the taste is definitely different from standard sweetened juices — tart, robust, but not bad at all once mixed in water."
+    }
+  ];
+
+  // FAQs from sea-buckthorn-juice-product-summary.md
+  const productFaqs = [
+    {
+      question: "What is sea buckthorn?",
+      answer: "Sea buckthorn (Hippophae rhamnoides) is a wildly hardy, ancient deciduous shrub native to the freezing, high-altitude deserts of the Himalayas (such as Ladakh at ~12,000 ft). Despite its name, it is not an ocean plant. Revered for centuries in traditional Tibetan and Ayurvedic medicine, its vibrant orange berries synthesize over 190 bioactives, rare plant lipids, and exceptional concentrations of natural Vitamin C."
+    },
+    {
+      question: "What does sea buckthorn do for the body?",
+      answer: "Sea buckthorn delivers comprehensive multi-system nourishment: it helps support all-day energy and vitality, helps reduce systemic inflammation when paired with curcumin, aids healthy gut motility and soothes digestive mucous membranes, supports liver function and metabolic detox, and actively reduces oxidative stress throughout the body."
+    },
+    {
+      question: "Is sea buckthorn good for skin?",
+      answer: "Yes, exceptionally. Sea buckthorn is one of the only known botanical sources of rare Omega-7 (palmitoleic acid), an essential structural constituent of skin cell membranes and mucosal tissues. Working alongside Vitamins C & E and carotenoids, it deeply hydrates dermal layers, reinforces moisture barriers, and stimulates natural pro-collagen synthesis for radiant, resilient skin."
+    },
+    {
+      question: "How does its nutrition compare to other fruits?",
+      answer: "Sea buckthorn dramatically outperforms ordinary fruits. It provides up to 28 times more concentrated Vitamin C than oranges (and up to 100 times more than lemons by weight). Furthermore, unlike standard sweet fruits that only offer watery carbohydrates, sea buckthorn synthesizes healthy lipids directly in its pulp and seeds, yielding a rare full-spectrum Omega 3, 6, 7 & 9 profile."
     }
   ];
 
@@ -773,11 +844,11 @@ export default function ProductDetails() {
                 For Energy, Immunity & Skin Health
               </p>
 
-              {/* Inventory Notice from spec */}
+              {/* Inventory Notice from summary */}
               <div className="flex items-center gap-2 mb-6">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-950/60 border border-red-800/80 text-red-300 text-xs font-semibold">
-                  <span className="w-2 h-2 rounded-full bg-red-500"></span>
-                  Only 40 left in stock
+                  <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                  Only 30 left
                 </span>
                 <span className="text-xs text-gray-400">• High Demand</span>
               </div>
@@ -814,7 +885,7 @@ export default function ProductDetails() {
                       <div className="flex items-baseline gap-2">
                         <span className="text-lg font-bold text-white">₹899</span>
                         <span className="text-xs text-gray-500 line-through">₹1,199</span>
-                        <span className="text-[10px] font-bold text-[var(--color-accent)]">25% OFF</span>
+                        <span className="text-[10px] font-bold text-[var(--color-accent)]">25% off</span>
                       </div>
                       <span className="text-[10px] text-gray-500 mt-1 font-mono">SKU: SBP-500</span>
                     </button>
@@ -844,7 +915,7 @@ export default function ProductDetails() {
                       <div className="flex items-baseline gap-2">
                         <span className="text-lg font-bold text-white">₹1,798</span>
                         <span className="text-xs text-gray-500 line-through">₹2,398</span>
-                        <span className="text-[10px] font-bold text-[var(--color-accent)]">25% OFF</span>
+                        <span className="text-[10px] font-bold text-[var(--color-accent)]">25% off</span>
                       </div>
                       <span className="text-[10px] text-gray-500 mt-1 font-mono">SKU: SBP-500-2</span>
                     </button>
@@ -852,7 +923,25 @@ export default function ProductDetails() {
                   </div>
                 </div>
 
-                {/* Member Subscription Price Banner from spec */}
+                {/* EMI & Cashback Offers from summary */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-4">
+                  <div className="p-3 rounded-xl bg-[#0a0a0a] border border-[#1f1f1f] flex items-center gap-2.5">
+                    <CreditCard className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
+                    <div>
+                      <span className="text-xs font-bold text-white block">0% EMI Available</span>
+                      <span className="text-[11px] text-gray-400">₹1 now + ₹449/mo (2 months)</span>
+                    </div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-[#0a0a0a] border border-[#1f1f1f] flex items-center gap-2.5">
+                    <Sparkles className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
+                    <div>
+                      <span className="text-xs font-bold text-white block">Cashback Offer</span>
+                      <span className="text-[11px] text-gray-400">Flat 10% up to ₹250</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Member Subscription Price Banner */}
                 <div className="p-3 rounded-xl bg-gradient-to-r from-[var(--color-primary)]/10 via-[var(--color-primary)]/5 to-transparent border border-[var(--color-border-gold)]/60 flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2.5">
                     <Sparkles className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
@@ -861,7 +950,7 @@ export default function ProductDetails() {
                         Member Price: ₹{selectedVariant === "pack-1" ? "854" : "1,708"}
                       </span>
                       <span className="text-[11px] text-gray-400">
-                        Save 30% via Membership / Subscription
+                        Save additional on recurring deliveries
                       </span>
                     </div>
                   </div>
@@ -873,7 +962,7 @@ export default function ProductDetails() {
                 {/* Tax & Shipping Note */}
                 <div className="text-[11px] text-gray-400 mt-3 flex items-center gap-2">
                   <Truck className="w-3.5 h-3.5 text-[var(--color-primary)]" />
-                  <span>Free shipping across India • Inclusive of all taxes</span>
+                  <span>Free shipping across India • MRP is inclusive of all taxes</span>
                 </div>
 
               </div>
@@ -964,21 +1053,29 @@ export default function ProductDetails() {
                     onClick={() => toggleAccordion("ingredients")}
                     className="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-white hover:text-[var(--color-primary)]"
                   >
-                    <span>Key Ingredients & Active Compounds</span>
+                    <span>Ingredients & Formulation</span>
                     {openAccordion === "ingredients" ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
                   </button>
                   {openAccordion === "ingredients" && (
                     <div className="px-4 pb-4 text-xs sm:text-sm text-gray-300 leading-relaxed border-t border-[#1f1f1f] pt-3 space-y-3">
                       <div>
-                        <strong className="text-white block mb-0.5">Sea Buckthorn (Hippophae rhamnoides):</strong>
-                        A rare Himalayan superfruit and nature's most concentrated source of Vitamin C, naturally rich in 190+ bioactives and a full-spectrum omega profile of Omega 3, 6, 7 & 9. It helps support skin health, immunity, liver function, gut balance and antioxidant defence.
+                        <strong className="text-white block mb-0.5">Sea Buckthorn (Hippophae rhamnoides) Pulp:</strong>
+                        Pure wild-harvested Himalayan pulp concentrate supplying 190+ active phytonutrients and full-spectrum Omega 3, 6, 7 & 9 with high naturally occurring Vitamin C.
                       </div>
                       <div>
                         <strong className="text-white block mb-0.5">Curcumin Extract (Curcuma longa):</strong>
-                        A potent anti-inflammatory and antioxidant compound that helps neutralise oxidative stress and supports the body's natural inflammation response.
+                        High-purity standardized curcuminoids providing potent anti-inflammatory synergy and systemic antioxidant defense.
                       </div>
-                      <div className="text-[11px] text-gray-400">
-                        Zero preservatives • Zero artificial food colorants • Zero added sucrose
+                      <div>
+                        <strong className="text-white block mb-0.5">Demineralized Water:</strong>
+                        Purified water base maintaining the optimal fluidity of the unfiltered liquid pulp concentrate.
+                      </div>
+                      <div>
+                        <strong className="text-white block mb-0.5">Potassium Sorbate & Sodium Benzoate:</strong>
+                        Permitted food-grade preservatives safeguarding active botanical omegas and vitamins against oxidation and microbial degradation throughout the 12-month shelf life.
+                      </div>
+                      <div className="text-[11px] text-gray-400 border-t border-[#1f1f1f] pt-2">
+                        Zero added sugar • Heavy metal free • Contaminant free • Non-GMO • cGMP manufactured
                       </div>
                     </div>
                   )}
@@ -990,22 +1087,31 @@ export default function ProductDetails() {
                     onClick={() => toggleAccordion("usage")}
                     className="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-white hover:text-[var(--color-primary)]"
                   >
-                    <span>Usage Instructions (How to Take)</span>
+                    <span>Directions for Use</span>
                     {openAccordion === "usage" ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
                   </button>
                   {openAccordion === "usage" && (
                     <div className="px-4 pb-4 text-xs sm:text-sm text-gray-300 leading-relaxed border-t border-[#1f1f1f] pt-3 space-y-2">
                       <p className="flex items-start gap-2">
                         <Check className="w-4 h-4 text-[var(--color-primary)] shrink-0 mt-0.5" />
-                        <span>Shake the bottle well and mix 10 ml (2 tsp) in 200 ml of water. Take it twice daily, before meals.</span>
+                        <span>Mix 10ml in 200ml water, twice daily.</span>
+                      </p>
+                      <p className="flex items-start gap-2">
+                        <Check className="w-4 h-4 text-[var(--color-primary)] shrink-0 mt-0.5" />
+                        <span>Best taken before meals (on an empty stomach for maximum absorption).</span>
+                      </p>
+                      <p className="flex items-start gap-2">
+                        <Check className="w-4 h-4 text-[var(--color-primary)] shrink-0 mt-0.5" />
+                        <span>Shake well before use (natural sediment is expected — sign of being unfiltered, not a defect).</span>
+                      </p>
+                      <p className="flex items-start gap-2">
+                        <Check className="w-4 h-4 text-[var(--color-primary)] shrink-0 mt-0.5" />
+                        <span>Benefits are cumulative — consistency over several weeks is recommended.</span>
                       </p>
                       <div className="p-3 rounded-lg bg-[#0a0a0a] border border-[#1f1f1f] text-xs text-gray-300 mt-2">
-                        <strong className="text-[var(--color-primary)] block mb-1">Important Note on Black Residue:</strong>
-                        The black residue in the bottle is completely natural and is due to sea buckthorn seed particles. This is because the product is unfiltered by nature.
+                        <strong className="text-[var(--color-primary)] block mb-1">Important Note on Sediment:</strong>
+                        Natural black/dark sediment in the bottle is completely expected and is due to unfiltered sea buckthorn seed particles. This is the natural hallmark of raw, cold-pressed processing.
                       </div>
-                      <p className="text-xs text-gray-400 pt-1">
-                        Colour and taste are subject to natural variation based on harvest conditions.
-                      </p>
                     </div>
                   )}
                 </div>
@@ -1016,12 +1122,17 @@ export default function ProductDetails() {
                     onClick={() => toggleAccordion("storage")}
                     className="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-white hover:text-[var(--color-primary)]"
                   >
-                    <span>Storage & Preservation</span>
+                    <span>Shelf Life & Storage</span>
                     {openAccordion === "storage" ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
                   </button>
                   {openAccordion === "storage" && (
-                    <div className="px-4 pb-4 text-xs sm:text-sm text-gray-300 leading-relaxed border-t border-[#1f1f1f] pt-3">
-                      Store in a cool, dry, and dark place away from direct sunlight. Once opened, refrigerate the bottle and consume within 60 days to ensure maximum freshness and bioavailability of active compounds.
+                    <div className="px-4 pb-4 text-xs sm:text-sm text-gray-300 leading-relaxed border-t border-[#1f1f1f] pt-3 space-y-2">
+                      <p>
+                        <strong className="text-white">Shelf Life:</strong> 12 months from date of manufacture.
+                      </p>
+                      <p>
+                        Store in a cool, dry, and dark place away from direct sunlight. Once opened, refrigerate the bottle and consume within 60 days to preserve optimal freshness and bioactive potency.
+                      </p>
                     </div>
                   )}
                 </div>
@@ -1105,16 +1216,39 @@ export default function ProductDetails() {
         {/* SECTION 5: CLAIMS & BENEFITS GRID                             */}
         {/* ============================================================== */}
         <section className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 py-12 sm:py-16">
-          <div className="text-center max-w-2xl mx-auto mb-10">
+          <div className="text-center max-w-3xl mx-auto mb-10">
             <span className="text-xs uppercase font-bold tracking-[0.2em] text-[var(--color-primary)] block">
               Multi-System Efficacy
             </span>
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white mt-1 mb-3">
-              Targeted Biological Health Claims
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white mt-1 mb-2">
+              Key Claims & Targeted Benefits
             </h2>
-            <p className="text-xs sm:text-sm text-gray-400">
-              Formulated to address the compounding oxidative stressors of modern urban living.
+            <p className="text-xs sm:text-sm text-gray-400 italic mb-6">
+              *(Claims based on clinically studied ingredients, not the finished product)*
             </p>
+
+            {/* Featured Clinical Data Point Callout */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[var(--color-primary)]/15 via-[#0a0a0a] to-[#050505] border border-[var(--color-border-gold)] flex flex-col sm:flex-row items-center justify-between gap-4 text-left">
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 rounded-xl bg-gold-gradient flex items-center justify-center text-black shrink-0 shadow-lg">
+                  <Activity className="w-6 h-6 text-black" />
+                </div>
+                <div>
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-[var(--color-primary)]">
+                    Featured Clinical Data Point
+                  </div>
+                  <div className="text-base sm:text-lg font-serif font-bold text-white">
+                    82.8% Increase in Antioxidant Activity
+                  </div>
+                  <p className="text-xs text-gray-300">
+                    Demonstrated in cited clinical research after 12 weeks of regular consumption.
+                  </p>
+                </div>
+              </div>
+              <span className="text-[10px] uppercase font-bold tracking-widest bg-black border border-[var(--color-border-gold)] text-[var(--color-primary)] px-3 py-1.5 rounded-full shrink-0">
+                12-Week Study
+              </span>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -1391,17 +1525,17 @@ export default function ProductDetails() {
               Botanical Profiling
             </span>
             <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white mt-1 mb-3">
-              Dual Botanical Synergists
+              Complete Formulation Integrity
             </h2>
             <p className="text-xs sm:text-sm text-gray-400">
-              Only two pure ingredients. Zero chemical fillers, preservatives, or artificial additives.
+              Full transparency down to every drop. Zero added sugar, zero fillers, non-GMO, and third-party verified.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* Sea Buckthorn Card */}
-            <div className="p-6 sm:p-8 rounded-2xl bg-[#050505] border border-[var(--color-border-gold)] flex flex-col justify-between">
+            <div className="p-6 rounded-2xl bg-[#050505] border border-[var(--color-border-gold)] flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-primary)]">
@@ -1411,31 +1545,31 @@ export default function ProductDetails() {
                     Wild Harvested
                   </span>
                 </div>
-                <h3 className="text-2xl font-serif font-bold text-white mb-3">
-                  Wild Himalayan Sea Buckthorn
+                <h3 className="text-xl font-serif font-bold text-white mb-2">
+                  Sea Buckthorn (Hippophae rhamnoides) Pulp
                 </h3>
-                <p className="text-xs sm:text-sm text-gray-300 leading-relaxed mb-6">
-                  A rare Himalayan superfruit and nature's most concentrated source of Vitamin C, naturally rich in 190+ bioactives and a full-spectrum omega profile of Omega 3, 6, 7 & 9. It helps support skin health, immunity, liver function, gut balance and antioxidant defence.
+                <p className="text-xs text-gray-300 leading-relaxed mb-5">
+                  Liquid pulp concentrate cold-pressed from Ladakh berries. Provides 190+ bioactives and a rare complete Omega 3, 6, 7 & 9 profile with up to 28x more Vitamin C than oranges.
                 </p>
                 <div className="space-y-2 text-xs text-gray-300">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
-                    <span>Contains rare Omega-7 (palmitoleic acid) for dermal hydration</span>
+                    <span>Omega-7 for deep cellular hydration</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
-                    <span>Up to 28 times more Vitamin C than conventional citrus</span>
+                    <span>Rich in flavonoids (quercetin & kaempferol)</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
-                    <span>Naturally occurring flavonoids (quercetin, kaempferol)</span>
+                    <span>Unfiltered pulp retaining seed lipids</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Curcumin Extract Card */}
-            <div className="p-6 sm:p-8 rounded-2xl bg-[#050505] border border-[#1f1f1f] flex flex-col justify-between">
+            <div className="p-6 rounded-2xl bg-[#050505] border border-[#1f1f1f] flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-primary)]">
@@ -1445,24 +1579,58 @@ export default function ProductDetails() {
                     High Potency
                   </span>
                 </div>
-                <h3 className="text-2xl font-serif font-bold text-white mb-3">
+                <h3 className="text-xl font-serif font-bold text-white mb-2">
                   Curcumin Extract (Curcuma longa)
                 </h3>
-                <p className="text-xs sm:text-sm text-gray-300 leading-relaxed mb-6">
-                  A potent anti-inflammatory and antioxidant compound that helps neutralise oxidative stress and supports the body's natural inflammation response.
+                <p className="text-xs text-gray-300 leading-relaxed mb-5">
+                  Standardized curcuminoids providing potent anti-inflammatory synergy. Natural lipids in sea buckthorn enhance systemic bioavailability across tissues.
                 </p>
                 <div className="space-y-2 text-xs text-gray-300">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
-                    <span>Potent free-radical scavenger protecting cell membranes</span>
+                    <span>Neutralises systemic oxidative stress</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
-                    <span>Down-regulates pro-inflammatory cytokines</span>
+                    <span>Supports healthy joint & mucosal response</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
-                    <span>Enhanced bioavailability through sea buckthorn berry lipids</span>
+                    <span>Lipid-assisted rapid cellular uptake</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Water & Preservatives Card */}
+            <div className="p-6 rounded-2xl bg-[#050505] border border-[#1f1f1f] flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-primary)]">
+                    Stability & Safety
+                  </span>
+                  <span className="text-xs bg-[#1a1a1a] text-gray-200 font-extrabold px-2.5 py-0.5 rounded border border-[#222]">
+                    Class II
+                  </span>
+                </div>
+                <h3 className="text-xl font-serif font-bold text-white mb-2">
+                  Demineralized Water & Permitted Preservatives
+                </h3>
+                <p className="text-xs text-gray-300 leading-relaxed mb-5">
+                  Demineralized water with Potassium Sorbate & Sodium Benzoate in strict permitted limits to prevent microbial fermentation and maintain fresh stability across 12 months.
+                </p>
+                <div className="space-y-2 text-xs text-gray-300">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
+                    <span>Preserves fragile omegas and Vitamin C</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
+                    <span>12 months stability from manufacture</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
+                    <span>FSSAI & cGMP manufacturing compliant</span>
                   </div>
                 </div>
               </div>
@@ -1571,21 +1739,21 @@ export default function ProductDetails() {
                 Based on 11 verified customer reviews across India
               </p>
 
-              {/* Score Bars */}
+              {/* Score Bars from summary: 73% 5-star, 27% 4-star */}
               <div className="space-y-2.5 text-xs text-gray-300">
                 <div className="flex items-center gap-2">
                   <span className="w-12">5 Star</span>
                   <div className="flex-1 h-2 bg-[#111] rounded-full overflow-hidden">
-                    <div className="h-full bg-[var(--color-primary)] w-[82%]"></div>
+                    <div className="h-full bg-[var(--color-primary)] w-[73%]"></div>
                   </div>
-                  <span className="w-8 text-right font-mono text-gray-400">82%</span>
+                  <span className="w-8 text-right font-mono text-gray-400">73%</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-12">4 Star</span>
                   <div className="flex-1 h-2 bg-[#111] rounded-full overflow-hidden">
-                    <div className="h-full bg-[var(--color-primary)] w-[18%]"></div>
+                    <div className="h-full bg-[var(--color-primary)] w-[27%]"></div>
                   </div>
-                  <span className="w-8 text-right font-mono text-gray-400">18%</span>
+                  <span className="w-8 text-right font-mono text-gray-400">27%</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-500">
                   <span className="w-12">3 Star</span>
@@ -1630,13 +1798,23 @@ export default function ProductDetails() {
                       : "border-[#1f1f1f] text-gray-400 hover:text-white"
                   }`}
                 >
-                  5 Star (9)
+                  5 Star (8)
+                </button>
+                <button
+                  onClick={() => setActiveReviewFilter("4star")}
+                  className={`text-xs px-3 py-1.5 rounded-lg border font-medium ${
+                    activeReviewFilter === "4star"
+                      ? "border-[var(--color-primary)] bg-[var(--color-primary)]/10 text-white"
+                      : "border-[#1f1f1f] text-gray-400 hover:text-white"
+                  }`}
+                >
+                  4 Star (3)
                 </button>
               </div>
 
             </div>
 
-            {/* Right: Review Cards from spec */}
+            {/* Right: Review Cards from summary */}
             <div className="lg:col-span-8 space-y-4">
               {filteredReviews.map((rev, idx) => (
                 <div key={idx} className="p-6 rounded-2xl bg-[#050505] border border-[#1f1f1f] space-y-3">
@@ -1649,6 +1827,13 @@ export default function ProductDetails() {
                             <Check className="w-2.5 h-2.5" /> Verified Buyer
                           </span>
                         )}
+                        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
+                          rev.sentiment === "Positive"
+                            ? "bg-[var(--color-primary)]/10 border-[var(--color-border-gold)] text-[var(--color-primary)]"
+                            : "bg-[#1a1a1a] border-gray-700 text-gray-300"
+                        }`}>
+                          {rev.sentiment} • {rev.sentimentNote}
+                        </span>
                       </div>
                       <span className="text-[11px] text-gray-500 font-mono">{rev.date}</span>
                     </div>
@@ -1671,6 +1856,57 @@ export default function ProductDetails() {
               ))}
             </div>
 
+          </div>
+        </section>
+
+        {/* ============================================================== */}
+        {/* SECTION 10.5: PRODUCT FAQS                                    */}
+        {/* ============================================================== */}
+        <section className="max-w-4xl mx-auto px-4 sm:px-8 py-12 sm:py-16">
+          <div className="text-center mb-10">
+            <span className="text-xs uppercase font-bold tracking-[0.2em] text-[var(--color-primary)] block mb-2">
+              Common Questions
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white flex items-center justify-center gap-2.5">
+              <HelpCircle className="w-6 h-6 text-[var(--color-primary)]" />
+              Frequently Asked Questions
+            </h2>
+            <div className="w-16 h-0.5 bg-gold-gradient mx-auto mt-3 mb-3" />
+            <p className="text-xs sm:text-sm text-gray-400">
+              Essential questions on Himalayan Sea Buckthorn Juice with Curcumin Extract.
+            </p>
+          </div>
+
+          <div className="space-y-3.5">
+            {productFaqs.map((faq, index) => {
+              const isOpen = openFaq === index;
+              return (
+                <div
+                  key={faq.question}
+                  className="bg-[#050505] border border-[#1f1f1f] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[var(--color-primary)]/40"
+                >
+                  <button
+                    onClick={() => setOpenFaq(isOpen ? null : index)}
+                    className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 focus:outline-none"
+                    aria-expanded={isOpen}
+                  >
+                    <span className="font-serif font-bold text-white text-sm sm:text-base">
+                      {faq.question}
+                    </span>
+                    <ChevronDown
+                      className={`w-4 h-4 text-[var(--color-primary)] shrink-0 transition-transform duration-300 ${
+                        isOpen ? "transform rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                  {isOpen && (
+                    <div className="px-4 sm:px-5 pb-5 pt-1 text-xs sm:text-sm text-gray-300 leading-relaxed border-t border-[#1f1f1f]">
+                      {faq.answer}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </section>
 

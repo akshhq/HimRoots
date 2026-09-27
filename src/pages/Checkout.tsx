@@ -232,13 +232,27 @@ export default function Checkout() {
           );
         });
 
-        rzp.open();
-        return;
+        try {
+          rzp.open();
+          // Reset isProcessing once modal opens so the button isn't stuck disabled if modal is dismissed externally
+          setIsProcessing(false);
+          return;
+        } catch (openErr: any) {
+          console.error("Razorpay popup open error:", openErr);
+          setIsProcessing(false);
+          setErrorMessage(openErr?.message || "Could not launch Razorpay checkout modal.");
+          return;
+        }
       }
 
       // If Razorpay failed to load or key is missing, block checkout completion and show clear error
       setIsProcessing(false);
-      setErrorMessage("Payment could not be initialized, please retry or contact support.");
+      const reason = !scriptReady || !window.Razorpay
+        ? "Payment SDK (checkout.js) could not be loaded. Please check your internet connection or ad blocker."
+        : !razorpay?.keyId
+        ? "Payment key not configured."
+        : `Payment initialization failed (SDK: ${Boolean(window.Razorpay)}, Key: ${razorpay?.keyId}).`;
+      setErrorMessage(reason);
       return;
     } catch (err: any) {
       console.error("Order submission error:", err);

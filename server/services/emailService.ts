@@ -33,7 +33,7 @@ export interface OrderNotificationEmailData {
   shippingFee: number;
   discount: number;
   total: number;
-  razorpayOrderId: string;
+  razorpayOrderId?: string;
   razorpayPaymentId: string;
 }
 
@@ -112,7 +112,7 @@ async function dispatchEmail(params: {
         }),
       });
 
-      const resData = await response.json();
+      const resData = (await response.json()) as any;
 
       if (!response.ok) {
         console.error('❌ Resend API Error Response:', resData);
@@ -154,7 +154,7 @@ async function dispatchEmail(params: {
         }),
       });
 
-      const resData = await response.json();
+      const resData = (await response.json()) as any;
 
       if (!response.ok) {
         console.error('❌ Brevo API Error Response:', resData);
