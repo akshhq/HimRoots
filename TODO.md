@@ -85,6 +85,24 @@
   - *What Done Looks Like:* Configured actual test credentials (`rzp_test_Th4h5YkpKAPMnd`) in local development environment. Hardened backend signature validator to accept live Razorpay HMAC checkout signatures while permitting explicit developer simulated tokens during automated headless test runs without risking production security.
   - *Files Touched:* [`.env`](file:///d:/Clg/Client%20Work/HimRoots/.env), [`server/services/orderService.ts`](file:///d:/Clg/Client%20Work/HimRoots/server/services/orderService.ts)
 
+- [x] **18. Button Transition Animations & Interactive Tactile Feedback**
+  - *What Done Looks Like:* Removed global animation suppression in `src/index.css` and added smooth cubic-bezier transitions (`0.25s cubic-bezier(0.4, 0, 0.2, 1)`) across all buttons (`button`, `[role="button"]`, `.btn`, `.bg-gold-gradient`). Enhanced tactile response with `active:scale-[0.97]` click depression, hover elevation, and soft gold ambient glow.
+  - *Files Touched:* [`src/index.css`](file:///d:/Clg/Client%20Work/HimRoots/src/index.css), [`src/components/ui/Button.tsx`](file:///d:/Clg/Client%20Work/HimRoots/src/components/ui/Button.tsx)
+
+- [x] **19. Real-Time Cart Toast Notification Popup**
+  - *What Done Looks Like:* Created an interactive floating popup (`CartNotificationPopup.tsx`) mounted in `RootLayout.tsx` that appears automatically whenever a patron adds a formulation to their cart. Displays product thumbnail, title, volume/format, added quantity vs total quantity, live subtotal, and quick action buttons ("View Cart", "Checkout"), with a 4.5s auto-dismiss timer that pauses on mouse hover.
+  - *Files Touched:* [`src/components/cart/CartNotificationPopup.tsx`](file:///d:/Clg/Client%20Work/HimRoots/src/components/cart/CartNotificationPopup.tsx), [`src/store/cartStore.ts`](file:///d:/Clg/Client%20Work/HimRoots/src/store/cartStore.ts), [`src/components/layout/RootLayout.tsx`](file:///d:/Clg/Client%20Work/HimRoots/src/components/layout/RootLayout.tsx), [`src/index.css`](file:///d:/Clg/Client%20Work/HimRoots/src/index.css)
+
+- [x] **20. Supabase User Account Database System & Cloud Cart Storage**
+  - *What Done Looks Like:* Complete customer account ecosystem using Supabase Auth & PostgreSQL:
+    - **Database & RLS:** Added `profiles`, `addresses`, `user_carts`, and linked `orders.user_id` with strict Row-Level Security policies allowing customers to view only their own records and order items.
+    - **Cloud Cart Sync:** Cart store (`cartStore.ts`) automatically merges local storage with Supabase `user_carts` upon sign in and syncs updates to the cloud.
+    - **Account Dashboard (`/account`):** Tabbed interface with comprehensive Order History (with line items and printable receipt modal), Saved Delivery Addresses (add, edit, delete, set default), and Profile Details.
+    - **Authentication (`/account/login`, `/signup`, `/account/reset-password`):** Secure email/password login, account creation, and password reset flows with feedback alerts.
+    - **1-Click Checkout Autofill:** Checkout automatically pre-fills customer info and provides 1-click address selector chips for saved delivery destinations.
+    - **Navbar Account Integration:** Added user avatar/account icon in header and drawer menu.
+  - *Files Touched:* [`supabase/migrations/20260930_user_accounts_and_cart.sql`](file:///d:/Clg/Client%20Work/HimRoots/supabase/migrations/20260930_user_accounts_and_cart.sql), [`supabase/schema.sql`](file:///d:/Clg/Client%20Work/HimRoots/supabase/schema.sql), [`src/types/database.types.ts`](file:///d:/Clg/Client%20Work/HimRoots/src/types/database.types.ts), [`src/store/authStore.ts`](file:///d:/Clg/Client%20Work/HimRoots/src/store/authStore.ts), [`src/store/cartStore.ts`](file:///d:/Clg/Client%20Work/HimRoots/src/store/cartStore.ts), [`src/services/addressService.ts`](file:///d:/Clg/Client%20Work/HimRoots/src/services/addressService.ts), [`src/services/userOrderService.ts`](file:///d:/Clg/Client%20Work/HimRoots/src/services/userOrderService.ts), [`src/pages/Auth.tsx`](file:///d:/Clg/Client%20Work/HimRoots/src/pages/Auth.tsx), [`src/pages/Account.tsx`](file:///d:/Clg/Client%20Work/HimRoots/src/pages/Account.tsx), [`src/pages/ResetPassword.tsx`](file:///d:/Clg/Client%20Work/HimRoots/src/pages/ResetPassword.tsx), [`src/pages/Checkout.tsx`](file:///d:/Clg/Client%20Work/HimRoots/src/pages/Checkout.tsx), [`src/components/layout/Navbar.tsx`](file:///d:/Clg/Client%20Work/HimRoots/src/components/layout/Navbar.tsx), [`server/services/orderService.ts`](file:///d:/Clg/Client%20Work/HimRoots/server/services/orderService.ts), [`server/controllers/orderController.ts`](file:///d:/Clg/Client%20Work/HimRoots/server/controllers/orderController.ts), [`server/routes/orders.ts`](file:///d:/Clg/Client%20Work/HimRoots/server/routes/orders.ts)
+
 ---
 
 ## 2. Client Tasks (Non-Technical / Business Owner)

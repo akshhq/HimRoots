@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ShoppingBag, Menu, X, Sparkles } from "lucide-react";
+import { ShoppingBag, Menu, X, Sparkles, User } from "lucide-react";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { useCartStore } from "@/store/cartStore";
+import { useAuthStore } from "@/store/authStore";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -10,6 +11,7 @@ export function Navbar() {
   const location = useLocation();
   const { getTotals } = useCartStore();
   const { itemsCount } = getTotals();
+  const { user, profile } = useAuthStore();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -90,8 +92,8 @@ export function Navbar() {
               })}
             </nav>
 
-            {/* Right Icons: Instagram + Cart + Mobile Hamburger */}
-            <div className="flex items-center gap-4 sm:gap-5">
+            {/* Right Icons: Instagram + Account + Cart + Mobile Hamburger */}
+            <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
               {/* Instagram Profile */}
               <a
                 href="https://www.instagram.com/himroots.wellness/"
@@ -99,16 +101,32 @@ export function Navbar() {
                 rel="noopener noreferrer"
                 title="Follow Himroots on Instagram (@himroots.wellness)"
                 aria-label="Follow Himroots on Instagram"
-                className="text-gray-300 hover:text-[var(--color-primary)] p-1.5 rounded-full hover:bg-[var(--color-secondary)]"
+                className="text-gray-300 hover:text-[var(--color-primary)] p-1.5 rounded-full hover:bg-[var(--color-secondary)] transition-colors"
               >
                 <InstagramIcon className="w-5 h-5" />
               </a>
+
+              {/* User Account */}
+              <Link
+                to={user ? "/account" : "/account/login"}
+                title={user ? `My Account (${profile?.full_name || user.email})` : "Sign In / Account"}
+                aria-label="User Account"
+                className="relative text-gray-300 hover:text-[var(--color-primary)] p-1.5 rounded-full hover:bg-[var(--color-secondary)] transition-colors"
+              >
+                {user ? (
+                  <div className="w-5 h-5 rounded-full bg-[var(--color-primary)] text-black font-bold text-[10px] flex items-center justify-center border border-[var(--color-primary-light)] shadow-sm">
+                    {(profile?.full_name || user.email || "U").charAt(0).toUpperCase()}
+                  </div>
+                ) : (
+                  <User className="w-5 h-5" />
+                )}
+              </Link>
 
               {/* Cart */}
               <Link 
                 to="/cart" 
                 aria-label="Shopping Cart"
-                className="relative text-gray-300 hover:text-[var(--color-primary)] p-1.5 rounded-full hover:bg-[var(--color-secondary)]"
+                className="relative text-gray-300 hover:text-[var(--color-primary)] p-1.5 rounded-full hover:bg-[var(--color-secondary)] transition-colors"
               >
                 <ShoppingBag className="w-5 h-5" />
                 {itemsCount > 0 && (
@@ -150,6 +168,24 @@ export function Navbar() {
                   </Link>
                 );
               })}
+
+              {/* Mobile Account Link */}
+              <Link
+                to={user ? "/account" : "/account/login"}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`text-base font-medium uppercase tracking-[0.2em] py-2 border-b border-[var(--color-border)]/50 flex items-center justify-between ${
+                  location.pathname.startsWith("/account")
+                    ? "text-[var(--color-primary)] font-bold"
+                    : "text-gray-200 hover:text-[var(--color-primary)]"
+                }`}
+              >
+                <span>{user ? "My Account" : "Sign In / Register"}</span>
+                {user && (
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[var(--color-primary)]/15 text-[var(--color-primary)] border border-[var(--color-primary)]/30">
+                    Active
+                  </span>
+                )}
+              </Link>
             </div>
 
             {/* Mobile Social Link */}

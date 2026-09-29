@@ -1,15 +1,19 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCartStore } from "@/store/cartStore";
+import { useAuthStore } from "@/store/authStore";
+import { addressService } from "@/services/addressService";
+import type { AddressRow } from "@/types/database.types";
 import { Button } from "@/components/ui/Button";
 import { loadRazorpayScript, type RazorpayOptions, type RazorpaySuccessResponse } from "@/lib/razorpay";
 import { apiFetch } from "@/lib/api";
-import { ArrowLeft, Lock, ShieldCheck, AlertCircle, Info, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Lock, ShieldCheck, AlertCircle, Info, CheckCircle2, MapPin, User } from "lucide-react";
 import { SEO } from "@/components/common/SEO";
 
 export default function Checkout() {
   const navigate = useNavigate();
   const { items, getTotals, clearCart } = useCartStore();
+  const { user, profile } = useAuthStore();
   const { subtotal } = getTotals();
 
   // Client-side visual estimation matching backend policy: Free above ₹2000, else ₹150
@@ -22,6 +26,9 @@ export default function Checkout() {
   const [infoMessage, setInfoMessage] = useState<string | null>(null);
   const isOrderCompletedRef = useRef(false);
 
+  const [savedAddresses, setSavedAddresses] = useState<AddressRow[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -32,6 +39,38 @@ export default function Checkout() {
     state: "",
     pincode: "",
   });
+
+  // Pre-fill user data & load saved addresses if authenticated
+  useEffect(() => {
+    if (user) {
+      addressService.fetchUserAddresses(user.id).then((addresses) => {
+        setSavedAddresses(addresses);
+        const defaultAddr = addresses.find((a) => a.is_default) || addresses[0];
+        if (defaultAddr) {
+          setSelectedAddressId(defaultAddr.id);
+          setFormData((prev) => ({
+            ...prev,
+            address: defaultAddr.address_line1 + (defaultAddr.address_line2 ? `, ${defaultAddr.address_line2}` : ""),
+            city: defaultAddr.city,
+            state: defaultAddr.state,
+            pincode: defaultAddr.pincode,
+          }));
+        }
+      });
+
+      const fullName = (profile?.full_name || user.user_metadata?.full_name || "").trim();
+      const parts = fullName.split(" ");
+      const firstName = parts[0] || "";
+      const lastName = parts.slice(1).join(" ") || "";
+      setFormData((prev) => ({
+        ...prev,
+        firstName: prev.firstName || firstName,
+        lastName: prev.lastName || lastName,
+        email: prev.email || user.email || "",
+        phone: prev.phone || profile?.phone || user.user_metadata?.phone || "",
+      }));
+    }
+  }, [user, profile]);
 
   useEffect(() => {
     // Only redirect to cart if user arrived with an empty cart, not when cart is cleared upon order placement
@@ -111,6 +150,7 @@ export default function Checkout() {
           pincode: formData.pincode.trim(),
           country: "India",
         },
+        userId: user?.id,
       };
 
       const response = await apiFetch("/api/orders", {
@@ -312,6 +352,37 @@ export default function Checkout() {
         <div className="flex flex-col lg:flex-row gap-12">
           {/* Checkout Form */}
           <div className="lg:w-2/3">
+            
+            {/* Account Status / Fast Checkout Banner */}
+            {!user ? (
+              <div className="mb-6 p-4 rounded-xl bg-black border border-[var(--color-border-gold)]/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/30 flex items-center justify-center text-[var(--color-primary)] shrink-0">
+                    <User className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="text-xs sm:text-sm font-bold text-white">Have a Himroots Account?</h3>
+                    <p className="text-[11px] text-gray-400">Sign in for 1-click address autofill and order history tracking.</p>
+                  </div>
+                </div>
+                <Button asChild variant="outline" size="sm" className="text-xs uppercase tracking-wider shrink-0 border-[var(--color-border-gold)]">
+                  <Link to="/account/login?redirect=/checkout">Sign In</Link>
+                </Button>
+              </div>
+            ) : (
+              <div className="mb-6 p-3.5 rounded-xl bg-[#0a0a0a] border border-[var(--color-border-gold)]/40 flex items-center justify-between text-xs shadow-sm">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-gray-300">
+                    Signed in as <strong className="text-white font-medium">{profile?.full_name || user.email}</strong>
+                  </span>
+                </div>
+                <Link to="/account" className="text-[var(--color-primary)] hover:underline font-semibold uppercase tracking-wider text-[11px]">
+                  My Account →
+                </Link>
+              </div>
+            )}
+
             <form id="checkout-form" onSubmit={handlePayment} className="flex flex-col gap-8">
               {/* Contact Information */}
               <div className="bg-[var(--color-secondary)] p-4 sm:p-6 md:p-8 rounded-lg border border-[var(--color-border)]">
@@ -381,6 +452,58 @@ export default function Checkout() {
                   </span>
                   Shipping Destination
                 </h2>
+
+                {/* Saved Address Quick Selector if User has saved addresses */}
+                {savedAddresses.length > 0 && (
+                  <div className="mb-6 pb-6 border-b border-[var(--color-border)]">
+                    <label className="text-xs font-bold uppercase tracking-wider text-[var(--color-primary)] block mb-3 flex items-center gap-1.5">
+                      <MapPin className="w-3.5 h-3.5" /> Select from Saved Addresses:
+                    </label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {savedAddresses.map((addr) => {
+                        const isSelected = selectedAddressId === addr.id;
+                        return (
+                          <button
+                            key={addr.id}
+                            type="button"
+                            onClick={() => {
+                              setSelectedAddressId(addr.id);
+                              const nameParts = addr.name.trim().split(" ");
+                              setFormData((prev) => ({
+                                ...prev,
+                                firstName: nameParts[0] || prev.firstName,
+                                lastName: nameParts.slice(1).join(" ") || prev.lastName,
+                                phone: addr.phone || prev.phone,
+                                address: addr.address_line1 + (addr.address_line2 ? `, ${addr.address_line2}` : ""),
+                                city: addr.city,
+                                state: addr.state,
+                                pincode: addr.pincode,
+                              }));
+                            }}
+                            className={`p-3.5 rounded-xl border text-left transition-all text-xs flex flex-col justify-between ${
+                              isSelected
+                                ? "bg-[var(--color-primary)]/15 border-[var(--color-primary)] text-white shadow-md ring-1 ring-[var(--color-primary)]"
+                                : "bg-black border-[var(--color-border)] text-gray-400 hover:border-gray-500"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between mb-1.5">
+                              <span className="font-bold text-[var(--color-primary)] uppercase tracking-wider text-[11px]">
+                                {addr.label}
+                              </span>
+                              {addr.is_default && (
+                                <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-500/30 font-bold uppercase">
+                                  Default
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-white font-medium truncate mb-0.5">{addr.name} • {addr.phone}</p>
+                            <p className="truncate text-gray-400">{addr.address_line1}, {addr.city}</p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1 md:col-span-2">
                     <label className="text-sm text-gray-400">

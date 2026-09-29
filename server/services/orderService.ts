@@ -32,6 +32,7 @@ export interface CreateOrderRequest {
   customer: CustomerInput;
   shipping: ShippingInput;
   notes?: string;
+  userId?: string;
 }
 
 export interface CalculatedOrder {
@@ -290,7 +291,8 @@ export async function persistOrderToDatabase(
   customer: CustomerInput,
   shipping: ShippingInput,
   razorpayOrderId: string,
-  notes?: string
+  notes?: string,
+  userId?: string
 ): Promise<{ orderId: string; orderNumber: string; orderToken: string }> {
   if (supabaseAdmin) {
     try {
@@ -315,6 +317,7 @@ export async function persistOrderToDatabase(
           order_status: 'pending',
           razorpay_order_id: razorpayOrderId || null,
           notes: notes || null,
+          user_id: userId || null,
         })
         .select('id, order_number')
         .single();
@@ -1008,7 +1011,8 @@ export async function executeCreateOrder(payload: CreateOrderRequest) {
     payload.customer,
     payload.shipping,
     razorpayOrder.id,
-    payload.notes
+    payload.notes,
+    payload.userId
   );
 
   return {

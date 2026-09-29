@@ -3,6 +3,7 @@ import {
   createOrder,
   getOrderByIdentifier,
   verifyOrderPayment,
+  getMyOrders,
 } from '../controllers/orderController';
 import { validateCreateOrder } from '../middleware/validation';
 import { orderLimiter } from '../middleware/rateLimiter';
@@ -21,6 +22,12 @@ router.post('/', orderLimiter, validateCreateOrder, createOrder);
  * Alias route for backwards compatibility with any existing clients.
  */
 router.post('/create', orderLimiter, validateCreateOrder, createOrder);
+
+/**
+ * GET /api/orders/my-orders
+ * Customer order history lookup requiring authenticated user Bearer token.
+ */
+router.get('/my-orders', getMyOrders);
 
 /**
  * GET /api/orders/:identifier

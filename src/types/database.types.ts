@@ -123,6 +123,7 @@ export interface Database {
           email_error: string | null;
           notes: string | null;
           paid_at: string | null;
+          user_id: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -149,6 +150,7 @@ export interface Database {
           email_error?: string | null;
           notes?: string | null;
           paid_at?: string | null;
+          user_id?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -175,6 +177,7 @@ export interface Database {
           email_error?: string | null;
           notes?: string | null;
           paid_at?: string | null;
+          user_id?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -209,6 +212,108 @@ export interface Database {
           price?: number;
           subtotal?: number;
           created_at?: string;
+        };
+      };
+      profiles: {
+        Row: {
+          id: string;
+          email: string;
+          full_name: string | null;
+          phone: string | null;
+          avatar_url: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          email: string;
+          full_name?: string | null;
+          phone?: string | null;
+          avatar_url?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          email?: string;
+          full_name?: string | null;
+          phone?: string | null;
+          avatar_url?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      addresses: {
+        Row: {
+          id: string;
+          user_id: string;
+          label: string;
+          name: string;
+          phone: string;
+          address_line1: string;
+          address_line2: string | null;
+          city: string;
+          state: string;
+          pincode: string;
+          country: string;
+          is_default: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          label?: string;
+          name: string;
+          phone: string;
+          address_line1: string;
+          address_line2?: string | null;
+          city: string;
+          state: string;
+          pincode: string;
+          country?: string;
+          is_default?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          label?: string;
+          name?: string;
+          phone?: string;
+          address_line1?: string;
+          address_line2?: string | null;
+          city?: string;
+          state?: string;
+          pincode?: string;
+          country?: string;
+          is_default?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      user_carts: {
+        Row: {
+          id: string;
+          user_id: string;
+          items: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          items?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          items?: Json;
+          created_at?: string;
+          updated_at?: string;
         };
       };
       contact_inquiries: {
@@ -263,6 +368,18 @@ export type OrderUpdate = Database['public']['Tables']['orders']['Update'];
 
 export type OrderItemRow = Database['public']['Tables']['order_items']['Row'];
 export type OrderItemInsert = Database['public']['Tables']['order_items']['Insert'];
+
+export type ProfileRow = Database['public']['Tables']['profiles']['Row'];
+export type ProfileInsert = Database['public']['Tables']['profiles']['Insert'];
+export type ProfileUpdate = Database['public']['Tables']['profiles']['Update'];
+
+export type AddressRow = Database['public']['Tables']['addresses']['Row'];
+export type AddressInsert = Database['public']['Tables']['addresses']['Insert'];
+export type AddressUpdate = Database['public']['Tables']['addresses']['Update'];
+
+export type UserCartRow = Database['public']['Tables']['user_carts']['Row'];
+export type UserCartInsert = Database['public']['Tables']['user_carts']['Insert'];
+export type UserCartUpdate = Database['public']['Tables']['user_carts']['Update'];
 
 export type ContactInquiryRow = Database['public']['Tables']['contact_inquiries']['Row'];
 export type ContactInquiryInsert = Database['public']['Tables']['contact_inquiries']['Insert'];

@@ -18,7 +18,7 @@ import {
  */
 export async function createOrder(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const { items, customer, shipping, notes } = req.body;
+    const { items, customer, shipping, notes, userId } = req.body;
 
     // Normalizing item structure (accepting both { productId } and { id })
     const normalizedItems = (items || []).map((item: any) => ({
@@ -41,6 +41,7 @@ export async function createOrder(req: Request, res: Response, next: NextFunctio
         country: shipping.country?.trim() || 'India',
       },
       notes: notes?.trim(),
+      userId: typeof userId === 'string' && userId.trim().length > 0 ? userId.trim() : undefined,
     });
 
     res.status(201).json({
@@ -230,6 +231,53 @@ export async function verifyOrderPayment(req: Request, res: Response, next: Next
       paymentId: razorpayPaymentId,
       paymentStatus: 'paid',
       orderStatus: 'processing',
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * Controller for Customer Order History Lookup
+ * Handles GET /api/orders/my-orders
+ * Requires Supabase user JWT bearer token
+ */
+export async function getMyOrders(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith('Bearer ')) {
+      res.status(401).json({ success: false, error: 'Authentication required' });
+      return;
+    }
+
+    const token = authHeader.split(' ')[1];
+    const { supabaseAdmin } = await import('../lib/supabase');
+    if (!supabaseAdmin) {
+      res.status(503).json({ success: false, error: 'Database service unavailable' });
+      return;
+    }
+
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+    if (authError || !user) {
+      res.status(401).json({ success: false, error: 'Invalid or expired user session' });
+      return;
+    }
+
+    const { data: orders, error: ordersError } = await (supabaseAdmin as any)
+      .from('orders')
+      .select('*, order_items(*)')
+      .or(`user_id.eq.${user.id},email.eq.${user.email?.trim().toLowerCase()}`)
+      .order('created_at', { ascending: false });
+
+    if (ordersError) {
+      console.error('Error querying customer orders:', ordersError);
+      res.status(500).json({ success: false, error: 'Failed to retrieve order history' });
+      return;
+    }
+
+    res.json({
+      success: true,
+      orders: orders || [],
     });
   } catch (error) {
     next(error);

@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { RootLayout } from "./components/layout/RootLayout";
 import { ErrorBoundary } from "./components/common/ErrorBoundary";
+import { useAuthStore } from "./store/authStore";
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
 import ProductDetails from "./pages/ProductDetails";
@@ -11,12 +13,21 @@ import PaymentFailed from "./pages/PaymentFailed";
 import About from "./pages/About";
 import SeaBuckthorn from "./pages/SeaBuckthorn";
 import Contact from "./pages/Contact";
+import Auth from "./pages/Auth";
+import Account from "./pages/Account";
+import ResetPassword from "./pages/ResetPassword";
 import RefundPolicy from "./pages/RefundPolicy";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
 
 function App() {
+  const initializeAuth = useAuthStore((s) => s.initialize);
+
+  useEffect(() => {
+    initializeAuth();
+  }, [initializeAuth]);
+
   return (
     <ErrorBoundary>
       <BrowserRouter>
@@ -36,6 +47,11 @@ function App() {
             <Route path="sea-buckthorn" element={<SeaBuckthorn />} />
             <Route path="about-sea-buckthorn" element={<SeaBuckthorn />} />
             <Route path="himalayan-seabuckthorn-juice" element={<SeaBuckthorn />} />
+            <Route path="account" element={<Account />} />
+            <Route path="account/login" element={<Auth />} />
+            <Route path="login" element={<Auth />} />
+            <Route path="signup" element={<Auth />} />
+            <Route path="account/reset-password" element={<ResetPassword />} />
             <Route path="refund-policy" element={<RefundPolicy />} />
             <Route path="cancellation-and-refund" element={<RefundPolicy />} />
             <Route path="terms" element={<TermsAndConditions />} />
