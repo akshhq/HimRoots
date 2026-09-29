@@ -248,6 +248,29 @@ CLIENT_SUPPORT_EMAIL=support@himroots.in
 
 ---
 
+## PART 7: UPTIME MONITORING & HEALTH CHECK CONSUMER
+
+To ensure 24/7 availability and prevent free-tier instances (e.g., Render/Railway) from sleeping or suffering silent downtime:
+
+### Free Uptime Monitoring Setup (UptimeRobot or Better Uptime)
+
+1. **Sign Up:** Create a free account at [uptimerobot.com](https://uptimerobot.com) or [betteruptime.com](https://betteruptime.com).
+2. **Add New Monitor:**
+   - **Monitor Type:** `HTTP(s)`
+   - **Friendly Name:** `Himroots Backend API`
+   - **URL:** `https://your-backend.onrender.com/api/health` (or `https://api.himroots.in/api/health`)
+   - **Monitoring Interval:** `5 minutes` (standard free tier)
+   - **HTTP Method:** `GET`
+   - **Accepted HTTP Status Codes:** `200`
+3. **Keyword Monitoring (Optional but Recommended):**
+   - Alert if response body does NOT contain `"status":"ok"`.
+4. **Configure Alert Contacts:**
+   - Add your email and/or SMS to receive instant alerts if the server fails or restarts unexpectedly.
+5. **Add Frontend Monitor:**
+   - Add a second monitor checking `https://himroots.in/` every 5 minutes to confirm the web storefront is up and delivering pages.
+
+---
+
 ## LAUNCH CHECKLIST
 
 ### Developer

@@ -1,4 +1,5 @@
 import { config, isEmailConfigured } from '../config/env';
+import { logger, maskEmail } from '../lib/logger';
 
 export interface EmailOrderLineItem {
   productName: string;
@@ -79,14 +80,16 @@ async function dispatchEmail(params: {
 
   // If live credentials are not set, run in safe simulation mode
   if (!isEmailConfigured) {
-    const toStr = Array.isArray(to) ? to.join(', ') : to;
-    console.log(`\n📧 [EMAIL SIMULATION]`);
-    console.log(`   To: ${toStr}`);
-    console.log(`   From: ${config.email.from}`);
-    console.log(`   Subject: ${subject}`);
-    console.log(`   Reply-To: ${replyTo || 'None'}`);
-    console.log(`   Status: Simulated (Set EMAIL_API_KEY to send real emails)\n`);
-    
+    const maskedRecipients = Array.isArray(to) ? to.map(maskEmail).join(', ') : maskEmail(to);
+    logger.info(
+      {
+        subject,
+        recipients: maskedRecipients,
+        from: config.email.from,
+      },
+      'Transactional email simulated (EMAIL_API_KEY not configured)'
+    );
+
     return {
       success: true,
       simulated: true,
@@ -115,7 +118,15 @@ async function dispatchEmail(params: {
       const resData = (await response.json()) as any;
 
       if (!response.ok) {
-        console.error('❌ Resend API Error Response:', resData);
+        logger.error(
+          {
+            provider: 'resend',
+            status: response.status,
+            message: resData?.message,
+            name: resData?.name,
+          },
+          'Resend API error response'
+        );
         return {
           success: false,
           error: resData?.message || `Resend HTTP error ${response.status}`,
@@ -127,7 +138,7 @@ async function dispatchEmail(params: {
         messageId: resData.id,
       };
     } catch (err: any) {
-      console.error('❌ Network exception contacting Resend:', err);
+      logger.error({ provider: 'resend', error: err.message }, 'Network exception contacting Resend');
       return {
         success: false,
         error: err.message || 'Resend network connection failed',
@@ -157,7 +168,14 @@ async function dispatchEmail(params: {
       const resData = (await response.json()) as any;
 
       if (!response.ok) {
-        console.error('❌ Brevo API Error Response:', resData);
+        logger.error(
+          {
+            provider: 'brevo',
+            status: response.status,
+            message: resData?.message,
+          },
+          'Brevo API error response'
+        );
         return {
           success: false,
           error: resData?.message || `Brevo HTTP error ${response.status}`,
@@ -169,7 +187,7 @@ async function dispatchEmail(params: {
         messageId: resData.messageId,
       };
     } catch (err: any) {
-      console.error('❌ Network exception contacting Brevo:', err);
+      logger.error({ provider: 'brevo', error: err.message }, 'Network exception contacting Brevo');
       return {
         success: false,
         error: err.message || 'Brevo network connection failed',

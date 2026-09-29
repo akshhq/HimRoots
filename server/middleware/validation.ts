@@ -119,6 +119,14 @@ export function validateCreateOrder(req: Request, res: Response, next: NextFunct
     }
   }
 
+  // 4. Payment Method Policy Check: Cash on Delivery (COD) is strictly disabled per business policy
+  const paymentMethod = req.body?.paymentMethod?.toString().toLowerCase().trim();
+  if (paymentMethod && paymentMethod === 'cod') {
+    errors['paymentMethod'] = 'Cash on Delivery is not supported. Himroots accepts prepaid orders exclusively via secure Razorpay checkout.';
+  } else if (paymentMethod && paymentMethod !== 'razorpay') {
+    errors['paymentMethod'] = `Unsupported payment method '${paymentMethod}'. Supported methods: razorpay.`;
+  }
+
   // Return clean, structured validation errors if any field failed
   if (Object.keys(errors).length > 0) {
     const firstErrorMessage = Object.values(errors)[0];

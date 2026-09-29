@@ -10,6 +10,8 @@ import {
   sendClientOrderNotificationEmail,
   sendCustomerOrderConfirmationEmail,
 } from '../services/emailService';
+import { logger, maskEmail } from '../lib/logger';
+import { sendCriticalAlert } from '../services/alertService';
 
 /**
  * Controller for Order Creation
@@ -43,6 +45,17 @@ export async function createOrder(req: Request, res: Response, next: NextFunctio
       notes: notes?.trim(),
       userId: typeof userId === 'string' && userId.trim().length > 0 ? userId.trim() : undefined,
     });
+
+    logger.info(
+      {
+        orderId: order.id,
+        orderNumber: order.orderNumber,
+        total: order.total,
+        itemsCount: normalizedItems.length,
+        customerEmail: maskEmail(customer?.email),
+      },
+      'Order created successfully and awaiting payment'
+    );
 
     res.status(201).json({
       success: true,
@@ -169,6 +182,17 @@ export async function verifyOrderPayment(req: Request, res: Response, next: Next
     );
 
     if (!verificationResult.isValid) {
+      logger.warn(
+        { orderId, razorpayOrderId },
+        'Payment signature verification failed'
+      );
+      await sendCriticalAlert({
+        title: 'Payment Signature Verification Failed',
+        message: verificationResult.errorMessage || 'Invalid Razorpay payment HMAC signature.',
+        severity: 'WARNING',
+        orderId,
+      });
+
       res.status(400).json({
         success: false,
         error: verificationResult.errorMessage || 'Payment verification failed: invalid signature.',
@@ -204,21 +228,52 @@ export async function verifyOrderPayment(req: Request, res: Response, next: Next
           const clientEmailResult = await sendClientOrderNotificationEmail(emailPayload);
           if (clientEmailResult.success) {
             await updateOrderEmailStatus(fullOrder.id, 'sent', null);
+            logger.info({ orderNumber: fullOrder.orderNumber }, 'Client order notification email dispatched');
           } else {
             await updateOrderEmailStatus(fullOrder.id, 'failed', clientEmailResult.error || 'Email error');
+            logger.error(
+              { orderNumber: fullOrder.orderNumber, error: clientEmailResult.error },
+              'Client order notification email failed'
+            );
+            await sendCriticalAlert({
+              title: 'Order Notification Email Dispatch Failed',
+              message: `Email to operations failed for order ${fullOrder.orderNumber}: ${clientEmailResult.error}`,
+              severity: 'ERROR',
+              orderNumber: fullOrder.orderNumber,
+              orderId: fullOrder.id,
+            });
           }
 
           try {
             await sendCustomerOrderConfirmationEmail(emailPayload);
-          } catch (custErr) {
-            console.warn('Customer receipt email notice:', custErr);
+          } catch (custErr: any) {
+            logger.warn({ orderNumber: fullOrder.orderNumber, error: custErr.message }, 'Customer receipt email notice');
           }
         }
       } catch (emailErr: any) {
-        console.error('Email notification error:', emailErr.message);
+        logger.error({ orderId, error: emailErr.message }, 'Email notification flow error');
         await updateOrderEmailStatus(orderId, 'failed', emailErr.message);
+        await sendCriticalAlert({
+          title: 'Order Notification Flow Error',
+          message: `Unexpected error during post-payment email dispatch for order ${orderId}: ${emailErr.message}`,
+          severity: 'ERROR',
+          orderId,
+          error: emailErr,
+        });
       }
     }
+
+    logger.info(
+      {
+        orderId: verificationResult.orderId || orderId,
+        orderNumber: verificationResult.orderNumber,
+        paymentId: razorpayPaymentId,
+        isDuplicate: verificationResult.isDuplicate,
+      },
+      verificationResult.isDuplicate
+        ? 'Payment already verified previously'
+        : 'Payment verified successfully and marked paid'
+    );
 
     res.json({
       success: true,

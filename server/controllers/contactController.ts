@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { supabaseAdmin } from '../lib/supabase';
 import { sendClientSupportInquiryEmail } from '../services/emailService';
 import { sanitizeText } from '../middleware/validation';
+import { logger, maskEmail } from '../lib/logger';
 
 export const VALID_CATEGORIES = [
   'Order Support',
@@ -25,7 +26,7 @@ export async function submitContactInquiry(req: Request, res: Response, next: Ne
 
     // 1. Anti-spam bot trap (honeypot field)
     if (honeypot && String(honeypot).trim().length > 0) {
-      console.warn('🤖 Spam bot detected via honeypot field. Dropping silently.');
+      logger.warn({ ip: req.ip }, 'Spam bot detected via honeypot field. Dropping silently.');
       res.status(200).json({
         success: true,
         message: 'Your inquiry has been received. Our team will get back to you promptly.',
@@ -78,10 +79,10 @@ export async function submitContactInquiry(req: Request, res: Response, next: Ne
           });
 
         if (dbError) {
-          console.error('Error inserting contact inquiry into Supabase:', dbError);
+          logger.error({ error: dbError }, 'Error inserting contact inquiry into Supabase');
         }
-      } catch (dbErr) {
-        console.warn('Supabase contact persistence error:', dbErr);
+      } catch (dbErr: any) {
+        logger.warn({ error: dbErr?.message }, 'Supabase contact persistence error');
       }
     }
 
@@ -98,12 +99,19 @@ export async function submitContactInquiry(req: Request, res: Response, next: Ne
       });
 
       if (!emailResult.success) {
-        console.error('⚠️ Could not dispatch support email notification:', emailResult.error);
+        logger.warn({ error: emailResult.error }, 'Could not dispatch support email notification');
       } else {
-        console.log(`✅ [SUPPORT INQUIRY DISPATCHED] Category: ${resolvedCategory} from ${cleanName}`);
+        logger.info(
+          {
+            category: resolvedCategory,
+            email: maskEmail(cleanEmail),
+            orderId: cleanOrderId,
+          },
+          'Support inquiry recorded and dispatched successfully'
+        );
       }
     } catch (emailErr: any) {
-      console.error('🔥 Exception during support email dispatch:', emailErr.message);
+      logger.error({ error: emailErr.message }, 'Exception during support email dispatch');
     }
 
     // 5. Return success response to user

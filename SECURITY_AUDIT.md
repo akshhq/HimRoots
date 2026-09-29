@@ -77,23 +77,22 @@ Required (Client): Complete domain verification in email provider dashboard befo
 
 ---
 
-## FINDINGS: LOW SEVERITY / INFORMATIONAL
+## FINDINGS: RESOLVED IN PRIOR ARCHITECTURAL PASSES
 
-### 6. In-memory rate limiter
+### 6. Distributed Rate Limiter (RESOLVED)
+Rate limiter upgraded from purely in-memory to distributed storage backed by Supabase `rate_limits` table with sliding window and automatic background cleanup, safe across server restarts and multi-instance deployments.
 
-Rate limiter uses an in-memory Map. Resets on process restart. Suitable for single-instance backend.
+### 7. Distributed Payment Idempotency (RESOLVED)
+Payment duplicate protection upgraded from local process cache to distributed Supabase `payment_idempotency` table, preventing concurrent duplicate captures or double stock deductions.
 
-### 7. In-memory order/payment cache
+### 8. Order Lookup IDOR Protection (RESOLVED)
+`GET /api/orders/:identifier` now requires a SHA256 cryptographic `orderToken` (or active authenticated patron session matching `user_id`). Guessing or scanning sequential order numbers alone is strictly rejected with 403 Forbidden.
 
-localOrdersStore falls through to Supabase on restart. Intentional dev fallback, not a production concern.
+### 9. Razorpay Webhook Verification (RESOLVED)
+Dedicated webhook endpoint implemented at `POST /api/webhooks/razorpay` with timing-safe HMAC SHA256 verification of `X-Razorpay-Signature`, handling `payment.captured` and `order.paid` events directly from Razorpay servers.
 
-### 8. Order lookup returns full customer PII
-
-GET /api/orders/:identifier returns shipping details. Acceptable since UUID is required to access it.
-
-### 9. No Razorpay webhook verification
-
-Current flow uses client-callback HMAC verification. Webhook support recommended as a future enhancement.
+### 10. Cash on Delivery (COD) Policy (RESOLVED)
+By explicit client business confirmation, Cash on Delivery is disabled. All transactions are 100% prepaid online via Razorpay (UPI, Cards, NetBanking), eliminating fraudulent orders and high-altitude logistics courier refusal liabilities.
 
 ---
 

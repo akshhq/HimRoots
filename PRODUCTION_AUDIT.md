@@ -219,15 +219,16 @@ The existing codebase contains well-crafted components and architecture that sho
 
 ---
 
-## 6. Security Issues
+## 6. Security Issues (Audit History & Resolutions)
 
-| Severity | Security Concern | Affected File | Description & Vulnerability |
-| :--- | :--- | :--- | :--- |
-| 🔴 **HIGH** | **Client-Side Payment Simulation Fallback** | `src/pages/Checkout.tsx` (lines 200-220) | If `window.Razorpay` fails to load or `razorpay.keyId` is missing, `Checkout.tsx` automatically simulates a payment by generating a fake `mockPaymentId` and POSTing to `/api/orders/verify`. In production, this allows completing an order without real payment. |
-| 🔴 **HIGH** | **Backend Test Payment Acceptance** | `server/services/orderService.ts` (lines 652-663) | When live keys are not configured, the backend verifies any payment ID starting with `pay_` or `test_` without checking `NODE_ENV === 'production'`. |
-| 🟠 **MEDIUM** | **IDOR PII Exposure on Order Lookup** | `server/routes/orders.ts` (lines 187-232) | `GET /api/orders/:identifier` returns full customer PII (full name, phone, email, delivery address) for any order number without requiring authentication, a secret order access token, or customer email verification. Anyone guessing or scanning order numbers could view customer identities. |
-| 🟠 **MEDIUM** | **Permissive Wildcard CORS** | `server/index.ts` (lines 12-16) | `cors({ origin: '*' })` allows any external domain to make cross-origin requests to order and contact endpoints. |
-| 🟡 **LOW** | **Concurrent Order Number Generation Collisions** | `supabase/schema.sql` (lines 58-78) | The database function `generate_order_number()` uses `SELECT COUNT(*) + 1 FROM orders WHERE created_at >= today`. Two concurrent transactions could calculate the same count, triggering a unique constraint error. (Note: Application code currently overrides this with a random 4-digit suffix, but the database default remains vulnerable if triggered directly). |
+| Severity | Security Concern | Affected File | Resolution Status | Description & Applied Fix |
+| :--- | :--- | :--- | :--- | :--- |
+| 🟢 **RESOLVED** | **Client-Side Payment Simulation Fallback** | `src/pages/Checkout.tsx` | **FIXED** | Client-side mock payment ID generation completely removed. There is strictly one path to `/order-success`, requiring successful `POST /api/orders/verify` response from the backend. |
+| 🟢 **RESOLVED** | **Backend Test Payment Acceptance** | `server/services/orderService.ts` | **FIXED** | Production strictly rejects test signatures and requires live Razorpay credentials. In dev/test, only explicit deterministic tokens are accepted for headless test runners. |
+| 🟢 **RESOLVED** | **IDOR PII Exposure on Order Lookup** | `server/routes/orders.ts` | **FIXED** | `GET /api/orders/:identifier` strictly requires a cryptographically random SHA256 `orderToken` query parameter or matching authenticated user session. |
+| 🟢 **RESOLVED** | **Permissive Wildcard CORS** | `server/index.ts` | **FIXED** | Wildcard `*` disabled in production. Explicit whitelist applied allowing only configured production frontend origins and local development hosts. |
+| 🟢 **RESOLVED** | **Concurrent Order Number Generation Collisions** | `supabase/schema.sql` | **FIXED** | Upgraded to PostgreSQL `order_number_seq` sequence combined with UTC date and collision retry loop, guaranteeing atomic uniqueness. |
+| 🟢 **RESOLVED** | **Cash on Delivery (COD) Risks** | Full Stack | **CLOSED** | Business decision confirmed: 100% prepaid Razorpay only. No unverified COD orders allowed. |
 
 ---
 

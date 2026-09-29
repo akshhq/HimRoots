@@ -13,8 +13,9 @@ export function securityHeaders(_req: Request, res: Response, next: NextFunction
   // Prevent clickjacking by restricting frame embedding
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
 
-  // Enable XSS filter in browsers
-  res.setHeader('X-XSS-Protection', '1; mode=block');
+  // Modern security control: Disable legacy auditor (which introduced side-channel vulnerabilities)
+  // in favor of the authoritative Content-Security-Policy below.
+  res.setHeader('X-XSS-Protection', '0');
 
   // Control referrer information sent in HTTP requests
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
@@ -28,15 +29,19 @@ export function securityHeaders(_req: Request, res: Response, next: NextFunction
   // Cross-Origin Opener Policy: allows popup communication needed for payment gateways
   res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
 
-  // Content Security Policy (CSP) tailored for Himroots and Razorpay checkout modal
+  // Authoritative Content Security Policy (CSP):
+  // Strictly allowlists Himroots assets, Razorpay checkout modal & API endpoints, Google Fonts, and Supabase.
   const cspDirectives = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' https://checkout.razorpay.com",
+    "script-src 'self' 'unsafe-inline' https://checkout.razorpay.com https://*.razorpay.com",
     "frame-src 'self' https://api.razorpay.com https://checkout.razorpay.com https://*.razorpay.com",
     "connect-src 'self' https://api.razorpay.com https://lumberjack.razorpay.com https://*.razorpay.com https://*.supabase.co https://api.himroots.in",
     "img-src 'self' data: https: blob:",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com data:",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
   ].join('; ');
 
   res.setHeader('Content-Security-Policy', cspDirectives);

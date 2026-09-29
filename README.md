@@ -232,10 +232,10 @@ Per updated brand design requirements:
     3. *Directions & Recommended Dosage* (numbered step-by-step usage guide).
     4. *Eco-Luxury Canister Construction* (details on UV protection and golden foil stamping).
 
-### 4. Persistent Shopping Cart & Checkout Flow
-* State managed via **Zustand** with `persist` middleware (data saved in browser `localStorage`).
-* Slide-over cart preview and full `/cart` page with quantity counters, unit prices, subtotal calculations, and item removal.
-* Simulated `/checkout` flow with address inputs, payment selection (Card, UPI, NetBanking, COD), order summary, and Razorpay-ready integration structure.
+### 4. Persistent Shopping Cart & Live Checkout Flow
+* State managed via **Zustand** with `persist` middleware (data saved in browser `localStorage` and synchronized bidirectionally with Supabase `user_carts` when logged in).
+* Slide-over cart preview, interactive toast notification popup, and full `/cart` page with quantity counters, unit prices, subtotal calculations, and item removal.
+* Production `/checkout` flow with address inputs, 1-click saved address autofill for authenticated patrons, live order calculation, and direct Razorpay checkout with server-side HMAC SHA256 cryptographic verification. Prepaid payments only (UPI, Cards, NetBanking).
 
 ### 5. Official Social Integration
 * Consistent usage of the official Instagram asset (`/images/instagram.png`) wrapped in a reusable [`InstagramIcon`](file:///d:/Clg/Client%20Work/HimRoots/src/components/ui/InstagramIcon.tsx) component.
@@ -277,10 +277,12 @@ HimRoots/
 │   │   ├── ProductDetails.tsx       # Detail view with gallery, tabs, & guide links
 │   │   ├── SeaBuckthorn.tsx         # Comprehensive 7-chapter botanical masterclass
 │   │   ├── About.tsx                # Brand heritage, terroir & sustainability ethos
-│   │   ├── Contact.tsx              # Contact channels, offices & inquiry form
 │   │   ├── Cart.tsx                 # Shopping cart view with itemized summary
-│   │   └── Checkout.tsx             # Delivery address & payment simulation
-│   ├── store/
+│   │   ├── Checkout.tsx             # Delivery address, account autofill & live Razorpay checkout
+│   │   ├── OrderSuccess.tsx         # Verified order confirmation & printable receipt
+│   │   ├── Account.tsx              # Customer account dashboard (orders, addresses, profile)
+│   │   ├── Auth.tsx                 # Patron login, signup & password reset
+│   │   └── RefundPolicy.tsx         # Razorpay compliance policies (cancellation & refund)
 │   │   ├── cartStore.ts             # Zustand cart store with localStorage persistence
 │   │   └── logoStore.ts             # Zustand store coordinating hero vs navbar logo
 │   ├── App.tsx                      # Route declarations
@@ -417,22 +419,23 @@ export interface Product {
 
 ## Completed Integrations & Future Roadmap
 
-### ✅ Completed Integrations (Milestone 1 — Full-Stack E-Commerce Core)
-- [x] **Relational Database Layer:** Supabase PostgreSQL with 4 tables (`products`, `orders`, `order_items`, `contact_inquiries`), RLS security policies, and daily order numbering.
-- [x] **Trusted Backend Execution:** Node.js + Express server with server-side price validation, sanitizing error handlers, and proxy integration.
-- [x] **Payment Gateway:** Razorpay Standard Checkout with timing-safe HMAC SHA256 signature verification and idempotent callback handling.
+### ✅ Completed Integrations
+- [x] **Relational Database Layer:** Supabase PostgreSQL with 7 tables (`products`, `orders`, `order_items`, `contact_inquiries`, `profiles`, `addresses`, `user_carts`, `payment_idempotency`, `rate_limits`), RLS security policies, and daily atomic order numbering.
+- [x] **Trusted Backend Execution:** Node.js + Express server with server-side price validation, sanitizing error handlers, strict CORS, and reverse proxy integration.
+- [x] **Payment Gateway:** Razorpay Standard Checkout with timing-safe HMAC SHA256 signature verification, webhook reconciliation, and distributed idempotency.
+- [x] **Customer Accounts & Cloud Cart Sync:** Supabase Auth with login, signup, password reset, account dashboard, order history, printable tax invoices, address book, and cloud cart synchronization.
 - [x] **Transactional Email Service:** Instant client order alerts (`New Order - {Order Number}`) and customer confirmation receipts via Resend / Brevo with payment decoupling.
-- [x] **Contact & Support Portal:** Direct support form with 7 categories, order reference tracking, anti-spam honeypot, and rate limiting.
-- [x] **Automated Test Suites:** 12/12 passing integration tests covering all payment edge cases and email workflows.
+- [x] **Contact & Support Portal:** Direct support form with 7 categories, order reference tracking, anti-spam honeypot, and distributed rate limiting.
+- [x] **Automated Test Suites:** Comprehensive integration tests covering all payment edge cases, webhook replay, IDOR token verification, stock decrementing, and email workflows.
 
-### 🔮 Future Recommendations (Explicitly Out of Current Scope)
+### 🔮 Future Recommendations (Post-Launch Operations)
 The current lean model operates on: **Customer buys & pays online → Client receives instant email alert with full shipping details → Client manually packs & ships**. The following features are reserved for future scaling phases:
 - [ ] **Logistics & Courier API:** Automated AWB creation, pickup scheduling, and shipping label generation via Shiprocket or Delhivery.
 - [ ] **Automated Delivery Tracking:** Real-time customer tracking page via courier tracking number webhooks.
 - [ ] **Automated Returns & Refunds:** Self-service customer return requests and automated Razorpay refund API triggers.
-- [ ] **Customer Accounts & Auth:** User signup, OTP login, profile management, and saved shipping addresses.
-- [ ] **Admin Dashboard:** Web-based dashboard for sales charts, order state transitions, and inventory stock adjustments.
+- [ ] **Admin Web Dashboard:** Web-based interface for operations staff to manage orders and stock (currently done directly via Supabase Table Editor).
 - [ ] **Automated CRM & Marketing:** Klaviyo / WhatsApp Business integration for abandoned cart recovery and refill reminders.
+- [ ] **Optional COD Re-Evaluation:** If Cash on Delivery is reconsidered in the future, implement phone OTP verification (SMS gateway) and PIN-code serviceability checks to mitigate high RTO (Return to Origin) refusal risks.
 
 ---
 

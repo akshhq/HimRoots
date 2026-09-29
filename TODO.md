@@ -112,6 +112,34 @@
     - **Polished Customer Journey:** Smooth 1-click address pre-fill on checkout, reliable cart toast notifications with hover pause, robust order history with printable invoices, and error resilience across auth, catalog, and checkout.
   - *Files Touched:* [`TODO.md`](file:///d:/Clg/Client%20Work/HimRoots/TODO.md), [`src/components/cart/CartNotificationPopup.tsx`](file:///d:/Clg/Client%20Work/HimRoots/src/components/cart/CartNotificationPopup.tsx), [`src/components/ui/Button.tsx`](file:///d:/Clg/Client%20Work/HimRoots/src/components/ui/Button.tsx), [`src/pages/Auth.tsx`](file:///d:/Clg/Client%20Work/HimRoots/src/pages/Auth.tsx), [`src/pages/Account.tsx`](file:///d:/Clg/Client%20Work/HimRoots/src/pages/Account.tsx), [`src/pages/Checkout.tsx`](file:///d:/Clg/Client%20Work/HimRoots/src/pages/Checkout.tsx), [`src/pages/OrderSuccess.tsx`](file:///d:/Clg/Client%20Work/HimRoots/src/pages/OrderSuccess.tsx), [`server/middleware/validation.ts`](file:///d:/Clg/Client%20Work/HimRoots/server/middleware/validation.ts), [`server/scripts/test_email_and_contact.ts`](file:///d:/Clg/Client%20Work/HimRoots/server/scripts/test_email_and_contact.ts)
 
+- [x] **22. Ground Truth Verification & Stale Documentation Purge**
+  - *What Done Looks Like:* Verified line-by-line that `Checkout.tsx` uses strictly live Razorpay checkout requiring backend HMAC signature verification before navigation to `/order-success` with zero client-side simulation. Corrected stale simulation claims in `README.md`, `PRODUCTION_AUDIT.md`, `SECURITY_AUDIT.md`, and `FINAL_PRODUCTION_REPORT.md`.
+  - *Files Touched:* [`README.md`](file:///d:/Clg/Client%20Work/HimRoots/README.md), [`PRODUCTION_AUDIT.md`](file:///d:/Clg/Client%20Work/HimRoots/PRODUCTION_AUDIT.md), [`SECURITY_AUDIT.md`](file:///d:/Clg/Client%20Work/HimRoots/SECURITY_AUDIT.md), [`FINAL_PRODUCTION_REPORT.md`](file:///d:/Clg/Client%20Work/HimRoots/FINAL_PRODUCTION_REPORT.md)
+
+- [x] **23. Cash on Delivery (COD) Policy Enforcement & Risk Elimination**
+  - *What Done Looks Like:* Per explicit client business decision, Cash on Delivery is disabled to eliminate high return-to-origin (RTO) courier costs and delivery refusals. Enforced strict validation rejection (`400 Bad Request`) in middleware and service layers for any incoming COD order attempt.
+  - *Files Touched:* [`server/middleware/validation.ts`](file:///d:/Clg/Client%20Work/HimRoots/server/middleware/validation.ts), [`server/services/orderService.ts`](file:///d:/Clg/Client%20Work/HimRoots/server/services/orderService.ts), [`src/pages/Checkout.tsx`](file:///d:/Clg/Client%20Work/HimRoots/src/pages/Checkout.tsx)
+
+- [x] **24. Structured Pino Logging, PII Masking & Real-Time Incident Alerting**
+  - *What Done Looks Like:* Replaced ad-hoc console logging with `pino` structured JSON logger (`server/lib/logger.ts`) emitting ISO timestamps, severity levels, request IDs (`X-Request-ID`), and route latency. Implemented PII masking on customer email, phone, and delivery address. Created `server/services/alertService.ts` dispatching real-time notifications to Slack/Discord/webhooks (`ALERT_WEBHOOK_URL`) on payment verification, webhook, or email delivery failures. Documented external health-check monitoring (`GET /api/health`) in `DEPLOYMENT.md`.
+  - *Files Touched:* [`server/lib/logger.ts`](file:///d:/Clg/Client%20Work/HimRoots/server/lib/logger.ts), [`server/services/alertService.ts`](file:///d:/Clg/Client%20Work/HimRoots/server/services/alertService.ts), [`server/index.ts`](file:///d:/Clg/Client%20Work/HimRoots/server/index.ts), [`server/controllers/orderController.ts`](file:///d:/Clg/Client%20Work/HimRoots/server/controllers/orderController.ts), [`server/routes/webhooks.ts`](file:///d:/Clg/Client%20Work/HimRoots/server/routes/webhooks.ts), [`server/controllers/contactController.ts`](file:///d:/Clg/Client%20Work/HimRoots/server/controllers/contactController.ts), [`server/services/emailService.ts`](file:///d:/Clg/Client%20Work/HimRoots/server/services/emailService.ts), [`DEPLOYMENT.md`](file:///d:/Clg/Client%20Work/HimRoots/DEPLOYMENT.md)
+
+- [x] **25. Content-Security-Policy (CSP) Hardening & Security Operations Runbook**
+  - *What Done Looks Like:* Replaced deprecated `X-XSS-Protection` reliance with strict, authoritative CSP allowlisting self, Razorpay checkout and API domains, Google Fonts, and Supabase. Verified distributed rate limiting and idempotency tables remain persistent in Supabase. Authored `SECURITY_OPERATIONS.md` detailing zero-downtime secrets rotation for Razorpay, Supabase, Resend, and alert webhooks, plus automated backup verification and disaster recovery runbooks.
+  - *Files Touched:* [`server/middleware/security.ts`](file:///d:/Clg/Client%20Work/HimRoots/server/middleware/security.ts), [`SECURITY_OPERATIONS.md`](file:///d:/Clg/Client%20Work/HimRoots/SECURITY_OPERATIONS.md)
+
+- [x] **26. Automated Security & Edge-Case Test Suite Expansion (57 Passing Tests)**
+  - *What Done Looks Like:* Expanded automated integration suite in `server/scripts/testBackend.ts` with tests covering IDOR order-lookup token verification (missing token 401, bad token 403, guessed sequential order numbers 401/403), COD rejection policy, arbitrary payment method rejection, invalid webhook signatures, and double-verification idempotency. Test suite verified 100% passing (57 passed, 0 failed).
+  - *Files Touched:* [`server/scripts/testBackend.ts`](file:///d:/Clg/Client%20Work/HimRoots/server/scripts/testBackend.ts), [`README.md`](file:///d:/Clg/Client%20Work/HimRoots/README.md)
+
+- [x] **27. GitHub Actions CI Safety Net**
+  - *What Done Looks Like:* Created `.github/workflows/ci.yml` running TypeScript typecheck (`tsc -b`), OxLint (`oxlint`), backend integration test suite (`testBackend.ts`), and production dual-build (`npm run build`) on every push and pull request to `main`.
+  - *Files Touched:* [`.github/workflows/ci.yml`](file:///d:/Clg/Client%20Work/HimRoots/.github/workflows/ci.yml)
+
+- [x] **28. Single Authoritative Manual Setup & Go-Live Procedures Guide**
+  - *What Done Looks Like:* Created `MANUAL_SETUP_GUIDE.md` replacing scattered setup notes. Contains Section A (Developer: 10-step numbered checklist with commands, env variables, schema, builds, Vercel/Render deployment, webhooks, alerts, and live test order) and Section B (Client: jargon-free walkthrough of Supabase account creation, Razorpay KYC, COD trade-off, domain DNS verification, daily routines, customer triage script, and how to update order status in Supabase Table Editor).
+  - *Files Touched:* [`MANUAL_SETUP_GUIDE.md`](file:///d:/Clg/Client%20Work/HimRoots/MANUAL_SETUP_GUIDE.md)
+
 ---
 
 ## 2. Client Tasks (Non-Technical / Business Owner)

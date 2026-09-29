@@ -1,0 +1,37 @@
+name: CI Safety Net
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Build, Lint & Integration Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck TypeScript (Client & Server)
+        run: npx tsc -b
+
+      - name: Run Linter (OxLint)
+        run: npx oxlint
+
+      - name: Run Backend Integration Test Suite
+        run: npx tsx server/scripts/testBackend.ts
+
+      - name: Verify Production Dual-Build
+        run: npm run build

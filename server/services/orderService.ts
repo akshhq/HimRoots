@@ -995,6 +995,11 @@ export async function executeCreateOrder(payload: CreateOrderRequest) {
     );
   }
 
+  // Hard guard: COD is explicitly disabled by client policy
+  if ((payload as any).paymentMethod === 'cod') {
+    throw new Error('Cash on Delivery is disabled. Himroots orders require prepaid online payment via Razorpay.');
+  }
+
   // 1. Calculate amounts authentically from database-backed prices
   const calculated = await calculateOrderAmounts(payload.items);
 

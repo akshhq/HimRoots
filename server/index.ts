@@ -4,6 +4,7 @@ import { config, isSupabaseAdminConfigured } from './config/env';
 import { securityHeaders, getCorsOrigins } from './middleware/security';
 import { apiLimiter } from './middleware/rateLimiter';
 import { errorHandler } from './middleware/errorHandler';
+import { requestLogger, logger } from './lib/logger';
 import productsRouter from './routes/products';
 import ordersRouter from './routes/orders';
 import contactRouter from './routes/contact';
@@ -36,7 +37,7 @@ app.use(
       return callback(new Error(`Origin '${origin}' not allowed by CORS policy`));
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Order-Token', 'x-razorpay-signature'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Order-Token', 'x-razorpay-signature', 'x-request-id'],
     credentials: true,
   })
 );
@@ -52,13 +53,8 @@ app.use(
 );
 app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 
-// 4. Request Logger (Development & Staging)
-app.use((req, _res, next) => {
-  if (config.nodeEnv !== 'test') {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
-  }
-  next();
-});
+// 4. Structured Request Logger with Request IDs and Latency Tracking
+app.use(requestLogger);
 
 // 5. Rate Limiter for all API routes
 app.use('/api', apiLimiter);
@@ -100,33 +96,32 @@ app.use(errorHandler);
 // 10. Start Server with Graceful Shutdown Handling (SIGTERM/SIGINT)
 if (process.env.NODE_ENV !== 'test') {
   const server = app.listen(config.port, () => {
-    console.log(`
-🌿 =======================================================
-   HIMROOTS WELLNESS BACKEND SERVER RUNNING
-   URL: http://localhost:${config.port}
-   Environment: ${config.nodeEnv}
-   Database: ${isSupabaseAdminConfigured ? 'Connected (Supabase)' : 'Local Fallback'}
-   Security: Enabled (Rate Limits, Strict CORS, Headers)
-======================================================= 🌿
-    `);
+    logger.info(
+      {
+        port: config.port,
+        environment: config.nodeEnv,
+        database: isSupabaseAdminConfigured ? 'Connected (Supabase)' : 'Local Fallback',
+      },
+      'Himroots Wellness backend server running'
+    );
   });
 
   const handleGracefulShutdown = (signal: string) => {
-    console.log(`\n🛑 Received ${signal}. Starting graceful shutdown...`);
+    logger.info({ signal }, `Received ${signal}. Starting graceful shutdown...`);
 
     // Stop accepting new incoming requests
     server.close((err) => {
       if (err) {
-        console.error('Error closing HTTP server during shutdown:', err);
+        logger.error({ error: err }, 'Error closing HTTP server during shutdown');
         process.exit(1);
       }
-      console.log('✅ HTTP server closed cleanly. In-flight requests drained.');
+      logger.info('HTTP server closed cleanly. In-flight requests drained.');
       process.exit(0);
     });
 
     // Hard fallback timeout (10 seconds)
     setTimeout(() => {
-      console.error('⚠️ Forcefully terminating after 10s shutdown timeout.');
+      logger.error('Forcefully terminating after 10s shutdown timeout.');
       process.exit(1);
     }, 10000).unref();
   };

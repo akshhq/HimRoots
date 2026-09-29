@@ -97,6 +97,12 @@ async function runTests() {
     const badTokenLookupRes = await fetch(`${baseUrl}/api/orders/${order1.id}?token=forged_token_xyz`);
     assert(badTokenLookupRes.status === 403, 'Order lookup with invalid token rejected with 403 (IDOR protection)');
 
+    const guessedNumberLookupRes = await fetch(`${baseUrl}/api/orders/${order1.orderNumber}`);
+    assert(
+      guessedNumberLookupRes.status === 401 || guessedNumberLookupRes.status === 403,
+      'Guessed sequential order number without token rejected with 401/403 (IDOR protection)'
+    );
+
     // Verify order in database lookup with valid signed token
     const lookupAfterPayRes = await fetch(`${baseUrl}/api/orders/${order1.id}?token=${order1.orderToken}`);
     const lookupAfterPay = await lookupAfterPayRes.json();
@@ -125,9 +131,43 @@ async function runTests() {
     assert(duplicateData.paymentStatus === 'paid', 'Payment status remains paid without corrupting state');
 
     // -------------------------------------------------------------
-    // 5. Payment Flow: Invalid Signature Rejection
+    // 5. Cash on Delivery (COD) Policy Enforcement
     // -------------------------------------------------------------
-    console.log('\n--- 5. Payment: Invalid Signature Handling ---');
+    console.log('\n--- 5. Cash on Delivery (COD) Policy Enforcement ---');
+    const codOrderRes = await fetch(`${baseUrl}/api/orders`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items: [{ productId: testProduct.id, quantity: 1 }],
+        customer: { name: 'Rohan Mehra', email: 'rohan@example.com', phone: '9816012345' },
+        shipping: { address: 'The Mall', city: 'Shimla', state: 'Himachal Pradesh', pincode: '171001' },
+        paymentMethod: 'cod',
+      }),
+    });
+    const codOrderData = await codOrderRes.json();
+    assert(codOrderRes.status === 400, 'COD order request is strictly rejected with 400 Bad Request');
+    assert(codOrderData.success === false, 'COD order returns success: false');
+    assert(
+      codOrderData.error && codOrderData.error.toLowerCase().includes('cash on delivery'),
+      'COD order returns clear explanation that COD is disabled in favor of prepaid Razorpay'
+    );
+
+    const unsupportedPaymentRes = await fetch(`${baseUrl}/api/orders`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items: [{ productId: testProduct.id, quantity: 1 }],
+        customer: { name: 'Rohan Mehra', email: 'rohan@example.com', phone: '9816012345' },
+        shipping: { address: 'The Mall', city: 'Shimla', state: 'Himachal Pradesh', pincode: '171001' },
+        paymentMethod: 'bitcoin',
+      }),
+    });
+    assert(unsupportedPaymentRes.status === 400, 'Arbitrary unsupported payment methods rejected with 400');
+
+    // -------------------------------------------------------------
+    // 6. Payment Flow: Invalid Signature Rejection
+    // -------------------------------------------------------------
+    console.log('\n--- 6. Payment: Invalid Signature Handling ---');
     // Create new order for invalid signature test
     const createOrder2Res = await fetch(`${baseUrl}/api/orders`, {
       method: 'POST',
@@ -357,6 +397,17 @@ async function runTests() {
     const duplicateWebhookData = await duplicateWebhookRes.json();
     assert(duplicateWebhookRes.status === 200, 'Duplicate webhook handled with 200');
     assert(duplicateWebhookData.alreadyProcessed === true, 'Duplicate webhook safely flagged as alreadyProcessed');
+
+    // Invalid webhook signature rejection test
+    const invalidWebhookSigRes = await fetch(`${baseUrl}/api/webhooks/razorpay`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-razorpay-signature': 'invalid_webhook_sig',
+      },
+      body: JSON.stringify({ event: 'payment.captured', payload: {} }),
+    });
+    assert(invalidWebhookSigRes.status === 400, 'Webhook with invalid signature strictly rejected with 400');
 
     // -------------------------------------------------------------
     // 11. Production Mode Guard Enforcement

@@ -2,6 +2,8 @@ import { Router, Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
 import { config, isRazorpayWebhookConfigured } from '../config/env';
 import { markOrderAsPaid } from '../services/orderService';
+import { logger } from '../lib/logger';
+import { sendCriticalAlert } from '../services/alertService';
 
 const router = Router();
 
@@ -21,6 +23,7 @@ router.post('/razorpay', async (req: Request, res: Response, next: NextFunction)
     // 1. Signature Verification
     if (config.nodeEnv === 'production' || isRazorpayWebhookConfigured) {
       if (!signature) {
+        logger.warn({ ip: req.ip }, 'Razorpay webhook rejected: missing x-razorpay-signature');
         res.status(400).json({
           success: false,
           error: 'Missing x-razorpay-signature header',
@@ -29,6 +32,11 @@ router.post('/razorpay', async (req: Request, res: Response, next: NextFunction)
       }
 
       if (!config.razorpay.webhookSecret) {
+        await sendCriticalAlert({
+          title: 'Razorpay Webhook Configuration Error',
+          message: 'Webhook received but RAZORPAY_WEBHOOK_SECRET is not configured on the server.',
+          severity: 'CRITICAL',
+        });
         res.status(500).json({
           success: false,
           error: 'Server webhook secret is unconfigured in production environment',
@@ -47,7 +55,12 @@ router.post('/razorpay', async (req: Request, res: Response, next: NextFunction)
       }
 
       if (!isValid) {
-        console.warn('⚠️  Rejected Razorpay webhook request: HMAC signature mismatch.');
+        logger.warn({ ip: req.ip }, 'Rejected Razorpay webhook request: HMAC signature mismatch');
+        await sendCriticalAlert({
+          title: 'Webhook Signature Verification Failed',
+          message: 'Razorpay webhook request received with invalid HMAC signature. Possible forgery attempt or mismatched secret.',
+          severity: 'WARNING',
+        });
         res.status(400).json({
           success: false,
           error: 'Invalid webhook signature',
@@ -101,6 +114,7 @@ router.post('/razorpay', async (req: Request, res: Response, next: NextFunction)
     }
 
     if (!razorpayPaymentId && !razorpayOrderId) {
+      logger.warn({ event }, 'Webhook payload does not contain payment or order identifiers');
       res.status(400).json({
         success: false,
         error: 'Webhook payload does not contain payment or order identifiers',
@@ -117,6 +131,18 @@ router.post('/razorpay', async (req: Request, res: Response, next: NextFunction)
       source: 'webhook',
     });
 
+    logger.info(
+      {
+        orderId: result.orderId,
+        orderNumber: result.orderNumber,
+        alreadyProcessed: result.isAlreadyPaid,
+        event,
+      },
+      result.isAlreadyPaid
+        ? 'Webhook: order was already reconciled previously'
+        : 'Webhook: order successfully marked paid and reconciled'
+    );
+
     res.status(200).json({
       success: true,
       received: true,
@@ -127,7 +153,14 @@ router.post('/razorpay', async (req: Request, res: Response, next: NextFunction)
         ? 'Webhook received: order was already reconciled and marked as paid.'
         : 'Webhook received: order marked as paid, stock decremented, and notifications queued.',
     });
-  } catch (error) {
+  } catch (error: any) {
+    logger.error({ error: error.message, stack: error.stack }, 'Unhandled error in webhook reconciliation');
+    await sendCriticalAlert({
+      title: 'Webhook Processing Error',
+      message: `Failed to process incoming Razorpay webhook: ${error.message}`,
+      severity: 'ERROR',
+      error,
+    });
     next(error);
   }
 });
