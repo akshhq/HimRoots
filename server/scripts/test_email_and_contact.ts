@@ -12,13 +12,8 @@
 import {
   sendClientOrderNotificationEmail,
   sendCustomerOrderConfirmationEmail,
-  sendClientSupportInquiryEmail,
   type OrderNotificationEmailData,
 } from '../services/emailService';
-import {
-  getOrderByIdOrNumber,
-  updateOrderEmailStatus,
-} from '../services/orderService';
 
 const BASE_URL = 'http://localhost:5000/api';
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCartStore } from "@/store/cartStore";
 import { CheckCircle2, X, ShoppingBag, ArrowRight } from "lucide-react";
@@ -6,49 +6,51 @@ import { Button } from "@/components/ui/Button";
 
 export function CartNotificationPopup() {
   const { lastNotification, clearNotification } = useCartStore();
-  const [isVisible, setIsVisible] = useState(false);
+  const [prevNotificationId, setPrevNotificationId] = useState<string | null>(null);
   const [isClosing, setIsClosing] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const closeAnimationTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navigate = useNavigate();
 
-  const handleDismiss = () => {
+  // Reset closing state when a new notification arrives
+  if (lastNotification && lastNotification.notificationId !== prevNotificationId) {
+    setPrevNotificationId(lastNotification.notificationId);
+    setIsClosing(false);
+  }
+
+  const handleDismiss = useCallback(() => {
     if (isClosing) return;
     setIsClosing(true);
     if (timerRef.current) clearTimeout(timerRef.current);
     closeAnimationTimerRef.current = setTimeout(() => {
-      setIsVisible(false);
       setIsClosing(false);
       clearNotification();
     }, 250);
-  };
+  }, [isClosing, clearNotification]);
 
   useEffect(() => {
-    if (lastNotification) {
-      if (closeAnimationTimerRef.current) clearTimeout(closeAnimationTimerRef.current);
-      if (timerRef.current) clearTimeout(timerRef.current);
+    if (!lastNotification) return;
 
-      setIsClosing(false);
-      setIsVisible(true);
+    if (closeAnimationTimerRef.current) clearTimeout(closeAnimationTimerRef.current);
+    if (timerRef.current) clearTimeout(timerRef.current);
 
-      // Auto dismiss after 4.5 seconds
-      timerRef.current = setTimeout(() => {
-        handleDismiss();
-      }, 4500);
-    }
+    // Auto dismiss after 4.5 seconds
+    timerRef.current = setTimeout(() => {
+      handleDismiss();
+    }, 4500);
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
       if (closeAnimationTimerRef.current) clearTimeout(closeAnimationTimerRef.current);
     };
-  }, [lastNotification?.notificationId]);
+  }, [lastNotification, handleDismiss]);
 
   const handlePause = () => {
     if (timerRef.current) clearTimeout(timerRef.current);
   };
 
   const handleResume = () => {
-    if (isVisible && !isClosing) {
+    if (lastNotification && !isClosing) {
       if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = setTimeout(() => {
         handleDismiss();
@@ -56,7 +58,7 @@ export function CartNotificationPopup() {
     }
   };
 
-  if (!isVisible || !lastNotification) return null;
+  if (!lastNotification) return null;
 
   const { item, addedQuantity } = lastNotification;
   const totalPrice = item.price * addedQuantity;

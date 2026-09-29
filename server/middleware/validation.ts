@@ -88,7 +88,7 @@ export function validateCreateOrder(req: Request, res: Response, next: NextFunct
     }
 
     const rawPhone = customer.phone?.toString() || '';
-    const cleanedPhone = rawPhone.replace(/[\s\-\(\)\+]/g, '');
+    const cleanedPhone = rawPhone.replace(/[\s\-()+]/g, '');
     if (!cleanedPhone || cleanedPhone.length < 8 || !/^\d+$/.test(cleanedPhone)) {
       errors['customer.phone'] = 'A valid contact phone number is required (at least 8 digits).';
     }
@@ -114,7 +114,7 @@ export function validateCreateOrder(req: Request, res: Response, next: NextFunct
     }
 
     const pincode = shipping.pincode?.toString().trim() || '';
-    if (!pincode || pincode.length < 4 || !/^[0-9a-zA-Z\s\-]+$/.test(pincode)) {
+    if (!pincode || pincode.length < 4 || !/^[0-9a-zA-Z\s-]+$/.test(pincode)) {
       errors['shipping.pincode'] = 'A valid postal PIN code is required.';
     }
   }

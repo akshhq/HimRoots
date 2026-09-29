@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCartStore } from "@/store/cartStore";
 import { useAuthStore } from "@/store/authStore";
@@ -24,23 +24,45 @@ export default function Checkout() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [infoMessage, setInfoMessage] = useState<string | null>(null);
-  const isOrderCompletedRef = useRef(false);
+  const [isOrderCompleted, setIsOrderCompleted] = useState(false);
 
   const [savedAddresses, setSavedAddresses] = useState<AddressRow[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
 
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
-    state: "",
-    pincode: "",
+  const [formData, setFormData] = useState(() => {
+    const fullName = (profile?.full_name || user?.user_metadata?.full_name || "").trim();
+    const parts = fullName.split(" ");
+    return {
+      firstName: parts[0] || "",
+      lastName: parts.slice(1).join(" ") || "",
+      email: user?.email || "",
+      phone: profile?.phone || user?.user_metadata?.phone || "",
+      address: "",
+      city: "",
+      state: "",
+      pincode: "",
+    };
   });
 
-  // Pre-fill user data & load saved addresses if authenticated
+  // Pre-fill user details if profile or user becomes available after initial render
+  const [profilePrefillKey, setProfilePrefillKey] = useState<string>("");
+  const currentPrefillKey = `${user?.id || ""}-${profile?.full_name || ""}-${profile?.phone || ""}`;
+  if (user && profilePrefillKey !== currentPrefillKey) {
+    setProfilePrefillKey(currentPrefillKey);
+    const fullName = (profile?.full_name || user.user_metadata?.full_name || "").trim();
+    const parts = fullName.split(" ");
+    const firstName = parts[0] || "";
+    const lastName = parts.slice(1).join(" ") || "";
+    setFormData((prev) => ({
+      ...prev,
+      firstName: prev.firstName || firstName,
+      lastName: prev.lastName || lastName,
+      email: prev.email || user.email || "",
+      phone: prev.phone || profile?.phone || user.user_metadata?.phone || "",
+    }));
+  }
+
+  // Load saved addresses if authenticated
   useEffect(() => {
     if (user) {
       addressService.fetchUserAddresses(user.id).then((addresses) => {
@@ -57,29 +79,17 @@ export default function Checkout() {
           }));
         }
       });
-
-      const fullName = (profile?.full_name || user.user_metadata?.full_name || "").trim();
-      const parts = fullName.split(" ");
-      const firstName = parts[0] || "";
-      const lastName = parts.slice(1).join(" ") || "";
-      setFormData((prev) => ({
-        ...prev,
-        firstName: prev.firstName || firstName,
-        lastName: prev.lastName || lastName,
-        email: prev.email || user.email || "",
-        phone: prev.phone || profile?.phone || user.user_metadata?.phone || "",
-      }));
     }
-  }, [user, profile]);
+  }, [user]);
 
   useEffect(() => {
     // Only redirect to cart if user arrived with an empty cart, not when cart is cleared upon order placement
-    if (items.length === 0 && !isOrderCompletedRef.current) {
+    if (items.length === 0 && !isOrderCompleted) {
       navigate("/cart");
     }
-  }, [items.length, navigate]);
+  }, [items.length, isOrderCompleted, navigate]);
 
-  if (items.length === 0 && !isOrderCompletedRef.current) {
+  if (items.length === 0 && !isOrderCompleted) {
     return null;
   }
 
@@ -107,7 +117,7 @@ export default function Checkout() {
       setErrorMessage("Please provide a valid email address for order notifications.");
       return;
     }
-    const cleanPhone = formData.phone.replace(/[\s\-\(\)\+]/g, "");
+    const cleanPhone = formData.phone.replace(/[\s\-()+]/g, "");
     if (!cleanPhone || cleanPhone.length < 8) {
       setErrorMessage("Please provide a valid contact phone number (at least 8 digits).");
       return;
@@ -216,7 +226,7 @@ export default function Checkout() {
               }
 
               // 5. Verification successful: mark completed, clear cart, transition to order-success
-              isOrderCompletedRef.current = true;
+              setIsOrderCompleted(true);
               clearCart();
               navigate("/order-success", {
                 state: {

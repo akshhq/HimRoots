@@ -56,10 +56,19 @@ export default function Account() {
   });
 
   // Profile form state
-  const [profileName, setProfileName] = useState("");
-  const [profilePhone, setProfilePhone] = useState("");
+  const [profileName, setProfileName] = useState(() => profile?.full_name || user?.user_metadata?.full_name || "");
+  const [profilePhone, setProfilePhone] = useState(() => profile?.phone || user?.user_metadata?.phone || "");
   const [profileStatus, setProfileStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [savingProfile, setSavingProfile] = useState(false);
+
+  // Sync profile fields if profile or user becomes available/updated
+  const [syncedProfileKey, setSyncedProfileKey] = useState<string>("");
+  const currentProfileKey = `${user?.id || ""}-${profile?.full_name || ""}-${profile?.phone || ""}`;
+  if (user && syncedProfileKey !== currentProfileKey) {
+    setSyncedProfileKey(currentProfileKey);
+    setProfileName(profile?.full_name || user.user_metadata?.full_name || "");
+    setProfilePhone(profile?.phone || user.user_metadata?.phone || "");
+  }
 
   // Load user data
   useEffect(() => {
@@ -69,24 +78,19 @@ export default function Account() {
     }
 
     if (user) {
-      setProfileName(profile?.full_name || user.user_metadata?.full_name || "");
-      setProfilePhone(profile?.phone || user.user_metadata?.phone || "");
-
       // Load orders
-      setLoadingOrders(true);
       userOrderService
         .fetchUserOrders(user.id, user.email)
         .then((data) => setOrders(data))
         .finally(() => setLoadingOrders(false));
 
       // Load addresses
-      setLoadingAddresses(true);
       addressService
         .fetchUserAddresses(user.id)
         .then((data) => setAddresses(data))
         .finally(() => setLoadingAddresses(false));
     }
-  }, [user, profile, authLoading, navigate]);
+  }, [user, authLoading, navigate]);
 
   const handleSignOut = async () => {
     await signOut();

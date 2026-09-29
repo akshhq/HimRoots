@@ -43,10 +43,8 @@ export default function OrderSuccess() {
   const [isLoading, setIsLoading] = useState(!state?.orderNumber && !state?.orderId);
 
   useEffect(() => {
-    // If state was passed via React Router navigation, we're ready
+    // If state was passed via React Router navigation, state is already loaded
     if (state?.orderNumber || state?.orderId) {
-      setOrderData(state);
-      setIsLoading(false);
       return;
     }
 
