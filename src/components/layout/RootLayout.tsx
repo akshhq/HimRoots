@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 import { Watermark } from "./Watermark";
+import { CartNotificationPopup } from "@/components/cart/CartNotificationPopup";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -16,6 +17,7 @@ export function RootLayout() {
   return (
     <div className="flex flex-col min-h-screen bg-[var(--color-background)]">
       <Navbar />
+      <CartNotificationPopup />
       <main className="flex-1">
         <Outlet />
       </main>
