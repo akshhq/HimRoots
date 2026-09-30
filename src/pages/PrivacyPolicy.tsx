@@ -123,8 +123,8 @@ export default function PrivacyPolicy() {
                 To access, correct, or request deletion of your personal contact records, contact our privacy desk:
               </p>
               <div className="text-sm">
-                <a href="mailto:support@himroots.in" className="text-[var(--color-primary)] font-semibold underline hover:text-white">
-                  support@himroots.in
+                <a href="mailto:info@himroots.in" className="text-[var(--color-primary)] font-semibold underline hover:text-white">
+                  info@himroots.in
                 </a>
                 <p className="text-xs text-gray-400 mt-2">
                   Himroots Wellness Hub, Solan / Shimla, Himachal Pradesh, India — 171001

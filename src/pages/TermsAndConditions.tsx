@@ -179,8 +179,8 @@ export default function TermsAndConditions() {
                   <Mail className="w-5 h-5 text-[var(--color-primary)] shrink-0" />
                   <div>
                     <span className="text-gray-400 block text-xs">Official Inquiries</span>
-                    <a href="mailto:support@himroots.in" className="text-white font-medium hover:text-[var(--color-primary)]">
-                      support@himroots.in
+                    <a href="mailto:info@himroots.in" className="text-white font-medium hover:text-[var(--color-primary)]">
+                      info@himroots.in
                     </a>
                   </div>
                 </div>

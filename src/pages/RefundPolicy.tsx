@@ -157,9 +157,9 @@ export default function RefundPolicy() {
                 <div className="flex items-center gap-3 p-3 bg-black/40 rounded-xl border border-[var(--color-border)]">
                   <Mail className="w-5 h-5 text-[var(--color-primary)] shrink-0" />
                   <div>
-                    <span className="text-gray-400 block text-xs">Email Desk</span>
-                    <a href="mailto:support@himroots.in" className="text-white font-medium hover:text-[var(--color-primary)]">
-                      support@himroots.in
+                    <span className="text-gray-400 block text-xs">Customer Care Desk</span>
+                    <a href="mailto:customercare@himroots.in" className="text-white font-medium hover:text-[var(--color-primary)]">
+                      customercare@himroots.in
                     </a>
                   </div>
                 </div>

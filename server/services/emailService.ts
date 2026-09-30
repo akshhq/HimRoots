@@ -375,8 +375,8 @@ export async function sendCustomerOrderConfirmationEmail(
     </p>
 
     <div style="background-color: #211d19; border-radius: 8px; padding: 16px; margin-top: 24px; font-size: 12px; color: #a8a29e; text-align: center;">
-      Need assistance or have a query regarding delivery? Reach out to our dedicated support team at 
-      <a href="mailto:${config.email.clientSupportEmail}" style="color: #D4AF37; text-decoration: none;">${config.email.clientSupportEmail}</a>.
+      Need assistance or have a query regarding delivery? Reach out to our dedicated customer care team at 
+      <a href="mailto:customercare@himroots.in" style="color: #D4AF37; text-decoration: none;">customercare@himroots.in</a>.
     </div>
   </div>
 </body>

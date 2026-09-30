@@ -22,7 +22,7 @@ export default function Home() {
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "Customer Support",
-      email: "support@himroots.in",
+      email: "customercare@himroots.in",
     },
   };
 

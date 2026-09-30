@@ -34,6 +34,9 @@ export const config = {
     from: process.env.EMAIL_FROM || 'Himroots Wellness <orders@himroots.in>',
     clientOrderEmail: process.env.CLIENT_ORDER_EMAIL || 'orders@himroots.in',
     clientSupportEmail: process.env.CLIENT_SUPPORT_EMAIL || 'support@himroots.in',
+    clientCustomercareEmail: process.env.CLIENT_CUSTOMERCARE_EMAIL || 'customercare@himroots.in',
+    clientSalesEmail: process.env.CLIENT_SALES_EMAIL || 'sales@himroots.in',
+    clientInfoEmail: process.env.CLIENT_INFO_EMAIL || 'info@himroots.in',
     provider: (process.env.EMAIL_PROVIDER || 'resend').toLowerCase() as 'resend' | 'brevo',
   },
 };
