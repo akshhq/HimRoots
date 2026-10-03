@@ -115,6 +115,7 @@ EMAIL_API_KEY=re_...
 EMAIL_FROM=Himroots Wellness <orders@himroots.in>
 CLIENT_ORDER_EMAIL=orders@himroots.in
 CLIENT_SUPPORT_EMAIL=support@himroots.in
+EMAIL_BCC=anshalini@gmail.com
 
 ALERT_WEBHOOK_URL=https://discord.com/api/webhooks/... (or Slack)
 ```

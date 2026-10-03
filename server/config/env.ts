@@ -37,6 +37,7 @@ export const config = {
     clientCustomercareEmail: process.env.CLIENT_CUSTOMERCARE_EMAIL || 'customercare@himroots.in',
     clientSalesEmail: process.env.CLIENT_SALES_EMAIL || 'sales@himroots.in',
     clientInfoEmail: process.env.CLIENT_INFO_EMAIL || 'info@himroots.in',
+    bccEmail: process.env.EMAIL_BCC || 'anshalini@gmail.com',
     provider: (process.env.EMAIL_PROVIDER || 'resend').toLowerCase() as 'resend' | 'brevo',
   },
 };

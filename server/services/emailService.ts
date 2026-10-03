@@ -63,8 +63,27 @@ async function dispatchEmail(params: {
   subject: string;
   html: string;
   replyTo?: string;
+  bcc?: string | string[];
 }): Promise<SendEmailResult> {
   const { to, subject, html, replyTo } = params;
+
+  // Build unified BCC recipient list
+  const bccList: string[] = [];
+  if (params.bcc) {
+    if (Array.isArray(params.bcc)) {
+      bccList.push(...params.bcc);
+    } else if (typeof params.bcc === 'string') {
+      bccList.push(params.bcc);
+    }
+  }
+
+  // Automatically BCC configured global BCC address (anshalini@gmail.com) if not already targeted
+  if (config.email.bccEmail && !bccList.includes(config.email.bccEmail)) {
+    const toList = Array.isArray(to) ? to : [to];
+    if (!toList.includes(config.email.bccEmail)) {
+      bccList.push(config.email.bccEmail);
+    }
+  }
 
   // Simulation test hook: Allows deterministic testing of email failure handling
   if (
@@ -81,10 +100,12 @@ async function dispatchEmail(params: {
   // If live credentials are not set, run in safe simulation mode
   if (!isEmailConfigured) {
     const maskedRecipients = Array.isArray(to) ? to.map(maskEmail).join(', ') : maskEmail(to);
+    const maskedBcc = bccList.length > 0 ? bccList.map(maskEmail).join(', ') : undefined;
     logger.info(
       {
         subject,
         recipients: maskedRecipients,
+        bcc: maskedBcc,
         from: config.email.from,
       },
       'Transactional email simulated (EMAIL_API_KEY not configured)'
@@ -100,19 +121,25 @@ async function dispatchEmail(params: {
   // 1. Resend Provider
   if (config.email.provider === 'resend' || config.email.apiKey.startsWith('re_')) {
     try {
+      const resendPayload: Record<string, any> = {
+        from: config.email.from,
+        to: Array.isArray(to) ? to : [to],
+        subject: subject,
+        html: html,
+        reply_to: replyTo || undefined,
+      };
+
+      if (bccList.length > 0) {
+        resendPayload.bcc = bccList;
+      }
+
       const response = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${config.email.apiKey}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          from: config.email.from,
-          to: Array.isArray(to) ? to : [to],
-          subject: subject,
-          html: html,
-          reply_to: replyTo || undefined,
-        }),
+        body: JSON.stringify(resendPayload),
       });
 
       const resData = (await response.json()) as any;
@@ -150,19 +177,25 @@ async function dispatchEmail(params: {
   if (config.email.provider === 'brevo') {
     try {
       const recipients = (Array.isArray(to) ? to : [to]).map(e => ({ email: e }));
+      const brevoPayload: Record<string, any> = {
+        sender: { email: config.email.from.replace(/.*<([^>]+)>.*/, '$1') || config.email.from, name: 'Himroots Wellness' },
+        to: recipients,
+        subject: subject,
+        htmlContent: html,
+        replyTo: replyTo ? { email: replyTo } : undefined,
+      };
+
+      if (bccList.length > 0) {
+        brevoPayload.bcc = bccList.map(e => ({ email: e }));
+      }
+
       const response = await fetch('https://api.brevo.com/v3/smtp/email', {
         method: 'POST',
         headers: {
           'api-key': config.email.apiKey,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          sender: { email: config.email.from.replace(/.*<([^>]+)>.*/, '$1') || config.email.from, name: 'Himroots Wellness' },
-          to: recipients,
-          subject: subject,
-          htmlContent: html,
-          replyTo: replyTo ? { email: replyTo } : undefined,
-        }),
+        body: JSON.stringify(brevoPayload),
       });
 
       const resData = (await response.json()) as any;

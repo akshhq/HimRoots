@@ -160,8 +160,9 @@ The application houses a dedicated, multi-chapter illustrated botanical monograp
 
 ### 6. Transactional Email System & Support Portal
 * Automated order alerts dispatched to `orders@himroots.in` and branded customer confirmations sent via Resend or Brevo.
+* All outbound transactional emails (order alerts, support queries, customer receipts) are automatically BCC'd to `anshalini@gmail.com` (configurable via `EMAIL_BCC`).
 * Payment verification and email dispatch are decoupled: an email provider outage will never corrupt a valid paid order.
-* `/contact` portal with honeypot bot trap, sliding-window rate limiting, and automated email forwarding with customer `reply_to`.
+* `/contact` portal with honeypot bot trap, sliding-window rate limiting, and automated email forwarding to `support@himroots.in` with customer `reply_to`.
 
 ---
 

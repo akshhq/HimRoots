@@ -43,7 +43,8 @@ Fill out each variable as described below:
 | `EMAIL_API_KEY` | Backend Only | API key from Resend (`re_...`) or Brevo. Generated in your email provider dashboard. |
 | `EMAIL_FROM` | Backend | Verified sender: `Himroots Wellness <orders@himroots.in>`. |
 | `CLIENT_ORDER_EMAIL` | Backend | Operations email receiving new orders (`orders@himroots.in`). |
-| `CLIENT_SUPPORT_EMAIL` | Backend | Support email receiving contact inquiries (`support@himroots.in`). |
+| `CLIENT_SUPPORT_EMAIL` | Backend | Support email receiving contact & query form submissions (`support@himroots.in`). |
+| `EMAIL_BCC` | Backend Only | Global BCC recipient receiving copies of all order notifications, support inquiries, and customer confirmations (`anshalini@gmail.com`). |
 | `ALERT_WEBHOOK_URL` | Backend Only | Slack or Discord Incoming Webhook URL to receive immediate alerts for payment or webhook failures. |
 
 ---

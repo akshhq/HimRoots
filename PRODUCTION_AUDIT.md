@@ -413,6 +413,7 @@ These tasks must be performed by the developer during final production deploymen
      EMAIL_FROM=Himroots Wellness <orders@himroots.in>
      CLIENT_ORDER_EMAIL=orders@himroots.in
      CLIENT_SUPPORT_EMAIL=support@himroots.in
+     EMAIL_BCC=anshalini@gmail.com
      ```
 2. **Frontend Production Build**:
    - In `.env.production`, set:
