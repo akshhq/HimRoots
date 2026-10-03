@@ -135,31 +135,17 @@ export default function Contact() {
               </div>
               <div className="flex-1">
                 <div className="text-xs uppercase font-bold tracking-wider text-[var(--color-primary)] mb-1">
-                  Email Desks
+                  Email Support
                 </div>
-                <div className="flex flex-col gap-1.5 text-sm font-medium text-gray-200">
+                <div className="flex flex-col gap-1 text-sm font-medium text-gray-200">
                   <a href="mailto:customercare@himroots.in" className="hover:text-[var(--color-primary)] transition-colors">
                     customercare@himroots.in
-                    <span className="text-[10px] text-gray-500 ml-1.5">(Customer Care)</span>
                   </a>
-                  <a href="mailto:sales@himroots.in" className="hover:text-[var(--color-primary)] transition-colors">
-                    sales@himroots.in
-                    <span className="text-[10px] text-gray-500 ml-1.5">(Sales & Wholesale)</span>
-                  </a>
-                  <a href="mailto:info@himroots.in" className="hover:text-[var(--color-primary)] transition-colors">
-                    info@himroots.in
-                    <span className="text-[10px] text-gray-500 ml-1.5">(General Information)</span>
-                  </a>
-                  <a href="mailto:orders@himroots.in" className="hover:text-[var(--color-primary)] transition-colors">
-                    orders@himroots.in
-                    <span className="text-[10px] text-gray-500 ml-1.5">(Order Tracking & Status)</span>
-                  </a>
-                  <a href="mailto:support@himroots.in" className="hover:text-[var(--color-primary)] transition-colors">
-                    support@himroots.in
-                    <span className="text-[10px] text-gray-500 ml-1.5">(Technical & Product Support)</span>
+                  <a href="mailto:orders@himroots.in" className="text-xs text-gray-400 hover:text-[var(--color-primary)] transition-colors">
+                    orders@himroots.in (Order Tracking)
                   </a>
                 </div>
-                <p className="text-[11px] text-gray-500 mt-2">Typical response within 24 business hours</p>
+                <p className="text-[11px] text-gray-500 mt-1">Typical response within 24 business hours</p>
               </div>
             </div>
 
@@ -173,8 +159,8 @@ export default function Contact() {
                   Phone & WhatsApp Helpline
                 </div>
                 <div className="text-sm font-medium text-gray-200">
-                  <a href="tel:+919876543210" className="hover:text-[var(--color-primary)] transition-colors">
-                    +91 98765 43210
+                  <a href="tel:+919871520888" className="hover:text-[var(--color-primary)] transition-colors">
+                    +91 98715 20888
                   </a>
                 </div>
                 <p className="text-[11px] text-gray-500 mt-1">Direct support for orders, payments & consultations</p>

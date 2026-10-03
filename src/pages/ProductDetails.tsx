@@ -33,18 +33,16 @@ import {
 } from "lucide-react";
 import { SEO } from "@/components/common/SEO";
 
-// Carousel slides matching spec descriptions (18 items)
+// Carousel slides matching spec descriptions
 interface CarouselSlide {
   id: number;
   title: string;
   subtitle: string;
-  image?: string;
-  isInfographic?: boolean;
-  infographicType?: "omega" | "bioactives" | "vitaminc" | "comparison" | "results" | "quality" | "pack2";
+  image: string;
   badge?: string;
 }
 
-const CAROUSEL_SLIDES: CarouselSlide[] = [
+const JUICE_CAROUSEL_SLIDES: CarouselSlide[] = [
   {
     id: 1,
     title: "Sea Buckthorn Pulp Juice",
@@ -54,80 +52,73 @@ const CAROUSEL_SLIDES: CarouselSlide[] = [
   },
   {
     id: 2,
+    title: "Full Spectrum Omega Profile",
+    subtitle: "Rare natural synergy of Omega 3, 6, 7 & 9 in bioactive plant form",
+    image: "/images/pulp-omega-profile.jpg",
+    badge: "Omega 3, 6, 7 & 9"
+  },
+  {
+    id: 3,
+    title: "Sea Buckthorn with 190+ Bioactives",
+    subtitle: "Vitamins C & E, carotenoids, plant sterols & flavonoids",
+    image: "/images/pulp-190-bioactives.jpg",
+    badge: "190+ Bioactives"
+  },
+  {
+    id: 4,
+    title: "28x Vitamin C Potency",
+    subtitle: "Provides up to 28x more concentrated Vitamin C than oranges",
+    image: "/images/pulp-vitaminc-comparison.jpg",
+    badge: "28x Vitamin C"
+  },
+  {
+    id: 5,
+    title: "60-Day Wellness Transformation",
+    subtitle: "Expected results timeline from Day 1 to Day 60+",
+    image: "/images/pulp-clinical-timeline.jpg",
+    badge: "Clinical Timeline"
+  },
+  {
+    id: 6,
+    title: "Tested for Quality & Purity",
+    subtitle: "Cold-pressed, unfiltered, zero added sugar & cGMP certified",
+    image: "/images/pulp-quality-standards.jpg",
+    badge: "Lab Verified"
+  },
+  {
+    id: 7,
+    title: "Daily Usage Ritual Guide",
+    subtitle: "Mix 10ml in 200ml water twice daily before meals",
+    image: "/images/pulp-daily-ritual-guide.jpg",
+    badge: "Daily Ritual"
+  },
+  {
+    id: 8,
+    title: "Himroots Sea Buckthorn vs Others",
+    subtitle: "Zero added sugar, never diluted, unfiltered berry pulp",
+    image: "/images/pulp-comparison-chart.jpg",
+    badge: "Pure Comparison"
+  },
+  {
+    id: 9,
+    title: "Pack of 2 Value Bundle",
+    subtitle: "2 x 500ml bottles — 50-day complete wellness course",
+    image: "/images/pulp-pack2-bundle.jpg",
+    badge: "Save 25%"
+  },
+  {
+    id: 10,
+    title: "Benefits of Sea Buckthorn Juice",
+    subtitle: "Triple Action: Energy, Deep Immunity & Radiant Skin",
+    image: "/images/pulp-serving-ritual.jpg",
+    badge: "Serving Ritual"
+  },
+  {
+    id: 11,
     title: "Himalayan Sea Buckthorn",
     subtitle: "Wild-Harvested from pristine Ladakh at ~12,000 ft",
     image: "/images/himroots-harvest-berries.jpg",
     badge: "12,000 ft Harvest"
-  },
-  {
-    id: 3,
-    title: "Sea Buckthorn Backed by Science",
-    subtitle: "20+ Global Clinical Trials Validating Cellular Potency",
-    isInfographic: true,
-    infographicType: "quality",
-    badge: "Clinical Grade"
-  },
-  {
-    id: 4,
-    title: "Benefits of Sea Buckthorn Juice",
-    subtitle: "Triple Action: Energy, Deep Immunity & Radiant Skin",
-    image: "/images/pulp-serving-ritual.jpg",
-    badge: "Full Spectrum"
-  },
-  {
-    id: 5,
-    title: "Clinically Proven Results",
-    subtitle: "Noticeable boost in stamina, digestive ease & mucosal hydration",
-    isInfographic: true,
-    infographicType: "results",
-    badge: "Proven Efficacy"
-  },
-  {
-    id: 6,
-    title: "Full Spectrum Omega Profile",
-    subtitle: "Rare natural synergy of Omega 3, 6, 7 & 9 in bioactive plant form",
-    isInfographic: true,
-    infographicType: "omega",
-    badge: "Omega 3, 6, 7 & 9"
-  },
-  {
-    id: 7,
-    title: "Sea Buckthorn with 190+ Bioactives",
-    subtitle: "Vitamins C & E, carotenoids, plant sterols & flavonoids",
-    isInfographic: true,
-    infographicType: "bioactives",
-    badge: "190+ Bioactives"
-  },
-  {
-    id: 8,
-    title: "Sea Buckthorn with Vitamin C",
-    subtitle: "Provides up to 28x more concentrated Vitamin C than oranges",
-    isInfographic: true,
-    infographicType: "vitaminc",
-    badge: "28x Vitamin C"
-  },
-  {
-    id: 9,
-    title: "Himroots Sea Buckthorn vs Others",
-    subtitle: "Zero added sugar, never diluted, unfiltered berry pulp",
-    isInfographic: true,
-    infographicType: "comparison",
-    badge: "Pure Comparison"
-  },
-  {
-    id: 10,
-    title: "Results of Sea Buckthorn",
-    subtitle: "Day 1 to Day 60 biological restoration timeline",
-    isInfographic: true,
-    infographicType: "results",
-    badge: "30-Day Ritual"
-  },
-  {
-    id: 11,
-    title: "How to Take Sea Buckthorn Juice",
-    subtitle: "Mix 10ml in 200ml water twice daily before meals",
-    image: "/images/himroots-sea-buckthorn-juice.jpg",
-    badge: "Daily Ritual"
   },
   {
     id: 12,
@@ -138,48 +129,128 @@ const CAROUSEL_SLIDES: CarouselSlide[] = [
   },
   {
     id: 13,
-    title: "Tested for Quality & Purity",
-    subtitle: "Heavy metal free, pesticide free & third-party verified",
-    isInfographic: true,
-    infographicType: "quality",
-    badge: "Lab Verified"
+    title: "Golden Vitality Elixir",
+    subtitle: "Bracing tart natural taste with standardized curcumin synergy",
+    image: "/images/himroots-sea-buckthorn-juice.jpg",
+    badge: "Golden Elixir"
   },
   {
     id: 14,
-    title: "Preserving Golden Bioactives",
-    subtitle: "Crafted in dark UV-resistant canister to preserve fragile fatty acids",
-    image: "/images/himroots-sea-buckthorn-pulp.jpg",
-    badge: "UV-Shielded"
-  },
-  {
-    id: 15,
-    title: "Tamper-Evident Luxury Packaging",
-    subtitle: "Double foil-sealed lid ensuring mountain-fresh active vitality",
-    image: "/images/pulp-serving-ritual.jpg",
-    badge: "Foil Sealed"
-  },
-  {
-    id: 16,
-    title: "Back Label & Nutritional Panel",
-    subtitle: "100% Transparency: Zero preservatives, zero fillers, zero sugar",
-    isInfographic: true,
-    infographicType: "bioactives",
-    badge: "Clean Label"
-  },
-  {
-    id: 17,
-    title: "Himalayan Golden Vitality Elixir",
+    title: "High Altitude Himalayan Peaks",
     subtitle: "Wild berries thriving through extreme Himalayan winter frost",
     image: "/images/himalayan-hero-peaks.jpg",
-    badge: "High Altitude"
+    badge: "Ladakh Peaks"
+  }
+];
+
+const CAPSULES_CAROUSEL_SLIDES: CarouselSlide[] = [
+  {
+    id: 1,
+    title: "Himroots Sea Buckthorn Softgels",
+    subtitle: "Amber Apothecary Glass Bottle — 60 Vegetarian Softgels",
+    image: "/images/himroots-sea-buckthorn-capsules.jpg",
+    badge: "Bestseller"
   },
   {
-    id: 18,
+    id: 2,
+    title: "Concentrated Rare Omega-7",
+    subtitle: "Palmitoleic acid for cellular membrane restoration & epithelial longevity",
+    image: "/images/capsules-omega7-cellular.jpg",
+    badge: "Rare Omega-7"
+  },
+  {
+    id: 3,
+    title: "Deep Skin Hydration & Barrier Repair",
+    subtitle: "Reinforces epidermal lipid barrier and triggers pro-collagen synthesis",
+    image: "/images/capsules-skin-hydration.jpg",
+    badge: "Skin Barrier"
+  },
+  {
+    id: 4,
+    title: "Mucosal Lining & Internal Hydration",
+    subtitle: "Targeted comfort for dry eyes, oral tissues and gut digestive mucosa",
+    image: "/images/capsules-mucosal-comfort.jpg",
+    badge: "Mucosal Comfort"
+  },
+  {
+    id: 5,
+    title: "100% Pure Botanical Formula",
+    subtitle: "85% Cold-Pressed Berry & Seed Oil, 10% Carotenoids, 5% Vitamin E",
+    image: "/images/capsules-clean-ingredients.jpg",
+    badge: "Pure Formula"
+  },
+  {
+    id: 6,
+    title: "Rigorous Purity & Quality Standards",
+    subtitle: "Cold-pressed, vegan softgel, hexane-free, cGMP certified facility",
+    image: "/images/capsules-quality-certifications.jpg",
+    badge: "Lab Verified"
+  },
+  {
+    id: 7,
+    title: "Daily Usage & Dosage Guide",
+    subtitle: "1-2 softgels daily with meals, swallow with water, 60-90 days consistency",
+    image: "/images/capsules-daily-ritual.jpg",
+    badge: "Daily Ritual"
+  },
+  {
+    id: 8,
     title: "Pack of 2 Value Bundle",
-    subtitle: "2 x 500ml bottles — 50-day complete wellness course",
-    isInfographic: true,
-    infographicType: "pack2",
-    badge: "Save 25%"
+    subtitle: "2 x 60 Softgels (120 Capsules) — Complete 60-Day Wellness Course",
+    image: "/images/capsules-pack2-bundle.jpg",
+    badge: "Save 28%"
+  },
+  {
+    id: 9,
+    title: "Golden Softgel Pearls",
+    subtitle: "Plant cellulose softgels rich in cold-pressed Himalayan berry oil",
+    image: "/images/capsules-apothecary.jpg",
+    badge: "Vegan Softgel"
+  },
+  {
+    id: 10,
+    title: "Ladakh High-Altitude Harvest",
+    subtitle: "Wild Himalayan berries harvested at 12,000 ft in extreme cold desert",
+    image: "/images/himalayan-harvest.jpg",
+    badge: "12,000 ft Harvest"
+  }
+];
+
+const JUICE_FAQS = [
+  {
+    question: "What is sea buckthorn?",
+    answer: "Sea buckthorn (Hippophae rhamnoides) is a wildly hardy, ancient deciduous shrub native to the freezing, high-altitude deserts of the Himalayas (such as Ladakh at ~12,000 ft). Despite its name, it is not an ocean plant. Revered for centuries in traditional Tibetan and Ayurvedic medicine, its vibrant orange berries synthesize over 190 bioactives, rare plant lipids, and exceptional concentrations of natural Vitamin C."
+  },
+  {
+    question: "What does sea buckthorn do for the body?",
+    answer: "Sea buckthorn delivers comprehensive multi-system nourishment: it helps support all-day energy and vitality, helps reduce systemic inflammation when paired with curcumin, aids healthy gut motility and soothes digestive mucous membranes, supports liver function and metabolic detox, and actively reduces oxidative stress throughout the body."
+  },
+  {
+    question: "Is sea buckthorn good for skin?",
+    answer: "Yes, exceptionally. Sea buckthorn is one of the only known botanical sources of rare Omega-7 (palmitoleic acid), an essential structural constituent of skin cell membranes and mucosal tissues. Working alongside Vitamins C & E and carotenoids, it deeply hydrates dermal layers, reinforces moisture barriers, and stimulates natural pro-collagen synthesis for radiant, resilient skin."
+  },
+  {
+    question: "How does its nutrition compare to other fruits?",
+    answer: "Sea buckthorn dramatically outperforms ordinary fruits. It provides up to 28 times more concentrated Vitamin C than oranges (and up to 100 times more than lemons by weight). Furthermore, unlike standard sweet fruits that only offer watery carbohydrates, sea buckthorn synthesizes healthy lipids directly in its pulp and seeds, yielding a rare full-spectrum Omega 3, 6, 7 & 9 profile."
+  }
+];
+
+const CAPSULES_FAQS = [
+  {
+    question: "What makes Himroots Sea Buckthorn Capsules unique?",
+    answer: "Himroots Sea Buckthorn Capsules are formulated with 100% pure cold-pressed wild Himalayan berry and seed oil encapsulated in 100% plant-cellulose vegetarian softgels. They provide an extraordinarily concentrated source of rare Omega-7 (palmitoleic acid), Omegas 3, 6, 9, natural carotenoids, and vitamin E with zero gelatin, zero fillers, and zero synthetic preservatives."
+  },
+  {
+    question: "How does Omega-7 benefit dry eyes and mucosal tissues?",
+    answer: "Omega-7 (palmitoleic acid) is a fundamental building block of delicate epithelial and mucosal tissue membranes throughout the body. Supplementation helps replenish tear-film lipid layers to relieve dry, irritated eyes from screen fatigue, lubricates dry mouth and throat tissues, and soothes gastrointestinal linings."
+  },
+  {
+    question: "Are the softgels 100% vegetarian?",
+    answer: "Yes, 100%. Unlike conventional omega supplements that use bovine or porcine gelatin, Himroots uses advanced plant-cellulose softgel technology. They are completely vegan, non-GMO, hexane-free, and cause zero fishy aftertaste or reflux."
+  },
+  {
+    question: "How long should I take the capsules to see results?",
+    answer: "While initial hydration and mucosal comfort are often noticed within 1 to 2 weeks, biological cellular renewal and deep skin barrier repair are cumulative. Consistent daily use for 60 to 90 days is recommended for optimal, lasting results."
   }
 ];
 
@@ -203,6 +274,12 @@ export default function ProductDetails() {
   const [selectedVariant, setSelectedVariant] = useState<"pack-1" | "pack-2">("pack-1");
   const [quantity, setQuantity] = useState(1);
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
+  const [prevSlug, setPrevSlug] = useState(slug);
+
+  if (slug !== prevSlug) {
+    setPrevSlug(slug);
+    setActiveSlideIndex(0);
+  }
 
   // Accordion state
   const [openAccordion, setOpenAccordion] = useState<string>("description");
@@ -309,15 +386,18 @@ export default function ProductDetails() {
     navigate("/checkout");
   };
 
+  const slides = isJuice ? JUICE_CAROUSEL_SLIDES : CAPSULES_CAROUSEL_SLIDES;
+
   const nextSlide = () => {
-    setActiveSlideIndex((prev) => (prev + 1) % CAROUSEL_SLIDES.length);
+    setActiveSlideIndex((prev) => (prev + 1) % slides.length);
   };
 
   const prevSlide = () => {
-    setActiveSlideIndex((prev) => (prev - 1 + CAROUSEL_SLIDES.length) % CAROUSEL_SLIDES.length);
+    setActiveSlideIndex((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
-  const currentSlide = CAROUSEL_SLIDES[activeSlideIndex];
+  const currentSlide = slides[activeSlideIndex] || slides[0];
+  const productFaqs = isJuice ? JUICE_FAQS : CAPSULES_FAQS;
 
   // Clinical studies from spec
   const clinicalStudies = [
@@ -425,26 +505,6 @@ export default function ProductDetails() {
     }
   ];
 
-  // FAQs from sea-buckthorn-juice-product-summary.md
-  const productFaqs = [
-    {
-      question: "What is sea buckthorn?",
-      answer: "Sea buckthorn (Hippophae rhamnoides) is a wildly hardy, ancient deciduous shrub native to the freezing, high-altitude deserts of the Himalayas (such as Ladakh at ~12,000 ft). Despite its name, it is not an ocean plant. Revered for centuries in traditional Tibetan and Ayurvedic medicine, its vibrant orange berries synthesize over 190 bioactives, rare plant lipids, and exceptional concentrations of natural Vitamin C."
-    },
-    {
-      question: "What does sea buckthorn do for the body?",
-      answer: "Sea buckthorn delivers comprehensive multi-system nourishment: it helps support all-day energy and vitality, helps reduce systemic inflammation when paired with curcumin, aids healthy gut motility and soothes digestive mucous membranes, supports liver function and metabolic detox, and actively reduces oxidative stress throughout the body."
-    },
-    {
-      question: "Is sea buckthorn good for skin?",
-      answer: "Yes, exceptionally. Sea buckthorn is one of the only known botanical sources of rare Omega-7 (palmitoleic acid), an essential structural constituent of skin cell membranes and mucosal tissues. Working alongside Vitamins C & E and carotenoids, it deeply hydrates dermal layers, reinforces moisture barriers, and stimulates natural pro-collagen synthesis for radiant, resilient skin."
-    },
-    {
-      question: "How does its nutrition compare to other fruits?",
-      answer: "Sea buckthorn dramatically outperforms ordinary fruits. It provides up to 28 times more concentrated Vitamin C than oranges (and up to 100 times more than lemons by weight). Furthermore, unlike standard sweet fruits that only offer watery carbohydrates, sea buckthorn synthesizes healthy lipids directly in its pulp and seeds, yielding a rare full-spectrum Omega 3, 6, 7 & 9 profile."
-    }
-  ];
-
   const filteredReviews = activeReviewFilter === "all" 
     ? customerReviews 
     : customerReviews.filter(r => activeReviewFilter === "5star" ? r.rating === 5 : r.rating === 4);
@@ -452,9 +512,9 @@ export default function ProductDetails() {
   const productStructuredData = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: "Himalayan Sea Buckthorn Juice (Pulp) with Curcumin Extract | 500ml",
-    image: CAROUSEL_SLIDES.filter(s => s.image).map(s => `https://himroots.in${s.image}`),
-    description: "Himroots Himalayan Sea Buckthorn Juice (Pulp) with Curcumin Extract is a liquid pulp concentrate, wild-harvested from the pristine Himalayan region of Ladakh at ~12,000 ft.",
+    name: product.name,
+    image: slides.map(s => `https://himroots.in${s.image}`),
+    description: product.description,
     sku: currentPricing.sku,
     brand: {
       "@type": "Brand",
@@ -471,18 +531,18 @@ export default function ProductDetails() {
     },
     aggregateRating: {
       "@type": "AggregateRating",
-      ratingValue: "4.73",
-      reviewCount: "11"
+      ratingValue: product.rating.toString(),
+      reviewCount: product.reviews.toString()
     }
   };
 
   return (
     <>
       <SEO
-        title="Himalayan Sea Buckthorn Juice (Pulp) with Curcumin Extract | Himroots Wellness"
-        description="Liquid pulp concentrate wild-harvested from Ladakh at 12,000 ft. Full-spectrum Omega 3, 6, 7 & 9 with standardized Curcumin Extract for energy, immunity & radiant skin."
+        title={`${product.name} | Himroots Wellness`}
+        description={product.description.slice(0, 160)}
         canonical={`/products/${product.slug}`}
-        image="/images/himroots-sea-buckthorn-pulp.jpg"
+        image={slides[0]?.image || product.images[0]}
         type="product"
         structuredData={[productStructuredData]}
       />
@@ -513,7 +573,7 @@ export default function ProductDetails() {
               <Link to="/shop" className="hover:text-[var(--color-primary)]">Shop</Link>
               <span>/</span>
               <span className="text-gray-200 truncate max-w-[220px] sm:max-w-none font-medium">
-                Himalayan Sea Buckthorn Juice with Curcumin
+                {product.name}
               </span>
             </div>
             <Link
@@ -539,208 +599,12 @@ export default function ProductDetails() {
               {/* Main Slide Viewer */}
               <div className="relative w-full aspect-square sm:aspect-[4/3] lg:aspect-square bg-[#050505] rounded-2xl overflow-hidden border border-[#1f1f1f] shadow-2xl flex items-center justify-center p-4">
                 
-                {/* Visual Content: Image or Rich Infographic Card */}
-                {currentSlide.image ? (
-                  <img
-                    src={currentSlide.image}
-                    alt={currentSlide.title}
-                    className="w-full h-full object-contain"
-                  />
-                ) : (
-                  /* Infographic Slide Renderers */
-                  <div className="w-full h-full p-4 sm:p-6 flex flex-col justify-between bg-gradient-to-b from-[#0a0a0a] via-black to-[#050505] border border-[var(--color-border-gold)]/40 rounded-xl">
-                    
-                    {/* Infographic Header */}
-                    <div className="flex items-center justify-between border-b border-[#1f1f1f] pb-3">
-                      <div className="flex items-center gap-2">
-                        <Sparkles className="w-4 h-4 text-[var(--color-primary)]" />
-                        <span className="text-xs uppercase tracking-widest text-[var(--color-primary)] font-bold">
-                          Scientific Monograph
-                        </span>
-                      </div>
-                      <span className="text-[10px] bg-[#1a1a1a] text-gray-300 font-mono px-2 py-0.5 rounded">
-                        Slide {activeSlideIndex + 1} of 18
-                      </span>
-                    </div>
-
-                    {/* Infographic Body based on type */}
-                    {currentSlide.infographicType === "omega" && (
-                      <div className="py-4 space-y-3">
-                        <h3 className="text-xl sm:text-2xl font-serif font-bold text-white text-center">
-                          Full Spectrum Omega Profile
-                        </h3>
-                        <p className="text-xs text-gray-400 text-center">
-                          One of Earth's only botanical sources naturally containing all four omegas:
-                        </p>
-                        <div className="grid grid-cols-2 gap-2.5 pt-2">
-                          <div className="p-3 rounded-lg bg-[#0a0a0a] border border-[#1f1f1f]">
-                            <span className="text-[var(--color-primary)] font-bold text-sm block">Omega-7</span>
-                            <span className="text-[11px] text-gray-300">Skin barrier repair & mucosal hydration</span>
-                          </div>
-                          <div className="p-3 rounded-lg bg-[#0a0a0a] border border-[#1f1f1f]">
-                            <span className="text-[var(--color-primary)] font-bold text-sm block">Omega-3</span>
-                            <span className="text-[11px] text-gray-300">Cardiovascular & healthy inflammation</span>
-                          </div>
-                          <div className="p-3 rounded-lg bg-[#0a0a0a] border border-[#1f1f1f]">
-                            <span className="text-[var(--color-primary)] font-bold text-sm block">Omega-6</span>
-                            <span className="text-[11px] text-gray-300">Dermal resilience & moisture retention</span>
-                          </div>
-                          <div className="p-3 rounded-lg bg-[#0a0a0a] border border-[#1f1f1f]">
-                            <span className="text-[var(--color-primary)] font-bold text-sm block">Omega-9</span>
-                            <span className="text-[11px] text-gray-300">Metabolic wellness & digestive harmony</span>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {currentSlide.infographicType === "vitaminc" && (
-                      <div className="py-4 text-center space-y-4">
-                        <span className="text-xs uppercase tracking-widest text-[var(--color-primary)] font-bold">
-                          Potency Comparison
-                        </span>
-                        <div className="flex items-center justify-center gap-6 my-2">
-                          <div className="text-center p-3 bg-[#0a0a0a] rounded-xl border border-[var(--color-border-gold)]">
-                            <span className="text-4xl sm:text-5xl font-black text-gold-gradient block">28x</span>
-                            <span className="text-xs text-gray-200 font-bold mt-1 block">Sea Buckthorn</span>
-                          </div>
-                          <span className="text-gray-500 font-bold text-lg">vs</span>
-                          <div className="text-center p-3 bg-[#0a0a0a] rounded-xl border border-[#1f1f1f] opacity-70">
-                            <span className="text-3xl sm:text-4xl font-black text-gray-400 block">1x</span>
-                            <span className="text-xs text-gray-400 font-medium mt-1 block">Fresh Oranges</span>
-                          </div>
-                        </div>
-                        <p className="text-xs text-gray-300 leading-relaxed max-w-sm mx-auto">
-                          Provides exceptionally bioavailable raw Vitamin C bonded with natural bioflavonoids for superior absorption and systemic immune defense.
-                        </p>
-                      </div>
-                    )}
-
-                    {currentSlide.infographicType === "bioactives" && (
-                      <div className="py-4 space-y-3">
-                        <h3 className="text-xl sm:text-2xl font-serif font-bold text-white text-center">
-                          190+ Bioactive Nutrients
-                        </h3>
-                        <p className="text-xs text-gray-400 text-center">
-                          Pristine high-altitude Ladakh berry matrix
-                        </p>
-                        <div className="grid grid-cols-3 gap-2 text-center text-xs pt-1">
-                          <div className="p-2.5 rounded bg-[#0a0a0a] border border-[#1f1f1f]">
-                            <span className="font-bold text-white block">Vitamins</span>
-                            <span className="text-[10px] text-gray-400">A, B1, B2, C, E, K</span>
-                          </div>
-                          <div className="p-2.5 rounded bg-[#0a0a0a] border border-[#1f1f1f]">
-                            <span className="font-bold text-white block">Minerals</span>
-                            <span className="text-[10px] text-gray-400">Zinc, Iron, Calcium</span>
-                          </div>
-                          <div className="p-2.5 rounded bg-[#0a0a0a] border border-[#1f1f1f]">
-                            <span className="font-bold text-white block">Phytosterols</span>
-                            <span className="text-[10px] text-gray-400">Beta-sitosterol</span>
-                          </div>
-                          <div className="p-2.5 rounded bg-[#0a0a0a] border border-[#1f1f1f]">
-                            <span className="font-bold text-white block">Polyphenols</span>
-                            <span className="text-[10px] text-gray-400">Quercetin, Isorhamnetin</span>
-                          </div>
-                          <div className="p-2.5 rounded bg-[#0a0a0a] border border-[#1f1f1f]">
-                            <span className="font-bold text-white block">Lipids</span>
-                            <span className="text-[10px] text-gray-400">Omegas 3, 6, 7 & 9</span>
-                          </div>
-                          <div className="p-2.5 rounded bg-[#0a0a0a] border border-[#1f1f1f]">
-                            <span className="font-bold text-white block">Curcuminoids</span>
-                            <span className="text-[10px] text-gray-400">Turmeric Extract</span>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {currentSlide.infographicType === "comparison" && (
-                      <div className="py-4 space-y-3">
-                        <h3 className="text-lg sm:text-xl font-serif font-bold text-white text-center">
-                          Himroots vs Ordinary Juices
-                        </h3>
-                        <div className="space-y-2 text-xs">
-                          <div className="flex items-center justify-between p-2 rounded bg-[#0a0a0a] border border-[var(--color-border-gold)]">
-                            <span className="text-gray-200">Processing Method</span>
-                            <span className="text-[var(--color-primary)] font-bold">Cold Pressed & Unfiltered</span>
-                          </div>
-                          <div className="flex items-center justify-between p-2 rounded bg-[#0a0a0a] border border-[#1f1f1f]">
-                            <span className="text-gray-200">Sugar & Sweeteners</span>
-                            <span className="text-white font-bold">Zero Added Sugar</span>
-                          </div>
-                          <div className="flex items-center justify-between p-2 rounded bg-[#0a0a0a] border border-[#1f1f1f]">
-                            <span className="text-gray-200">Harvest Altitude</span>
-                            <span className="text-[var(--color-primary)] font-bold">~12,000 ft (Ladakh)</span>
-                          </div>
-                          <div className="flex items-center justify-between p-2 rounded bg-[#0a0a0a] border border-[#1f1f1f]">
-                            <span className="text-gray-200">Curcumin Synergy</span>
-                            <span className="text-white font-bold">Standardized Extract Added</span>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {currentSlide.infographicType === "results" && (
-                      <div className="py-4 space-y-3 text-xs">
-                        <h3 className="text-lg sm:text-xl font-serif font-bold text-white text-center">
-                          Expected Results Timeline
-                        </h3>
-                        <div className="space-y-2">
-                          <div className="p-2.5 rounded bg-[#0a0a0a] border border-[#1f1f1f]">
-                            <span className="text-[var(--color-primary)] font-bold block mb-0.5">Days 1 - 10: Cellular Energy</span>
-                            <span className="text-gray-400">Noticeable boost in morning stamina, gut comfort, and digestive lightness.</span>
-                          </div>
-                          <div className="p-2.5 rounded bg-[#0a0a0a] border border-[#1f1f1f]">
-                            <span className="text-[var(--color-primary)] font-bold block mb-0.5">Days 15 - 30: Skin Barrier & Immunity</span>
-                            <span className="text-gray-400">Enhanced dermal hydration, soothed mucosal linings, and sustained immune resilience.</span>
-                          </div>
-                          <div className="p-2.5 rounded bg-[#0a0a0a] border border-[#1f1f1f]">
-                            <span className="text-[var(--color-primary)] font-bold block mb-0.5">Days 45 - 60+: Deep Metabolic Balance</span>
-                            <span className="text-gray-400">Liver hepatoprotection, systemic antioxidant defense, and youthful cellular repair.</span>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {currentSlide.infographicType === "quality" && (
-                      <div className="py-4 text-center space-y-3">
-                        <ShieldCheck className="w-10 h-10 text-[var(--color-primary)] mx-auto" />
-                        <h3 className="text-lg sm:text-xl font-serif font-bold text-white">
-                          Rigorous Quality & Safety Standards
-                        </h3>
-                        <p className="text-xs text-gray-300 max-w-sm mx-auto">
-                          Every batch is cold-extracted in a US FDA registered facility and strictly tested for heavy metals, pesticides, and microbial safety.
-                        </p>
-                        <div className="flex flex-wrap justify-center gap-2 pt-2">
-                          <span className="px-2.5 py-1 rounded bg-[#0a0a0a] border border-[#1f1f1f] text-[11px] text-gray-300">GMP Certified</span>
-                          <span className="px-2.5 py-1 rounded bg-[#0a0a0a] border border-[#1f1f1f] text-[11px] text-gray-300">FSSAI Approved</span>
-                          <span className="px-2.5 py-1 rounded bg-[#0a0a0a] border border-[#1f1f1f] text-[11px] text-gray-300">Heavy Metal Free</span>
-                        </div>
-                      </div>
-                    )}
-
-                    {currentSlide.infographicType === "pack2" && (
-                      <div className="py-4 text-center space-y-3">
-                        <Package className="w-10 h-10 text-[var(--color-primary)] mx-auto" />
-                        <h3 className="text-xl sm:text-2xl font-serif font-bold text-white">
-                          Pack of 2 Value Bundle
-                        </h3>
-                        <p className="text-xs text-gray-300">
-                          Complete 50-day course: 2 x 500ml bottles for unbroken cellular nourishment.
-                        </p>
-                        <div className="p-3 bg-[#0a0a0a] rounded-xl border border-[var(--color-border-gold)] max-w-xs mx-auto">
-                          <span className="text-2xl font-bold text-white">₹1,798</span>
-                          <span className="text-sm text-gray-500 line-through ml-2">₹2,398</span>
-                          <span className="text-xs font-bold text-[var(--color-primary)] block mt-1">25% Discount Applied</span>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Infographic Footer */}
-                    <div className="border-t border-[#1f1f1f] pt-2 text-[10px] text-gray-500 text-center">
-                      Himroots Pure Himalayan Wellness Formulation
-                    </div>
-
-                  </div>
-                )}
+                {/* Visual Content: Real Product Detail Image */}
+                <img
+                  src={currentSlide.image}
+                  alt={currentSlide.title}
+                  className="w-full h-full object-contain"
+                />
 
                 {/* Overlaid Badges */}
                 <div className="absolute top-3 left-3 flex flex-col gap-1.5 pointer-events-none">
@@ -748,12 +612,12 @@ export default function ProductDetails() {
                     {currentSlide.badge || "Cold Pressed"}
                   </span>
                   <span className="bg-black/90 border border-[#1f1f1f] text-gray-300 text-[10px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">
-                    Unfiltered Pulp
+                    {isJuice ? "Unfiltered Pulp" : "Vegan Softgel"}
                   </span>
                 </div>
 
                 <div className="absolute top-3 right-3 bg-[var(--color-accent)] text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider pointer-events-none">
-                  25% OFF
+                  {isJuice ? "25% OFF" : "28% OFF"}
                 </div>
 
                 {/* Carousel Prev / Next Controls */}
@@ -778,7 +642,7 @@ export default function ProductDetails() {
                     {currentSlide.title}
                   </span>
                   <span className="text-gray-400 font-mono text-[10px] shrink-0">
-                    {activeSlideIndex + 1} / {CAROUSEL_SLIDES.length}
+                    {activeSlideIndex + 1} / {slides.length}
                   </span>
                 </div>
 
@@ -786,7 +650,7 @@ export default function ProductDetails() {
 
               {/* Thumbnail Strip */}
               <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
-                {CAROUSEL_SLIDES.map((slide, idx) => (
+                {slides.map((slide, idx) => (
                   <button
                     key={slide.id}
                     onClick={() => setActiveSlideIndex(idx)}
@@ -797,16 +661,7 @@ export default function ProductDetails() {
                     }`}
                     title={slide.title}
                   >
-                    {slide.image ? (
-                      <img src={slide.image} alt={slide.title} className="w-full h-full object-cover rounded" />
-                    ) : (
-                      <div className="w-full h-full bg-[#111] rounded flex flex-col items-center justify-center p-1 text-center">
-                        <Sparkles className="w-3.5 h-3.5 text-[var(--color-primary)] mb-0.5" />
-                        <span className="text-[8px] text-gray-300 font-bold leading-tight line-clamp-2">
-                          {slide.title}
-                        </span>
-                      </div>
-                    )}
+                    <img src={slide.image} alt={slide.title} className="w-full h-full object-cover rounded" />
                   </button>
                 ))}
               </div>
@@ -819,36 +674,36 @@ export default function ProductDetails() {
               {/* Category & Rating */}
               <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                 <span className="text-xs uppercase font-bold tracking-[0.2em] text-[var(--color-primary)]">
-                  Wild Himalayan Superfood
+                  {product.category || "Wild Himalayan Superfood"}
                 </span>
                 
-                {/* Rating from spec: 4.73/5 (Based on 11 reviews) */}
+                {/* Rating */}
                 <div className="flex items-center gap-1.5 bg-[#0a0a0a] border border-[#1f1f1f] px-2.5 py-1 rounded-full text-xs">
                   <div className="flex text-[var(--color-primary)]">
                     {[...Array(5)].map((_, i) => (
                       <Star key={i} className="w-3.5 h-3.5 fill-current" />
                     ))}
                   </div>
-                  <span className="font-bold text-white">4.73</span>
-                  <span className="text-gray-400">/ 5 (11 reviews)</span>
+                  <span className="font-bold text-white">{product.rating}</span>
+                  <span className="text-gray-400">/ 5 ({product.reviews} reviews)</span>
                 </div>
               </div>
 
-              {/* Title from spec */}
+              {/* Title from product */}
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-white mb-2 leading-tight">
-                Himalayan Sea Buckthorn Juice (Pulp) with Curcumin Extract | 500ml
+                {product.name}
               </h1>
 
-              {/* Tagline from spec */}
+              {/* Tagline from product */}
               <p className="text-sm font-medium text-[var(--color-primary-light)] mb-4">
-                For Energy, Immunity & Skin Health
+                {product.tagline}
               </p>
 
-              {/* Inventory Notice from summary */}
+              {/* Inventory Notice */}
               <div className="flex items-center gap-2 mb-6">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-950/60 border border-red-800/80 text-red-300 text-xs font-semibold">
                   <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                  Only 30 left
+                  Only {product.stock} left
                 </span>
                 <span className="text-xs text-gray-400">• High Demand</span>
               </div>
@@ -881,13 +736,23 @@ export default function ProductDetails() {
                           </div>
                         )}
                       </div>
-                      <span className="text-xs text-gray-400 mb-2">500ml bottle (25 days)</span>
+                      <span className="text-xs text-gray-400 mb-2">
+                        {isJuice ? "500ml bottle (25 days)" : "60 Softgels (30-60 days)"}
+                      </span>
                       <div className="flex items-baseline gap-2">
-                        <span className="text-lg font-bold text-white">₹899</span>
-                        <span className="text-xs text-gray-500 line-through">₹1,199</span>
-                        <span className="text-[10px] font-bold text-[var(--color-accent)]">25% off</span>
+                        <span className="text-lg font-bold text-white">
+                          ₹{isJuice ? "899" : (product.price || 1199)}
+                        </span>
+                        <span className="text-xs text-gray-500 line-through">
+                          ₹{isJuice ? "1,199" : (product.originalPrice || 1499)}
+                        </span>
+                        <span className="text-[10px] font-bold text-[var(--color-accent)]">
+                          {isJuice ? "25% off" : "20% off"}
+                        </span>
                       </div>
-                      <span className="text-[10px] text-gray-500 mt-1 font-mono">SKU: SBP-500</span>
+                      <span className="text-[10px] text-gray-500 mt-1 font-mono">
+                        SKU: {isJuice ? "SBP-500" : "SBC-60"}
+                      </span>
                     </button>
 
                     {/* Pack of 2 */}
@@ -911,25 +776,37 @@ export default function ProductDetails() {
                           </div>
                         )}
                       </div>
-                      <span className="text-xs text-gray-400 mb-2">2 x 500ml (50 days course)</span>
+                      <span className="text-xs text-gray-400 mb-2">
+                        {isJuice ? "2 x 500ml (50 days course)" : "2 x 60 Softgels (120 Softgels)"}
+                      </span>
                       <div className="flex items-baseline gap-2">
-                        <span className="text-lg font-bold text-white">₹1,798</span>
-                        <span className="text-xs text-gray-500 line-through">₹2,398</span>
-                        <span className="text-[10px] font-bold text-[var(--color-accent)]">25% off</span>
+                        <span className="text-lg font-bold text-white">
+                          ₹{isJuice ? "1,798" : "2,158"}
+                        </span>
+                        <span className="text-xs text-gray-500 line-through">
+                          ₹{isJuice ? "2,398" : "2,998"}
+                        </span>
+                        <span className="text-[10px] font-bold text-[var(--color-accent)]">
+                          {isJuice ? "25% off" : "28% off"}
+                        </span>
                       </div>
-                      <span className="text-[10px] text-gray-500 mt-1 font-mono">SKU: SBP-500-2</span>
+                      <span className="text-[10px] text-gray-500 mt-1 font-mono">
+                        SKU: {isJuice ? "SBP-500-2" : "SBC-60-2"}
+                      </span>
                     </button>
 
                   </div>
                 </div>
 
-                {/* EMI & Cashback Offers from summary */}
+                {/* EMI & Cashback Offers */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-4">
                   <div className="p-3 rounded-xl bg-[#0a0a0a] border border-[#1f1f1f] flex items-center gap-2.5">
                     <CreditCard className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
                     <div>
                       <span className="text-xs font-bold text-white block">0% EMI Available</span>
-                      <span className="text-[11px] text-gray-400">₹1 now + ₹449/mo (2 months)</span>
+                      <span className="text-[11px] text-gray-400">
+                        {isJuice ? "₹1 now + ₹449/mo (2 months)" : "₹1 now + ₹599/mo (2 months)"}
+                      </span>
                     </div>
                   </div>
                   <div className="p-3 rounded-xl bg-[#0a0a0a] border border-[#1f1f1f] flex items-center gap-2.5">
@@ -947,7 +824,7 @@ export default function ProductDetails() {
                     <Sparkles className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
                     <div>
                       <span className="text-xs font-bold text-white block">
-                        Member Price: ₹{selectedVariant === "pack-1" ? "854" : "1,708"}
+                        Member Price: ₹{isJuice ? (selectedVariant === "pack-1" ? "854" : "1,708") : (selectedVariant === "pack-1" ? "1,139" : "2,050")}
                       </span>
                       <span className="text-[11px] text-gray-400">
                         Save additional on recurring deliveries
@@ -1042,7 +919,7 @@ export default function ProductDetails() {
                   </button>
                   {openAccordion === "description" && (
                     <div className="px-4 pb-4 text-xs sm:text-sm text-gray-300 leading-relaxed border-t border-[#1f1f1f] pt-3">
-                      Himroots Himalayan Sea Buckthorn Juice (Pulp) with Curcumin Extract is a liquid pulp concentrate, wild-harvested from the pristine Himalayan region of Ladakh at ~12,000 ft. Revered for centuries in Tibetan medicine, this ancient berry now meets rigorous modern science, bringing time-tested wisdom to the challenges of contemporary health. Cold-pressed and unfiltered to preserve its naturally occurring nutrient richness, it contains no added sugar or fillers. Naturally rich in Vitamin C and powered by 190+ bioactives, including Vitamins C & E, carotenoids, polyphenols, plant sterols, and a rare full-spectrum Omega 3, 6, 7 & 9 profile, it delivers comprehensive support for healthy skin, immunity, liver function, cholesterol balance, gut health, and antioxidant defence.
+                      {product.description}
                     </div>
                   )}
                 </div>
@@ -1058,24 +935,20 @@ export default function ProductDetails() {
                   </button>
                   {openAccordion === "ingredients" && (
                     <div className="px-4 pb-4 text-xs sm:text-sm text-gray-300 leading-relaxed border-t border-[#1f1f1f] pt-3 space-y-3">
-                      <div>
-                        <strong className="text-white block mb-0.5">Sea Buckthorn (Hippophae rhamnoides) Pulp:</strong>
-                        Pure wild-harvested Himalayan pulp concentrate supplying 190+ active phytonutrients and full-spectrum Omega 3, 6, 7 & 9 with high naturally occurring Vitamin C.
-                      </div>
-                      <div>
-                        <strong className="text-white block mb-0.5">Curcumin Extract (Curcuma longa):</strong>
-                        High-purity standardized curcuminoids providing potent anti-inflammatory synergy and systemic antioxidant defense.
-                      </div>
-                      <div>
-                        <strong className="text-white block mb-0.5">Demineralized Water:</strong>
-                        Purified water base maintaining the optimal fluidity of the unfiltered liquid pulp concentrate.
-                      </div>
-                      <div>
-                        <strong className="text-white block mb-0.5">Potassium Sorbate & Sodium Benzoate:</strong>
-                        Permitted food-grade preservatives safeguarding active botanical omegas and vitamins against oxidation and microbial degradation throughout the 12-month shelf life.
-                      </div>
+                      {product.detailedIngredients && product.detailedIngredients.length > 0 ? (
+                        product.detailedIngredients.map((ing) => (
+                          <div key={ing.name}>
+                            <strong className="text-white block mb-0.5">{ing.name} ({ing.percentage}):</strong>
+                            <span className="text-gray-400">{ing.benefits.join(" • ")}</span>
+                          </div>
+                        ))
+                      ) : (
+                        product.ingredients.map((ing, idx) => (
+                          <div key={idx} className="text-gray-300">• {ing}</div>
+                        ))
+                      )}
                       <div className="text-[11px] text-gray-400 border-t border-[#1f1f1f] pt-2">
-                        Zero added sugar • Heavy metal free • Contaminant free • Non-GMO • cGMP manufactured
+                        {product.certifications.join(" • ")}
                       </div>
                     </div>
                   )}
@@ -1092,26 +965,18 @@ export default function ProductDetails() {
                   </button>
                   {openAccordion === "usage" && (
                     <div className="px-4 pb-4 text-xs sm:text-sm text-gray-300 leading-relaxed border-t border-[#1f1f1f] pt-3 space-y-2">
-                      <p className="flex items-start gap-2">
-                        <Check className="w-4 h-4 text-[var(--color-primary)] shrink-0 mt-0.5" />
-                        <span>Mix 10ml in 200ml water, twice daily.</span>
-                      </p>
-                      <p className="flex items-start gap-2">
-                        <Check className="w-4 h-4 text-[var(--color-primary)] shrink-0 mt-0.5" />
-                        <span>Best taken before meals (on an empty stomach for maximum absorption).</span>
-                      </p>
-                      <p className="flex items-start gap-2">
-                        <Check className="w-4 h-4 text-[var(--color-primary)] shrink-0 mt-0.5" />
-                        <span>Shake well before use (natural sediment is expected — sign of being unfiltered, not a defect).</span>
-                      </p>
-                      <p className="flex items-start gap-2">
-                        <Check className="w-4 h-4 text-[var(--color-primary)] shrink-0 mt-0.5" />
-                        <span>Benefits are cumulative — consistency over several weeks is recommended.</span>
-                      </p>
-                      <div className="p-3 rounded-lg bg-[#0a0a0a] border border-[#1f1f1f] text-xs text-gray-300 mt-2">
-                        <strong className="text-[var(--color-primary)] block mb-1">Important Note on Sediment:</strong>
-                        Natural black/dark sediment in the bottle is completely expected and is due to unfiltered sea buckthorn seed particles. This is the natural hallmark of raw, cold-pressed processing.
-                      </div>
+                      {product.directions.map((dir, idx) => (
+                        <p key={idx} className="flex items-start gap-2">
+                          <Check className="w-4 h-4 text-[var(--color-primary)] shrink-0 mt-0.5" />
+                          <span>{dir}</span>
+                        </p>
+                      ))}
+                      {isJuice && (
+                        <div className="p-3 rounded-lg bg-[#0a0a0a] border border-[#1f1f1f] text-xs text-gray-300 mt-2">
+                          <strong className="text-[var(--color-primary)] block mb-1">Important Note on Sediment:</strong>
+                          Natural separation and berry sediment are the hallmarks of cold-pressed, unfiltered sea buckthorn pulp containing pure essential fruit lipids. Shake vigorously before each pour.
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -1533,109 +1398,43 @@ export default function ProductDetails() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            {/* Sea Buckthorn Card */}
-            <div className="p-6 rounded-2xl bg-[#050505] border border-[var(--color-border-gold)] flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-primary)]">
-                    Primary Superfruit
-                  </span>
-                  <span className="text-xs bg-gold-gradient text-black font-extrabold px-2.5 py-0.5 rounded">
-                    Wild Harvested
-                  </span>
-                </div>
-                <h3 className="text-xl font-serif font-bold text-white mb-2">
-                  Sea Buckthorn (Hippophae rhamnoides) Pulp
-                </h3>
-                <p className="text-xs text-gray-300 leading-relaxed mb-5">
-                  Liquid pulp concentrate cold-pressed from Ladakh berries. Provides 190+ bioactives and a rare complete Omega 3, 6, 7 & 9 profile with up to 28x more Vitamin C than oranges.
-                </p>
-                <div className="space-y-2 text-xs text-gray-300">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
-                    <span>Omega-7 for deep cellular hydration</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
-                    <span>Rich in flavonoids (quercetin & kaempferol)</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
-                    <span>Unfiltered pulp retaining seed lipids</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Curcumin Extract Card */}
-            <div className="p-6 rounded-2xl bg-[#050505] border border-[#1f1f1f] flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-primary)]">
-                    Standardized Extract
-                  </span>
-                  <span className="text-xs bg-[#1a1a1a] text-gray-200 font-extrabold px-2.5 py-0.5 rounded border border-[#222]">
-                    High Potency
-                  </span>
-                </div>
-                <h3 className="text-xl font-serif font-bold text-white mb-2">
-                  Curcumin Extract (Curcuma longa)
-                </h3>
-                <p className="text-xs text-gray-300 leading-relaxed mb-5">
-                  Standardized curcuminoids providing potent anti-inflammatory synergy. Natural lipids in sea buckthorn enhance systemic bioavailability across tissues.
-                </p>
-                <div className="space-y-2 text-xs text-gray-300">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
-                    <span>Neutralises systemic oxidative stress</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
-                    <span>Supports healthy joint & mucosal response</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
-                    <span>Lipid-assisted rapid cellular uptake</span>
+            {product.detailedIngredients && product.detailedIngredients.length > 0 ? (
+              product.detailedIngredients.map((item, idx) => (
+                <div
+                  key={item.name}
+                  className={`p-6 rounded-2xl bg-[#050505] flex flex-col justify-between ${
+                    idx === 0 ? "border border-[var(--color-border-gold)]" : "border border-[#1f1f1f]"
+                  }`}
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-primary)]">
+                        {idx === 0 ? "Primary Botanical" : idx === 1 ? "Bioactive Synergy" : "Purity & Stability"}
+                      </span>
+                      <span className={`text-xs font-extrabold px-2.5 py-0.5 rounded ${
+                        idx === 0 ? "bg-gold-gradient text-black" : "bg-[#1a1a1a] text-gray-200 border border-[#222]"
+                      }`}>
+                        {item.percentage}
+                      </span>
+                    </div>
+                    <h3 className="text-xl font-serif font-bold text-white mb-2">
+                      {item.name}
+                    </h3>
+                    <p className="text-xs text-gray-300 leading-relaxed mb-5">
+                      {item.benefits[0]}
+                    </p>
+                    <div className="space-y-2 text-xs text-gray-300">
+                      {item.benefits.slice(1).map((b, bIdx) => (
+                        <div key={bIdx} className="flex items-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
+                          <span>{b}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            {/* Water & Preservatives Card */}
-            <div className="p-6 rounded-2xl bg-[#050505] border border-[#1f1f1f] flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-primary)]">
-                    Stability & Safety
-                  </span>
-                  <span className="text-xs bg-[#1a1a1a] text-gray-200 font-extrabold px-2.5 py-0.5 rounded border border-[#222]">
-                    Class II
-                  </span>
-                </div>
-                <h3 className="text-xl font-serif font-bold text-white mb-2">
-                  Demineralized Water & Permitted Preservatives
-                </h3>
-                <p className="text-xs text-gray-300 leading-relaxed mb-5">
-                  Demineralized water with Potassium Sorbate & Sodium Benzoate in strict permitted limits to prevent microbial fermentation and maintain fresh stability across 12 months.
-                </p>
-                <div className="space-y-2 text-xs text-gray-300">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
-                    <span>Preserves fragile omegas and Vitamin C</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
-                    <span>12 months stability from manufacture</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
-                    <span>FSSAI & cGMP manufacturing compliant</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+              ))
+            ) : null}
           </div>
         </section>
 
@@ -1873,7 +1672,7 @@ export default function ProductDetails() {
             </h2>
             <div className="w-16 h-0.5 bg-gold-gradient mx-auto mt-3 mb-3" />
             <p className="text-xs sm:text-sm text-gray-400">
-              Essential questions on Himalayan Sea Buckthorn Juice with Curcumin Extract.
+              Essential questions on {product.name}.
             </p>
           </div>
 

@@ -1,0 +1,894 @@
+-- =============================================================================
+-- HIMROOTS WELLNESS — COMPLETE DATABASE INITIALIZATION SCRIPT
+-- Run this in Supabase Studio -> SQL Editor -> New Query -> Run
+-- Includes: Products, Orders, Order Items, Profiles, Addresses, Cart Sync, RLS Policies
+-- =============================================================================
+
+-- =============================================================================
+-- HIMROOTS WELLNESS — DATABASE SCHEMA MIGRATION
+-- Database: PostgreSQL (Supabase)
+-- Description: Complete schema for Products, Orders, and Order Items with
+--              automated human-readable order numbers, RLS security policies,
+--              and index optimizations.
+-- =============================================================================
+
+-- Enable UUID extension if not already enabled
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+-- =============================================================================
+-- 1. PRODUCTS TABLE
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS public.products (
+    id TEXT PRIMARY KEY DEFAULT ('prod_' || substr(md5(random()::text), 1, 8)),
+    name TEXT NOT NULL,
+    slug TEXT UNIQUE NOT NULL,
+    tagline TEXT,
+    script_quote TEXT,
+    description TEXT NOT NULL,
+    price NUMERIC(10, 2) NOT NULL CHECK (price >= 0),
+    original_price NUMERIC(10, 2) CHECK (original_price IS NULL OR original_price >= price),
+    volume TEXT,
+    images TEXT[] NOT NULL DEFAULT '{}',
+    category TEXT NOT NULL,
+    ingredients TEXT[] DEFAULT '{}',
+    detailed_ingredients JSONB DEFAULT '[]'::jsonb,
+    benefits TEXT[] DEFAULT '{}',
+    certifications TEXT[] DEFAULT '{}',
+    directions TEXT[] DEFAULT '{}',
+    packaging_feature TEXT,
+    stock_status TEXT NOT NULL DEFAULT 'in_stock' CHECK (stock_status IN ('in_stock', 'low_stock', 'out_of_stock')),
+    stock_quantity INTEGER NOT NULL DEFAULT 50 CHECK (stock_quantity >= 0),
+    rating NUMERIC(3, 2) DEFAULT 5.0 CHECK (rating >= 0 AND rating <= 5),
+    reviews_count INTEGER DEFAULT 0 CHECK (reviews_count >= 0),
+    is_featured BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+-- Comments on products table
+COMMENT ON TABLE public.products IS 'Himroots high-altitude Himalayan wellness product catalog';
+COMMENT ON COLUMN public.products.id IS 'Unique identifier (supports legacy prod_XXX IDs and generated IDs)';
+COMMENT ON COLUMN public.products.slug IS 'URL-friendly unique slug for product routing';
+COMMENT ON COLUMN public.products.detailed_ingredients IS 'JSONB array with {name, percentage, benefits[]} breakdown';
+
+-- Indexes for products
+CREATE INDEX IF NOT EXISTS idx_products_slug ON public.products(slug);
+CREATE INDEX IF NOT EXISTS idx_products_category ON public.products(category);
+CREATE INDEX IF NOT EXISTS idx_products_is_featured ON public.products(is_featured);
+CREATE INDEX IF NOT EXISTS idx_products_stock_status ON public.products(stock_status);
+
+-- =============================================================================
+-- 2. ORDER NUMBER GENERATOR FUNCTION
+-- Format: HM-YYYYMMDD-XXXXX (e.g., HM-20260924-01042)
+-- Uses UTC date + atomic sequence to guarantee strict uniqueness without race conditions.
+-- Includes a loop guard against direct invocation collisions.
+-- =============================================================================
+CREATE SEQUENCE IF NOT EXISTS public.order_number_seq START WITH 1001;
+
+CREATE OR REPLACE FUNCTION public.generate_order_number()
+RETURNS TEXT AS $$
+DECLARE
+    v_date TEXT;
+    v_seq BIGINT;
+    v_num TEXT;
+    v_exists BOOLEAN;
+    v_tries INTEGER := 0;
+BEGIN
+    v_date := to_char(timezone('utc'::text, now()), 'YYYYMMDD');
+    LOOP
+        v_seq := nextval('public.order_number_seq');
+        v_num := 'HM-' || v_date || '-' || lpad((v_seq % 100000)::text, 5, '0');
+        
+        -- Guard against collisions if called directly or sequence wrapped
+        SELECT EXISTS(SELECT 1 FROM public.orders WHERE order_number = v_num) INTO v_exists;
+        IF NOT v_exists THEN
+            RETURN v_num;
+        END IF;
+
+        v_tries := v_tries + 1;
+        IF v_tries > 10 THEN
+            -- High concurrency fallback: append random 3-digit entropy
+            v_num := 'HM-' || v_date || '-' || lpad((v_seq % 100000)::text, 5, '0') || '-' || lpad(floor(random() * 900 + 100)::text, 3, '0');
+            RETURN v_num;
+        END IF;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql VOLATILE;
+
+-- =============================================================================
+-- 3. ORDERS TABLE
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS public.orders (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    order_number TEXT UNIQUE NOT NULL DEFAULT public.generate_order_number(),
+    customer_name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    shipping_address TEXT NOT NULL,
+    city TEXT NOT NULL,
+    state TEXT NOT NULL,
+    pincode TEXT NOT NULL,
+    country TEXT NOT NULL DEFAULT 'India',
+    subtotal NUMERIC(10, 2) NOT NULL CHECK (subtotal >= 0),
+    shipping_fee NUMERIC(10, 2) NOT NULL DEFAULT 0.00 CHECK (shipping_fee >= 0),
+    discount NUMERIC(10, 2) NOT NULL DEFAULT 0.00 CHECK (discount >= 0),
+    total NUMERIC(10, 2) NOT NULL CHECK (total >= 0),
+    payment_status TEXT NOT NULL DEFAULT 'pending' CHECK (payment_status IN ('pending', 'paid', 'failed', 'refunded')),
+    order_status TEXT NOT NULL DEFAULT 'pending' CHECK (order_status IN ('pending', 'paid', 'processing', 'shipped', 'delivered', 'cancelled', 'received', 'packed')),
+    razorpay_order_id TEXT,
+    razorpay_payment_id TEXT,
+    email_status TEXT NOT NULL DEFAULT 'pending' CHECK (email_status IN ('pending', 'sent', 'failed')),
+    email_error TEXT,
+    paid_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+-- Comments on orders table
+COMMENT ON TABLE public.orders IS 'Master transaction and customer shipping records for manual client fulfillment';
+COMMENT ON COLUMN public.orders.order_number IS 'Human-readable sequential order reference number (e.g. HM-20260924-0001)';
+COMMENT ON COLUMN public.orders.payment_status IS 'Razorpay payment lifecycle state';
+COMMENT ON COLUMN public.orders.order_status IS 'Manual fulfillment tracking state for the Himroots operations team';
+
+-- Indexes for orders
+CREATE INDEX IF NOT EXISTS idx_orders_order_number ON public.orders(order_number);
+CREATE INDEX IF NOT EXISTS idx_orders_email ON public.orders(email);
+CREATE INDEX IF NOT EXISTS idx_orders_phone ON public.orders(phone);
+CREATE INDEX IF NOT EXISTS idx_orders_created_at ON public.orders(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_orders_payment_status ON public.orders(payment_status);
+CREATE INDEX IF NOT EXISTS idx_orders_order_status ON public.orders(order_status);
+CREATE INDEX IF NOT EXISTS idx_orders_razorpay_order_id ON public.orders(razorpay_order_id);
+CREATE INDEX IF NOT EXISTS idx_orders_razorpay_payment_id ON public.orders(razorpay_payment_id);
+
+-- =============================================================================
+-- 4. ORDER ITEMS TABLE
+-- Stores historical snapshot of item name, quantity, price, and line subtotal.
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS public.order_items (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    order_id UUID NOT NULL REFERENCES public.orders(id) ON DELETE CASCADE,
+    product_id TEXT REFERENCES public.products(id) ON DELETE SET NULL,
+    product_name TEXT NOT NULL,
+    quantity INTEGER NOT NULL CHECK (quantity > 0),
+    price NUMERIC(10, 2) NOT NULL CHECK (price >= 0),
+    subtotal NUMERIC(10, 2) NOT NULL CHECK (subtotal >= 0),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+-- Comments on order_items table
+COMMENT ON TABLE public.order_items IS 'Line item records capturing immutable name & price at time of purchase';
+
+-- Indexes for order_items
+CREATE INDEX IF NOT EXISTS idx_order_items_order_id ON public.order_items(order_id);
+CREATE INDEX IF NOT EXISTS idx_order_items_product_id ON public.order_items(product_id);
+
+-- =============================================================================
+-- 5. CONTACT INQUIRIES TABLE
+-- Supporting the existing /contact form discovered in previous audit
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS public.contact_inquiries (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT,
+    order_id TEXT,
+    category TEXT NOT NULL DEFAULT 'General Enquiry',
+    subject TEXT NOT NULL DEFAULT 'General Inquiry',
+    message TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'unread' CHECK (status IN ('unread', 'read', 'responded', 'archived')),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+-- Indexes for contact_inquiries
+CREATE INDEX IF NOT EXISTS idx_contact_inquiries_created_at ON public.contact_inquiries(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_contact_inquiries_status ON public.contact_inquiries(status);
+
+-- =============================================================================
+-- 6. AUTOMATED UPDATED_AT TRIGGER
+-- =============================================================================
+CREATE OR REPLACE FUNCTION public.handle_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = timezone('utc'::text, now());
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trigger_products_updated_at ON public.products;
+CREATE TRIGGER trigger_products_updated_at
+    BEFORE UPDATE ON public.products
+    FOR EACH ROW
+    EXECUTE FUNCTION public.handle_updated_at();
+
+DROP TRIGGER IF EXISTS trigger_orders_updated_at ON public.orders;
+CREATE TRIGGER trigger_orders_updated_at
+    BEFORE UPDATE ON public.orders
+    FOR EACH ROW
+    EXECUTE FUNCTION public.handle_updated_at();
+
+-- =============================================================================
+-- 7. ROW LEVEL SECURITY (RLS) POLICIES
+-- =============================================================================
+
+-- Enable RLS on all tables
+ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.order_items ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.contact_inquiries ENABLE ROW LEVEL SECURITY;
+
+-- -----------------------------------------------------------------------------
+-- Products RLS
+-- Public can READ active products.
+-- Only authenticated service role can INSERT, UPDATE, or DELETE.
+-- -----------------------------------------------------------------------------
+DROP POLICY IF EXISTS "Public can view active products" ON public.products;
+CREATE POLICY "Public can view active products"
+    ON public.products
+    FOR SELECT
+    TO anon, authenticated
+    USING (true);
+
+DROP POLICY IF EXISTS "Service role manages products" ON public.products;
+CREATE POLICY "Service role manages products"
+    ON public.products
+    FOR ALL
+    TO service_role
+    USING (true)
+    WITH CHECK (true);
+
+-- -----------------------------------------------------------------------------
+-- Orders RLS
+-- Strict Security: Orders must NOT be publicly readable or writable.
+-- Customers cannot inspect other orders or tamper with payment_status.
+-- All order operations are handled through the backend via service_role.
+-- -----------------------------------------------------------------------------
+DROP POLICY IF EXISTS "Deny direct public read access to orders" ON public.orders;
+CREATE POLICY "Deny direct public read access to orders"
+    ON public.orders
+    FOR SELECT
+    TO anon, authenticated
+    USING (false);
+
+DROP POLICY IF EXISTS "Deny direct public write access to orders" ON public.orders;
+CREATE POLICY "Deny direct public write access to orders"
+    ON public.orders
+    FOR ALL
+    TO anon, authenticated
+    USING (false);
+
+DROP POLICY IF EXISTS "Service role has full access to orders" ON public.orders;
+CREATE POLICY "Service role has full access to orders"
+    ON public.orders
+    FOR ALL
+    TO service_role
+    USING (true)
+    WITH CHECK (true);
+
+-- -----------------------------------------------------------------------------
+-- Order Items RLS
+-- Strict Security: Follows orders security. No direct public access.
+-- -----------------------------------------------------------------------------
+DROP POLICY IF EXISTS "Deny direct public access to order items" ON public.order_items;
+CREATE POLICY "Deny direct public access to order items"
+    ON public.order_items
+    FOR ALL
+    TO anon, authenticated
+    USING (false);
+
+DROP POLICY IF EXISTS "Service role has full access to order items" ON public.order_items;
+CREATE POLICY "Service role has full access to order items"
+    ON public.order_items
+    FOR ALL
+    TO service_role
+    USING (true)
+    WITH CHECK (true);
+
+-- -----------------------------------------------------------------------------
+-- Contact Inquiries RLS
+-- Public can submit inquiries via the website contact form.
+-- Reading, updating, or deleting inquiries is restricted to service_role.
+-- -----------------------------------------------------------------------------
+DROP POLICY IF EXISTS "Public can submit contact inquiries" ON public.contact_inquiries;
+CREATE POLICY "Public can submit contact inquiries"
+    ON public.contact_inquiries
+    FOR INSERT
+    TO anon, authenticated
+    WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Deny public read on contact inquiries" ON public.contact_inquiries;
+CREATE POLICY "Deny public read on contact inquiries"
+    ON public.contact_inquiries
+    FOR SELECT
+    TO anon, authenticated
+    USING (false);
+
+DROP POLICY IF EXISTS "Service role has full access to contact inquiries" ON public.contact_inquiries;
+CREATE POLICY "Service role has full access to contact inquiries"
+    ON public.contact_inquiries
+    FOR ALL
+    TO service_role
+    USING (true)
+    WITH CHECK (true);
+
+-- =============================================================================
+-- 8. PAYMENT IDEMPOTENCY TABLE
+-- Stores processed Razorpay payment IDs & webhook event IDs to prevent duplicate
+-- processing across multi-instance or serverless deployments.
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS public.payment_idempotency (
+    key TEXT PRIMARY KEY,
+    order_id TEXT,
+    event_type TEXT,
+    status TEXT NOT NULL DEFAULT 'completed',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+CREATE INDEX IF NOT EXISTS idx_payment_idempotency_created_at ON public.payment_idempotency(created_at DESC);
+
+ALTER TABLE public.payment_idempotency ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Deny public access to payment idempotency" ON public.payment_idempotency;
+CREATE POLICY "Deny public access to payment idempotency"
+    ON public.payment_idempotency
+    FOR ALL
+    TO anon, authenticated
+    USING (false);
+
+DROP POLICY IF EXISTS "Service role manages idempotency" ON public.payment_idempotency;
+CREATE POLICY "Service role manages idempotency"
+    ON public.payment_idempotency
+    FOR ALL
+    TO service_role
+    USING (true)
+    WITH CHECK (true);
+
+-- =============================================================================
+-- 9. DISTRIBUTED RATE LIMITING TABLE
+-- Timestamped request logs keyed by client IP or identifier for multi-instance rate limiting.
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS public.rate_limits (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    key TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+CREATE INDEX IF NOT EXISTS idx_rate_limits_key_created ON public.rate_limits(key, created_at DESC);
+
+CREATE OR REPLACE FUNCTION public.prune_rate_limits()
+RETURNS void AS $$
+BEGIN
+    DELETE FROM public.rate_limits WHERE created_at < (now() - interval '1 hour');
+END;
+$$ LANGUAGE plpgsql;
+
+ALTER TABLE public.rate_limits ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Deny public access to rate limits" ON public.rate_limits;
+CREATE POLICY "Deny public access to rate limits"
+    ON public.rate_limits
+    FOR ALL
+    TO anon, authenticated
+    USING (false);
+
+DROP POLICY IF EXISTS "Service role manages rate limits" ON public.rate_limits;
+CREATE POLICY "Service role manages rate limits"
+    ON public.rate_limits
+    FOR ALL
+    TO service_role
+    USING (true)
+    WITH CHECK (true);
+
+-- =============================================================================
+-- 10. USER PROFILES TABLE (Linked to Supabase Auth users)
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS public.profiles (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    email TEXT NOT NULL,
+    full_name TEXT,
+    phone TEXT,
+    avatar_url TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+COMMENT ON TABLE public.profiles IS 'Extended customer profile records linked to auth.users';
+
+DROP TRIGGER IF EXISTS trigger_profiles_updated_at ON public.profiles;
+CREATE TRIGGER trigger_profiles_updated_at
+    BEFORE UPDATE ON public.profiles
+    FOR EACH ROW
+    EXECUTE FUNCTION public.handle_updated_at();
+
+-- Auto-create profile on Supabase auth user creation
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO public.profiles (id, email, full_name, phone)
+    VALUES (
+        NEW.id,
+        NEW.email,
+        COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name', ''),
+        COALESCE(NEW.raw_user_meta_data->>'phone', '')
+    )
+    ON CONFLICT (id) DO UPDATE SET
+        email = EXCLUDED.email,
+        full_name = COALESCE(NULLIF(EXCLUDED.full_name, ''), profiles.full_name),
+        phone = COALESCE(NULLIF(EXCLUDED.phone, ''), profiles.phone),
+        updated_at = timezone('utc'::text, now());
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+    AFTER INSERT ON auth.users
+    FOR EACH ROW
+    EXECUTE FUNCTION public.handle_new_user();
+
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view own profile" ON public.profiles;
+CREATE POLICY "Users can view own profile"
+    ON public.profiles
+    FOR SELECT
+    TO authenticated
+    USING (auth.uid() = id);
+
+DROP POLICY IF EXISTS "Users can update own profile" ON public.profiles;
+CREATE POLICY "Users can update own profile"
+    ON public.profiles
+    FOR UPDATE
+    TO authenticated
+    USING (auth.uid() = id)
+    WITH CHECK (auth.uid() = id);
+
+DROP POLICY IF EXISTS "Service role has full access to profiles" ON public.profiles;
+CREATE POLICY "Service role has full access to profiles"
+    ON public.profiles
+    FOR ALL
+    TO service_role
+    USING (true)
+    WITH CHECK (true);
+
+-- =============================================================================
+-- 11. ADDRESSES TABLE (Multiple saved shipping destinations per user)
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS public.addresses (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    label TEXT NOT NULL DEFAULT 'Home',
+    name TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    address_line1 TEXT NOT NULL,
+    address_line2 TEXT,
+    city TEXT NOT NULL,
+    state TEXT NOT NULL,
+    pincode TEXT NOT NULL,
+    country TEXT NOT NULL DEFAULT 'India',
+    is_default BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+COMMENT ON TABLE public.addresses IS 'Saved customer delivery destinations for fast checkout';
+
+CREATE INDEX IF NOT EXISTS idx_addresses_user_id ON public.addresses(user_id);
+CREATE INDEX IF NOT EXISTS idx_addresses_is_default ON public.addresses(user_id, is_default);
+
+CREATE OR REPLACE FUNCTION public.handle_default_address()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.is_default = true THEN
+        UPDATE public.addresses
+        SET is_default = false
+        WHERE user_id = NEW.user_id AND id != NEW.id;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trigger_default_address ON public.addresses;
+CREATE TRIGGER trigger_default_address
+    BEFORE INSERT OR UPDATE OF is_default ON public.addresses
+    FOR EACH ROW
+    WHEN (NEW.is_default = true)
+    EXECUTE FUNCTION public.handle_default_address();
+
+DROP TRIGGER IF EXISTS trigger_addresses_updated_at ON public.addresses;
+CREATE TRIGGER trigger_addresses_updated_at
+    BEFORE UPDATE ON public.addresses
+    FOR EACH ROW
+    EXECUTE FUNCTION public.handle_updated_at();
+
+ALTER TABLE public.addresses ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view own addresses" ON public.addresses;
+CREATE POLICY "Users can view own addresses"
+    ON public.addresses
+    FOR SELECT
+    TO authenticated
+    USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can insert own addresses" ON public.addresses;
+CREATE POLICY "Users can insert own addresses"
+    ON public.addresses
+    FOR INSERT
+    TO authenticated
+    WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can update own addresses" ON public.addresses;
+CREATE POLICY "Users can update own addresses"
+    ON public.addresses
+    FOR UPDATE
+    TO authenticated
+    USING (auth.uid() = user_id)
+    WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can delete own addresses" ON public.addresses;
+CREATE POLICY "Users can delete own addresses"
+    ON public.addresses
+    FOR DELETE
+    TO authenticated
+    USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Service role has full access to addresses" ON public.addresses;
+CREATE POLICY "Service role has full access to addresses"
+    ON public.addresses
+    FOR ALL
+    TO service_role
+    USING (true)
+    WITH CHECK (true);
+
+-- =============================================================================
+-- 12. USER CARTS TABLE (Cloud-persisted shopping cart for logged-in users)
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS public.user_carts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID UNIQUE NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    items JSONB NOT NULL DEFAULT '[]'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+COMMENT ON TABLE public.user_carts IS 'Cloud-synchronized persistent cart items for logged-in customers';
+
+CREATE INDEX IF NOT EXISTS idx_user_carts_user_id ON public.user_carts(user_id);
+
+DROP TRIGGER IF EXISTS trigger_user_carts_updated_at ON public.user_carts;
+CREATE TRIGGER trigger_user_carts_updated_at
+    BEFORE UPDATE ON public.user_carts
+    FOR EACH ROW
+    EXECUTE FUNCTION public.handle_updated_at();
+
+ALTER TABLE public.user_carts ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view own cart" ON public.user_carts;
+CREATE POLICY "Users can view own cart"
+    ON public.user_carts
+    FOR SELECT
+    TO authenticated
+    USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can manage own cart" ON public.user_carts;
+CREATE POLICY "Users can manage own cart"
+    ON public.user_carts
+    FOR ALL
+    TO authenticated
+    USING (auth.uid() = user_id)
+    WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Service role has full access to user_carts" ON public.user_carts;
+CREATE POLICY "Service role has full access to user_carts"
+    ON public.user_carts
+    FOR ALL
+    TO service_role
+    USING (true)
+    WITH CHECK (true);
+
+-- =============================================================================
+-- 13. USER ORDER HISTORY (Linking orders to user_id and granting user RLS)
+-- =============================================================================
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_schema = 'public' AND table_name = 'orders' AND column_name = 'user_id'
+    ) THEN
+        ALTER TABLE public.orders ADD COLUMN user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
+        CREATE INDEX IF NOT EXISTS idx_orders_user_id ON public.orders(user_id);
+    END IF;
+END $$;
+
+-- Allow authenticated users to view orders matching user_id or authenticated email
+DROP POLICY IF EXISTS "Users can view own orders" ON public.orders;
+CREATE POLICY "Users can view own orders"
+    ON public.orders
+    FOR SELECT
+    TO authenticated
+    USING (user_id = auth.uid() OR email = (auth.jwt() ->> 'email')::text);
+
+-- Allow authenticated users to view items for their own orders
+DROP POLICY IF EXISTS "Users can view own order items" ON public.order_items;
+CREATE POLICY "Users can view own order items"
+    ON public.order_items
+    FOR SELECT
+    TO authenticated
+    USING (
+        EXISTS (
+            SELECT 1 FROM public.orders 
+            WHERE orders.id = order_items.order_id 
+            AND (orders.user_id = auth.uid() OR orders.email = (auth.jwt() ->> 'email')::text)
+        )
+    );
+
+
+
+
+-- =============================================================================
+-- USER ACCOUNTS, CART STORAGE, ADDRESSES & RLS
+-- =============================================================================
+
+-- =============================================================================
+-- HIMROOTS WELLNESS — USER ACCOUNTS, CART STORAGE, ADDRESSES & ORDER HISTORY
+-- Migration: 20260930_user_accounts_and_cart.sql
+-- Database: PostgreSQL (Supabase)
+-- =============================================================================
+
+-- Enable UUID extension if not already enabled
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+-- =============================================================================
+-- 1. PROFILES TABLE (Linked to Supabase Auth users)
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS public.profiles (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    email TEXT NOT NULL,
+    full_name TEXT,
+    phone TEXT,
+    avatar_url TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+COMMENT ON TABLE public.profiles IS 'Extended customer profile records linked to auth.users';
+
+-- Generic updated_at timestamp handler function
+CREATE OR REPLACE FUNCTION public.handle_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = timezone('utc'::text, now());
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger for profiles updated_at
+DROP TRIGGER IF EXISTS trigger_profiles_updated_at ON public.profiles;
+CREATE TRIGGER trigger_profiles_updated_at
+    BEFORE UPDATE ON public.profiles
+    FOR EACH ROW
+    EXECUTE FUNCTION public.handle_updated_at();
+
+-- Function & Trigger to automatically create a profile entry when a user signs up
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO public.profiles (id, email, full_name, phone)
+    VALUES (
+        NEW.id,
+        NEW.email,
+        COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name', ''),
+        COALESCE(NEW.raw_user_meta_data->>'phone', '')
+    )
+    ON CONFLICT (id) DO UPDATE SET
+        email = EXCLUDED.email,
+        full_name = COALESCE(NULLIF(EXCLUDED.full_name, ''), profiles.full_name),
+        phone = COALESCE(NULLIF(EXCLUDED.phone, ''), profiles.phone),
+        updated_at = timezone('utc'::text, now());
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+    AFTER INSERT ON auth.users
+    FOR EACH ROW
+    EXECUTE FUNCTION public.handle_new_user();
+
+-- Enable RLS on profiles
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view own profile" ON public.profiles;
+CREATE POLICY "Users can view own profile"
+    ON public.profiles
+    FOR SELECT
+    TO authenticated
+    USING (auth.uid() = id);
+
+DROP POLICY IF EXISTS "Users can update own profile" ON public.profiles;
+CREATE POLICY "Users can update own profile"
+    ON public.profiles
+    FOR UPDATE
+    TO authenticated
+    USING (auth.uid() = id)
+    WITH CHECK (auth.uid() = id);
+
+DROP POLICY IF EXISTS "Service role has full access to profiles" ON public.profiles;
+CREATE POLICY "Service role has full access to profiles"
+    ON public.profiles
+    FOR ALL
+    TO service_role
+    USING (true)
+    WITH CHECK (true);
+
+-- =============================================================================
+-- 2. ADDRESSES TABLE (Multiple saved shipping destinations per user)
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS public.addresses (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    label TEXT NOT NULL DEFAULT 'Home',
+    name TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    address_line1 TEXT NOT NULL,
+    address_line2 TEXT,
+    city TEXT NOT NULL,
+    state TEXT NOT NULL,
+    pincode TEXT NOT NULL,
+    country TEXT NOT NULL DEFAULT 'India',
+    is_default BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+COMMENT ON TABLE public.addresses IS 'Saved customer delivery destinations for fast checkout';
+
+CREATE INDEX IF NOT EXISTS idx_addresses_user_id ON public.addresses(user_id);
+CREATE INDEX IF NOT EXISTS idx_addresses_is_default ON public.addresses(user_id, is_default);
+
+-- Auto-manage default address (only 1 default per user)
+CREATE OR REPLACE FUNCTION public.handle_default_address()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.is_default = true THEN
+        UPDATE public.addresses
+        SET is_default = false
+        WHERE user_id = NEW.user_id AND id != NEW.id;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trigger_default_address ON public.addresses;
+CREATE TRIGGER trigger_default_address
+    BEFORE INSERT OR UPDATE OF is_default ON public.addresses
+    FOR EACH ROW
+    WHEN (NEW.is_default = true)
+    EXECUTE FUNCTION public.handle_default_address();
+
+-- Updated_at trigger for addresses
+DROP TRIGGER IF EXISTS trigger_addresses_updated_at ON public.addresses;
+CREATE TRIGGER trigger_addresses_updated_at
+    BEFORE UPDATE ON public.addresses
+    FOR EACH ROW
+    EXECUTE FUNCTION public.handle_updated_at();
+
+-- Enable RLS on addresses
+ALTER TABLE public.addresses ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view own addresses" ON public.addresses;
+CREATE POLICY "Users can view own addresses"
+    ON public.addresses
+    FOR SELECT
+    TO authenticated
+    USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can insert own addresses" ON public.addresses;
+CREATE POLICY "Users can insert own addresses"
+    ON public.addresses
+    FOR INSERT
+    TO authenticated
+    WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can update own addresses" ON public.addresses;
+CREATE POLICY "Users can update own addresses"
+    ON public.addresses
+    FOR UPDATE
+    TO authenticated
+    USING (auth.uid() = user_id)
+    WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can delete own addresses" ON public.addresses;
+CREATE POLICY "Users can delete own addresses"
+    ON public.addresses
+    FOR DELETE
+    TO authenticated
+    USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Service role has full access to addresses" ON public.addresses;
+CREATE POLICY "Service role has full access to addresses"
+    ON public.addresses
+    FOR ALL
+    TO service_role
+    USING (true)
+    WITH CHECK (true);
+
+-- =============================================================================
+-- 3. USER CARTS TABLE (Synchronized cart storage across devices)
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS public.user_carts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID UNIQUE NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    items JSONB NOT NULL DEFAULT '[]'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+COMMENT ON TABLE public.user_carts IS 'Cloud-synchronized persistent cart items for logged-in customers';
+
+CREATE INDEX IF NOT EXISTS idx_user_carts_user_id ON public.user_carts(user_id);
+
+DROP TRIGGER IF EXISTS trigger_user_carts_updated_at ON public.user_carts;
+CREATE TRIGGER trigger_user_carts_updated_at
+    BEFORE UPDATE ON public.user_carts
+    FOR EACH ROW
+    EXECUTE FUNCTION public.handle_updated_at();
+
+-- Enable RLS on user_carts
+ALTER TABLE public.user_carts ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view own cart" ON public.user_carts;
+CREATE POLICY "Users can view own cart"
+    ON public.user_carts
+    FOR SELECT
+    TO authenticated
+    USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can manage own cart" ON public.user_carts;
+CREATE POLICY "Users can manage own cart"
+    ON public.user_carts
+    FOR ALL
+    TO authenticated
+    USING (auth.uid() = user_id)
+    WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Service role has full access to user_carts" ON public.user_carts;
+CREATE POLICY "Service role has full access to user_carts"
+    ON public.user_carts
+    FOR ALL
+    TO service_role
+    USING (true)
+    WITH CHECK (true);
+
+-- =============================================================================
+-- 4. LINK ORDERS TO USER ID & CONFIGURE USER ORDER HISTORY RLS
+-- =============================================================================
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_schema = 'public' AND table_name = 'orders' AND column_name = 'user_id'
+    ) THEN
+        ALTER TABLE public.orders ADD COLUMN user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
+        CREATE INDEX IF NOT EXISTS idx_orders_user_id ON public.orders(user_id);
+    END IF;
+END $$;
+
+-- Update RLS for orders so authenticated users can view their own orders
+DROP POLICY IF EXISTS "Users can view own orders" ON public.orders;
+CREATE POLICY "Users can view own orders"
+    ON public.orders
+    FOR SELECT
+    TO authenticated
+    USING (user_id = auth.uid() OR email = (auth.jwt() ->> 'email')::text);
+
+-- Update RLS for order_items so authenticated users can view items belonging to their orders
+DROP POLICY IF EXISTS "Users can view own order items" ON public.order_items;
+CREATE POLICY "Users can view own order items"
+    ON public.order_items
+    FOR SELECT
+    TO authenticated
+    USING (
+        EXISTS (
+            SELECT 1 FROM public.orders 
+            WHERE orders.id = order_items.order_id 
+            AND (orders.user_id = auth.uid() OR orders.email = (auth.jwt() ->> 'email')::text)
+        )
+    );

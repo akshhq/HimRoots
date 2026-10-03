@@ -18,6 +18,7 @@ interface AuthState {
   updateProfile: (updates: Partial<ProfileRow>) => Promise<{ error: string | null }>;
   fetchProfile: (userId: string) => Promise<void>;
   resetPasswordForEmail: (email: string) => Promise<{ error: string | null }>;
+  resendConfirmationEmail: (email: string) => Promise<{ error: string | null }>;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -110,6 +111,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       });
 
       if (error) {
+        if (error.message.toLowerCase().includes('email not confirmed')) {
+          return {
+            error: 'Your email has not been confirmed yet. Please verify your email inbox or click resend below.',
+          };
+        }
         return { error: error.message };
       }
 
@@ -218,6 +224,23 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       return { error: null };
     } catch (err: any) {
       return { error: err.message || 'Failed to send password reset email.' };
+    }
+  },
+
+  resendConfirmationEmail: async (email) => {
+    if (!supabase || !isSupabaseConfigured) {
+      return { error: 'Authentication service is not configured.' };
+    }
+
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email.trim().toLowerCase(),
+      });
+      if (error) return { error: error.message };
+      return { error: null };
+    } catch (err: any) {
+      return { error: err.message || 'Failed to resend confirmation email.' };
     }
   },
 }));

@@ -22,6 +22,15 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 
 COMMENT ON TABLE public.profiles IS 'Extended customer profile records linked to auth.users';
 
+-- Generic updated_at timestamp handler function
+CREATE OR REPLACE FUNCTION public.handle_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = timezone('utc'::text, now());
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
 -- Trigger for profiles updated_at
 DROP TRIGGER IF EXISTS trigger_profiles_updated_at ON public.profiles;
 CREATE TRIGGER trigger_profiles_updated_at

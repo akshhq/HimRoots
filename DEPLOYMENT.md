@@ -1,7 +1,5 @@
 # DEPLOYMENT GUIDE — Himroots Wellness
-> Last updated: September 2026
-
-This document covers the complete deployment architecture for the Himroots Wellness website.
+> Authoritative production deployment guide for frontend, backend, database, and payment gateways.
 
 ---
 
@@ -9,140 +7,103 @@ This document covers the complete deployment architecture for the Himroots Welln
 
 ```
 Browser (himroots.in)
-        |
-        | HTTPS
-        v
-Apache / cPanel Hosting  <-- Frontend SPA (dist/)
-        |
-        | VITE_API_BASE_URL (HTTPS)
-        v
-Backend API Server  <-- Node.js / Express (server/)
-        |
-        | Service Role Key
-        v
-Supabase (PostgreSQL + Storage)
-        |
-        | Razorpay SDK + HMAC Secret
-        v
-Razorpay Payment Gateway
-        |
-        | Email API Key
-        v
-Resend / Brevo (Transactional Email)
+        │
+        │ HTTPS
+        ▼
+Static Hosting (Apache /public_html/ or Vercel Edge)  <-- Frontend SPA (dist/)
+        │
+        │ VITE_API_BASE_URL (HTTPS)
+        ▼
+Backend API Server (Render / Railway / VPS)           <-- Node.js / Express (server/)
+        │
+        ├─► Supabase Cloud (PostgreSQL + Auth + Storage)
+        ├─► Razorpay Cloud (Standard Checkout + Webhook HMAC)
+        └─► Resend / Brevo (Transactional Email Dispatch)
 ```
 
 ---
 
-## PART 1: FRONTEND DEPLOYMENT (Apache / cPanel)
+## PART 1: FRONTEND DEPLOYMENT
 
-### What to upload to /public_html/
-
-After running `npm run build`, upload only the contents of the `dist/` folder:
+### Static Assets Manifest (`dist/`)
+Upon running `npm run build`, the production bundle is compiled into `dist/`:
 
 ```
-public_html/
-├── index.html         <-- SPA entry point
-├── .htaccess          <-- Apache SPA routing rules
-├── assets/            <-- Hashed JS and CSS bundles
-│   ├── index-XXXXXX.js
-│   └── index-XXXXXX.css
-├── images/            <-- All product and site images
-├── favicon.png
-├── favicon.svg
+dist/
+├── index.html                   <-- SPA entry point with Google Fonts & meta tags
+├── .htaccess                    <-- Apache mod_rewrite SPA routing rules
+├── assets/                      <-- Fingerprinted and minified JS & CSS bundles
+│   ├── index-*.js
+│   └── index-*.css
+├── images/                      <-- All botanical, branding, and product card assets
+│   ├── himroots-logo.png        <-- Unified brand logo
+│   ├── instagram.png            <-- Official Instagram glyph
+│   ├── pulp-*.jpg               <-- 8 Juice visual detail cards
+│   ├── capsules-*.jpg           <-- 7 Capsule visual detail cards
+│   └── himalayan-*.jpg          <-- Terroir & harvesting photography
+├── android-chrome-*.png
+├── apple-touch-icon.png
+├── favicon.ico / favicon.svg
 ├── icons.svg
 ├── robots.txt
+├── site.webmanifest
 └── sitemap.xml
 ```
 
-**DO NOT upload:**
-- src/
-- node_modules/
-- server/
-- supabase/
-- .git/
-- .env
-- package.json
-- tsconfig files
+**DO NOT upload to webroot:**
+- `src/`
+- `node_modules/`
+- `server/`
+- `supabase/`
+- `.git/`
+- `.env`
+- `package.json`
+- `tsconfig.*`
 
-### Build steps
-
-Before building, you must know the backend API URL:
-
+### Frontend Build Execution
 ```bash
-# Set environment for production build
-VITE_API_BASE_URL=https://your-backend.onrender.com npm run build
-
-# Or create a .env.production file:
-# VITE_API_BASE_URL=https://your-backend.onrender.com
-# VITE_SUPABASE_URL=https://your-project.supabase.co
-# VITE_SUPABASE_ANON_KEY=eyJ...
-# VITE_RAZORPAY_KEY_ID=rzp_live_...
-
-npm run build
+# Production client compilation
+npm run build:client
 ```
+Ensure client environment variables are set during build or present in `.env.production`:
+- `VITE_API_BASE_URL=https://api.himroots.in` (or your Render URL)
+- `VITE_SUPABASE_URL=https://your-project.supabase.co`
+- `VITE_SUPABASE_ANON_KEY=eyJ...`
+- `VITE_RAZORPAY_KEY_ID=rzp_live_...`
 
-### SPA Routing (.htaccess)
-
-The `.htaccess` in `public/` (and copied to `dist/`) handles SPA routing:
-- All routes (/cart, /shop, /checkout, etc.) rewrite to index.html
-- Static files (images, assets) are served directly
-- /api/ requests are NOT rewritten (reserved for reverse proxy or cross-origin API)
-
-This file must be present in /public_html/ for React Router (BrowserRouter) to work.
+### Apache / cPanel / `public_html/` Deployment
+1. Upload the entire contents of `dist/` into `/public_html/`.
+2. Confirm `.htaccess` is present in `/public_html/` (enable "Show Hidden Files" in cPanel File Manager).
+3. The `.htaccess` file ensures all client routes (`/shop`, `/products/:slug`, `/cart`, `/checkout`, `/account`, `/auth`, `/about-sea-buckthorn`) are rewritten to `index.html` without 404 errors.
 
 ---
 
-## PART 2: BACKEND DEPLOYMENT (Separate Node.js Platform)
+## PART 2: BACKEND DEPLOYMENT (Node.js Platform)
 
-### Why the backend cannot run on Apache/cPanel
+*Standard cPanel shared hosting cannot execute Node.js background services. Deploy `server/` to Render, Railway, Fly.io, or an Ubuntu VPS.*
 
-Standard cPanel / FTP shared hosting is Apache-only. Apache cannot execute Node.js processes.
-The Express backend (`server/`) MUST be deployed to a Node.js platform.
+### Render Web Service Deployment (Recommended)
+1. In Render, select **New Web Service** and link the `HimRoots` repository.
+2. Configuration:
+   - **Environment:** Node
+   - **Build Command:** `npm install && npm run build:server`
+   - **Start Command:** `node dist-server/index.js`
+   - **Plan:** Free or Starter
+3. Supply all backend environment variables in the Render Dashboard.
+4. Verify deployment health check:
+   ```bash
+   curl https://himroots-api.onrender.com/api/health
+   # Response: {"status":"ok","service":"Himroots Wellness API","integrations":{"supabase":"configured"}}
+   ```
 
-### Recommended Platforms (Free Tier Available)
+### Backend Production Environment Variables
 
-| Platform | Free Tier | Notes |
-|----------|-----------|-------|
-| Render | Yes | Spins down after 15min inactivity on free tier |
-| Railway | Yes | $5 credit/month free |
-| Fly.io | Yes | 3 free VMs |
-| DigitalOcean App Platform | No | $5/month minimum |
-
-### Render Deployment (Recommended for simplicity)
-
-1. Push code to GitHub.
-2. Create a new Render account at render.com.
-3. Click "New Web Service" > Connect GitHub > Select the HimRoots repo.
-4. Configure:
-   - **Environment**: Node
-   - **Build Command**: `npm install && npm run build:server` (or `npm run build` to build both client and server)
-   - **Start Command**: `npm start` (executes `node dist-server/index.js` using vanilla Node without devDependencies)
-   - **Root Directory**: (leave blank — uses project root)
-5. Add all environment variables from `.env.example` in the Render dashboard.
-6. Deploy. Render will give you a URL like: `https://himroots-api.onrender.com`
-
-### Production Server Standalone Execution
-
-The backend includes a zero-runtime-dependency esbuild bundle step:
-```bash
-# Build production server bundle
-npm run build:server
-# Result: dist-server/index.js (single bundled Node executable)
-
-# Production runtime (no devDependencies needed):
-npm install --omit=dev
-npm start
-# Runs: node dist-server/index.js
-```
-
-### Required environment variables on the backend platform
-
-```
+```env
 NODE_ENV=production
 PORT=5000
 CORS_ORIGIN=https://himroots.in,https://www.himroots.in
 
-SUPABASE_URL=https://your-project-id.supabase.co
+SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=eyJ...your-service-role-key...
 
 RAZORPAY_KEY_ID=rzp_live_...
@@ -154,147 +115,111 @@ EMAIL_API_KEY=re_...
 EMAIL_FROM=Himroots Wellness <orders@himroots.in>
 CLIENT_ORDER_EMAIL=orders@himroots.in
 CLIENT_SUPPORT_EMAIL=support@himroots.in
+
+ALERT_WEBHOOK_URL=https://discord.com/api/webhooks/... (or Slack)
 ```
 
-### Webhook Configuration (Razorpay Dashboard)
-1. Go to Razorpay Dashboard > Settings > Webhooks > Add New Webhook.
-2. Webhook URL: `https://api.himroots.in/api/webhooks/razorpay` (or your Render URL: `https://himroots-api.onrender.com/api/webhooks/razorpay`).
-3. Secret: Enter a strong random secret and copy it into `RAZORPAY_WEBHOOK_SECRET`.
-4. Active Events: Select `payment.captured` and `order.paid`.
-5. Save. The backend will verify raw HMAC-SHA256 signatures and atomically mark orders paid & decrement inventory even if customers close their browser tab.
+---
+
+## PART 3: DATABASE & AUTHENTICATION (Supabase)
+
+### Setup & Schema Initialization
+1. Create a Supabase project at [supabase.com](https://supabase.com) in region **ap-south-1 (Mumbai)**.
+2. Open the Supabase **SQL Editor**.
+3. Execute [`supabase/00_complete_setup.sql`](supabase/00_complete_setup.sql) to create all 8 core tables, security policies, triggers, and seed data:
+
+| Table | Purpose | Public RLS Policy |
+| :--- | :--- | :--- |
+| `products` | Product catalog & stock counts | Public SELECT only; service_role WRITE |
+| `orders` | Customer order transactions | DENY all public access; service_role only |
+| `order_items` | Itemized line items per order | DENY all public access; service_role only |
+| `contact_inquiries` | Support form submissions | Public INSERT only; service_role manage |
+| `profiles` | User profile data | Users SELECT/UPDATE own profile via `auth.uid()` |
+| `addresses` | Saved customer shipping addresses | Users manage own addresses via `auth.uid()` |
+| `user_carts` | Cross-device shopping cart | Users manage own cart via `auth.uid()` |
+| `payment_idempotency` | Payment deduplication logs | service_role only |
+| `rate_limits` | Distributed IP rate limiting | service_role only |
+
+4. **Verify Database Configuration:**
+   Execute the automated verification script:
+   ```bash
+   node scripts/verify-auth.js
+   ```
+
+5. **Supabase Auth URL Configuration:**
+   - Under **Authentication > URL Configuration**:
+     - Site URL: `https://himroots.in`
+     - Additional Redirect URLs:
+       - `https://himroots.in/reset-password`
+       - `https://www.himroots.in/reset-password`
+       - `http://localhost:5173/reset-password`
 
 ---
 
-## PART 3: DATABASE (Supabase)
+## PART 4: PAYMENT GATEWAY (Razorpay)
 
-### Setup steps
+### Live Mode Activation
+1. Complete Razorpay Business KYC at [dashboard.razorpay.com](https://dashboard.razorpay.com).
+2. Toggle dashboard switch to **Live Mode**.
+3. Generate Live API Keys under **Settings > API Keys**.
+4. Populate `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET`.
 
-1. Create a free Supabase project at supabase.com.
-2. Go to SQL Editor and run `supabase/schema.sql` to create all tables and RLS policies.
-3. Optionally run `supabase/seed.sql` to seed product data.
-4. Go to Project Settings > API and copy:
-   - **Project URL** → `SUPABASE_URL` (backend) and `VITE_SUPABASE_URL` (frontend)
-   - **anon/public key** → `VITE_SUPABASE_ANON_KEY` (frontend)
-   - **service_role key** → `SUPABASE_SERVICE_ROLE_KEY` (backend only, never expose to frontend)
-
-### Database tables
-
-| Table | Purpose |
-|-------|---------|
-| products | Product catalog |
-| orders | Customer orders |
-| order_items | Line items per order |
-| contact_inquiries | Contact form submissions |
-
-### Backup recommendations
-
-- Enable Supabase Point-in-Time Recovery (PITR) on paid plans for automated backups.
-- On the free plan, export orders periodically from the Supabase Table Editor.
-- Never rely solely on the in-memory fallback for production orders.
+### Webhook Configuration
+1. Under **Settings > Webhooks > Add New Webhook**:
+   - Webhook URL: `https://api.himroots.in/api/webhooks/razorpay` (or your Render URL)
+   - Secret: Enter a strong random secret and copy to `RAZORPAY_WEBHOOK_SECRET`
+   - Active Events: `payment.captured`, `order.paid`
+2. Backend verifies HMAC SHA256 signatures with `crypto.timingSafeEqual`, updating order records and triggering inventory decrements even if the customer drops network connection.
 
 ---
 
-## PART 4: PAYMENT (Razorpay)
+## PART 5: TRANSACTIONAL EMAIL CONFIGURATION
 
-### Live key activation
-
-1. Log in to dashboard.razorpay.com.
-2. Complete KYC (business verification — required for live payments).
-3. Go to Settings > API Keys > Generate Live Keys.
-4. Replace all `rzp_test_` keys with `rzp_live_` keys in both:
-   - Backend environment: `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`
-   - Frontend build env: `VITE_RAZORPAY_KEY_ID`
-5. Test a real small payment end-to-end before public launch.
+### Resend Setup (Recommended)
+1. Add domain `himroots.in` in [resend.com/domains](https://resend.com/domains).
+2. Add DNS records (SPF, DKIM) at your domain registrar.
+3. Once verified, generate an API key and set `EMAIL_API_KEY=re_...`.
+4. Set `EMAIL_FROM=Himroots Wellness <orders@himroots.in>`.
+5. Inquiries and order notifications will dispatch reliably without blocking payment confirmations.
 
 ---
 
-## PART 5: EMAIL
+## PART 6: DOMAIN, SSL & UPTIME MONITORING
 
-### Resend (Recommended)
-
-1. Sign up at resend.com.
-2. Add and verify domain `himroots.in` (adds DNS records: SPF, DKIM).
-3. Create API key > copy to `EMAIL_API_KEY` on backend.
-4. Set `EMAIL_PROVIDER=resend`.
-5. Set `EMAIL_FROM=Himroots Wellness <orders@himroots.in>`.
-6. Set `CLIENT_ORDER_EMAIL=orders@himroots.in` and `CLIENT_SUPPORT_EMAIL=support@himroots.in`.
-
-### Brevo (Alternative)
-
-1. Sign up at brevo.com.
-2. Go to Settings > Senders and Domains > Add and verify domain.
-3. Generate SMTP/API key > copy to `EMAIL_API_KEY`.
-4. Set `EMAIL_PROVIDER=brevo` on backend.
+### DNS & SSL Configuration
+- Point domain `A` record to your hosting IP (or Vercel CNAME).
+- Install Let's Encrypt SSL certificate and enforce HTTPS redirect.
+- Configure UptimeRobot to ping:
+  - `https://api.himroots.in/api/health` every 5 minutes.
+  - `https://himroots.in/` every 5 minutes.
 
 ---
 
-## PART 6: DOMAIN & SSL (himroots.in)
+## FINAL PRE-LAUNCH CHECKLIST
 
-### SSL Certificate
+### Developer Checks
+- [ ] `supabase/00_complete_setup.sql` executed on live Supabase instance.
+- [ ] `node scripts/verify-auth.js` passes with 100% green checks.
+- [ ] Dual production build compiles cleanly: `npm run build`.
+- [ ] Oxlint passes with 0 warnings, 0 errors: `npm run lint`.
+- [ ] Backend test suite passes: `npm run test:backend`.
+- [ ] Frontend deployed and `.htaccess` verified in `/public_html/`.
+- [ ] Test all routes directly in browser:
+  - `/` (Home)
+  - `/shop` (Catalog)
+  - `/products/sea-buckthorn-pulp` (Juice details + 8 cards)
+  - `/products/sea-buckthorn-capsules` (Capsules details + 7 cards)
+  - `/about-sea-buckthorn` (Botanical monograph)
+  - `/about` (Brand heritage & contact directory)
+  - `/contact` (Support portal)
+  - `/cart` & `/checkout` (Shopping flow)
+  - `/account` & `/auth` (Customer portal)
+  - `/reset-password` (Password recovery)
 
-1. Log into your hosting control panel (cPanel).
-2. Navigate to SSL/TLS > Let's Encrypt SSL.
-3. Install certificate for himroots.in and www.himroots.in.
-4. Enable HTTP to HTTPS redirect (usually one checkbox in cPanel).
-
-### DNS Records required
-
-| Type | Name | Value | Purpose |
-|------|------|-------|---------|
-| A | @ | Your hosting IP | Website |
-| CNAME | www | himroots.in | www redirect |
-| TXT | @ | SPF record from email provider | Email anti-spam |
-| CNAME | em._domainkey | DKIM from email provider | Email signing |
-
----
-
-## PART 7: UPTIME MONITORING & HEALTH CHECK CONSUMER
-
-To ensure 24/7 availability and prevent free-tier instances (e.g., Render/Railway) from sleeping or suffering silent downtime:
-
-### Free Uptime Monitoring Setup (UptimeRobot or Better Uptime)
-
-1. **Sign Up:** Create a free account at [uptimerobot.com](https://uptimerobot.com) or [betteruptime.com](https://betteruptime.com).
-2. **Add New Monitor:**
-   - **Monitor Type:** `HTTP(s)`
-   - **Friendly Name:** `Himroots Backend API`
-   - **URL:** `https://your-backend.onrender.com/api/health` (or `https://api.himroots.in/api/health`)
-   - **Monitoring Interval:** `5 minutes` (standard free tier)
-   - **HTTP Method:** `GET`
-   - **Accepted HTTP Status Codes:** `200`
-3. **Keyword Monitoring (Optional but Recommended):**
-   - Alert if response body does NOT contain `"status":"ok"`.
-4. **Configure Alert Contacts:**
-   - Add your email and/or SMS to receive instant alerts if the server fails or restarts unexpectedly.
-5. **Add Frontend Monitor:**
-   - Add a second monitor checking `https://himroots.in/` every 5 minutes to confirm the web storefront is up and delivering pages.
-
----
-
-## LAUNCH CHECKLIST
-
-### Developer
-
-- [ ] Supabase project created and schema.sql executed
-- [ ] Products seeded in Supabase (seed.sql or manual entry)
-- [ ] Backend deployed to Render/Railway with all environment variables set
-- [ ] Frontend built with VITE_API_BASE_URL pointing to live backend
-- [ ] dist/ uploaded to /public_html/ via FTP
-- [ ] .htaccess present in /public_html/
-- [ ] Test all SPA routes: /, /shop, /products/:slug, /about, /about-sea-buckthorn, /contact, /cart, /checkout, /order-success, /payment-failed
-
-### Client
-
-- [ ] SSL certificate installed and HTTPS forced
-- [ ] Domain DNS pointing to hosting IP
-- [ ] Razorpay KYC completed and live keys activated
-- [ ] Email domain verified (SPF + DKIM records added to DNS)
-- [ ] Placed a real test order with live Razorpay to verify end-to-end
-
-### Production Testing Required
-
-- [ ] Complete checkout flow with live Razorpay key
-- [ ] Verify email received at orders@himroots.in on new order
-- [ ] Verify email received at support@himroots.in on contact submission
-- [ ] Test all routes with direct browser URL (no 404s)
-- [ ] Verify /api/health returns 200 on live backend
+### Client & Business Checks
+- [ ] Razorpay KYC approved and switched to **Live Mode**.
+- [ ] Domain DNS and SSL active on `himroots.in` and `www.himroots.in`.
+- [ ] Email domain verified in Resend/Brevo (SPF + DKIM green).
+- [ ] Support telephone active: `9871520888`.
+- [ ] Official inboxes operational: `orders@himroots.in`, `support@himroots.in`.
+- [ ] Live ₹1 test order placed, verified, and refunded via Razorpay.

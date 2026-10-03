@@ -41,13 +41,13 @@ The Himroots Wellness platform currently operates as a **hybrid monorepo** consi
 | :--- | :--- | :--- | :--- |
 | **Frontend Framework** | React 19 (`react` 19.2.8, `react-dom` 19.2.8) | Component-driven UI using modern hooks | ✅ Excellent performance & bundle size |
 | **Styling & Design System** | Tailwind CSS v4 (`@tailwindcss/vite` 4.3.3) | Inline CSS variables in `src/index.css`, custom gold/bronze Himalayan palette | ✅ Premium aesthetics, no utility bloat |
-| **Build Tooling** | Vite 8 (`vite` 8.3.0) + TypeScript (~6.0.2) | Client build target in `dist/` | ✅ Fast compile, standard static output |
-| **Client Routing** | `react-router-dom` v7 (7.18.4) | `BrowserRouter` with HTML5 pushState & catch-all fallback | ⚠️ Requires server-side rewrite rules |
-| **State Management** | Zustand 5 (`zustand` 5.0.15) | `cartStore.ts` with `localStorage` persistence | ✅ Ideal for guest checkout sessions |
-| **Backend Runtime** | Express 5 (`express` 5.2.1) + Node.js | TypeScript executed via `tsx` dev runner | ⚠️ Needs standalone production build/process |
-| **Database** | PostgreSQL 15+ via Supabase | Relational schema with RLS, foreign keys & indexes | ✅ Robust ACID compliance for transactions |
-| **Payment Gateway** | Razorpay Standard Checkout SDK | Server-initiated orders with client checkout modal | ⚠️ Missing webhook handler for network drops |
-| **Email Dispatch** | Transactional REST API (Resend / Brevo) | Native `fetch` with decoupled status tracking | ✅ Fast, no bloated SDK dependencies |
+| **Build Tooling** | Vite 8 (`vite` 8.3.0) + TypeScript (~6.0.2) | Client build target in `dist/`, server target in `dist-server/` | ✅ Fast compile, dual static/bundle outputs |
+| **Client Routing** | `react-router-dom` v7 (7.18.4) | `BrowserRouter` with HTML5 pushState & catch-all fallback | ✅ Managed by `.htaccess` and `vercel.json` |
+| **State Management** | Zustand 5 (`zustand` 5.0.15) | `cartStore.ts` with `localStorage` + bidirectional cloud sync | ✅ Seamless guest & authenticated cart sessions |
+| **Backend Runtime** | Express 5 (`express` 5.2.1) + Node.js | Esbuild bundled standalone production executable (`dist-server/index.js`) | ✅ Zero devDependencies needed at runtime |
+| **Database & Auth** | PostgreSQL 15+ via Supabase | Relational schema with 8 tables, RLS, Auth triggers, indexes | ✅ Robust ACID compliance & secure patron auth |
+| **Payment Gateway** | Razorpay Standard Checkout SDK | Server-initiated orders + HMAC SHA256 timing-safe webhooks | ✅ Resilient against dropped network connections |
+| **Email Dispatch** | Transactional REST API (Resend / Brevo) | Native `fetch` with decoupled status tracking | ✅ Fast, decoupled from payment verification |
 
 ---
 
@@ -58,79 +58,60 @@ d:\Clg\Client Work\HimRoots\
 ├── .env.example                     # Environment template (client + server variables)
 ├── .gitignore                       # Git exclusion rules (dist, env, node_modules)
 ├── .oxlintrc.json                   # Oxlint linting configuration
+├── DEPLOYMENT.md                    # Production build & deployment documentation
 ├── index.html                       # SPA entry point with Google Fonts & Razorpay SDK
+├── MANUAL_SETUP_GUIDE.md            # Authoritative developer & client manual setup guide
 ├── package.json                     # Root manifest (dependencies for both FE and BE)
 ├── package-lock.json                # Locked dependency tree
+├── PRODUCTION_AUDIT.md              # Production readiness & architecture audit
+├── PRODUCTS_SPEC.md                 # Complete specifications for both flagship products
+├── README.md                        # Primary project overview and instructions
+├── SECURITY_AUDIT.md                # Security controls & vulnerability review
+├── SECURITY_OPERATIONS.md           # Operational runbooks & incident response procedures
 ├── TODO.md                          # Project roadmap & operational setup tasks
 ├── tsconfig.app.json                # Frontend TypeScript configuration
 ├── tsconfig.json                    # TypeScript project references
 ├── tsconfig.node.json               # Node/Vite build TypeScript configuration
+├── tsconfig.server.json             # Server TypeScript configuration
+├── vercel.json                      # Vercel SPA routing & security headers
 ├── vite.config.ts                   # Vite bundler configuration & local dev API proxy
 ├── public/                          # Static assets copied directly to dist/
 │   ├── .htaccess                    # Apache mod_rewrite SPA routing configuration
 │   ├── about_sea_buckthorn.md       # Botanical reference copy
 │   ├── favicon.png / favicon.svg    # Brand browser icons
 │   ├── icons.svg                    # SVG icon sprites
-│   └── images/                      # Botanical, bottle, harvesting & packaging photography
+│   ├── robots.txt / sitemap.xml     # Search indexing directives
+│   └── images/                      # Botanical photography & 15 product detail cards
+├── scripts/                         # Operational & verification scripts
+│   ├── verify-auth.js               # Diagnostic verification for Supabase Auth & tables
+│   ├── generate_capsule_cards.py    # Generator script for capsule image cards
+│   ├── update-svg-and-manifest.js   # Favicon generator helper
+│   └── generate-favicons.ps1        # Multi-resolution favicon builder
 ├── server/                          # Express.js Backend API
 │   ├── index.ts                     # Express server setup, CORS, health check, router mount
-│   ├── config/
-│   │   └── env.ts                   # Environment variable parser, validation & fallbacks
-│   ├── lib/
-│   │   ├── razorpay.ts              # Razorpay SDK initialization
-│   │   └── supabase.ts              # Supabase Admin client initialization (service_role)
-│   ├── middleware/
-│   │   └── errorHandler.ts          # Central error handling & message sanitization
-│   ├── routes/
-│   │   ├── contact.ts               # POST /api/contact with rate limiting & honeypot
-│   │   ├── orders.ts                # POST /api/orders/create, verify, GET /api/orders/:id
-│   │   └── products.ts              # GET /api/products, GET /api/products/:identifier
-│   ├── scripts/                     # Local test suites
-│   │   ├── test_email_and_contact.ts# Automated verification for contact & email
-│   │   └── test_razorpay_flow.ts    # Automated test suite for orders & payments
-│   └── services/
-│       ├── emailService.ts          # Resend & Brevo transactional dispatchers
-│       ├── orderService.ts          # Price calculation, order persistence, verification
-│       └── productService.ts        # Database product querying with fallback
+│   ├── config/env.ts                # Environment variable parser, validation & fallbacks
+│   ├── controllers/                 # Express controllers (order, product, contact)
+│   ├── lib/                         # Clients (Supabase service_role, Razorpay, Logger)
+│   ├── middleware/                  # Security headers, rate limiting, error handling
+│   ├── routes/                      # API routes (/api/orders, /api/products, /api/contact, /api/webhooks)
+│   ├── scripts/                     # Automated backend test suites
+│   └── services/                    # Business logic (order, product, email, alert)
 ├── src/                             # React SPA Frontend Source
-│   ├── App.css                      # Legacy template styles
 │   ├── App.tsx                      # App router layout & route definitions
 │   ├── index.css                    # Tailwind v4 theme, fonts, custom drop-shadows
 │   ├── main.tsx                     # React DOM entry point
-│   ├── assets/                      # Bundled images & logos
-│   ├── components/
-│   │   ├── layout/
-│   │   │   ├── Footer.tsx           # Global footer with brand story, links, trust badges
-│   │   │   ├── Navbar.tsx           # Sticky black luxury navigation & responsive mobile drawer
-│   │   │   └── RootLayout.tsx       # Global layout shell with scroll-to-top behavior
-│   │   └── ui/
-│   │       ├── BrandLogo.tsx        # Central responsive SVG/PNG brand identity
-│   │       ├── Button.tsx           # Reusable luxury gold/outline action button
-│   │       └── InstagramIcon.tsx    # Branded Instagram icon component
-│   ├── data/
-│   │   └── products.ts              # Static product definitions (2 active formulations)
-│   ├── lib/
-│   │   ├── razorpay.ts              # Client Razorpay checkout.js script loader & types
-│   │   ├── supabase.ts              # Supabase browser client (VITE_SUPABASE_ANON_KEY)
-│   │   └── utils.ts                 # Utility helper (clsx/twMerge)
-│   ├── pages/
-│   │   ├── About.tsx                # Brand heritage & wild Himalayan terroir page
-│   │   ├── Cart.tsx                 # Persistent shopping bag with free shipping progress
-│   │   ├── Checkout.tsx             # 2-step single page guest checkout with Razorpay modal
-│   │   ├── Contact.tsx              # Customer care form with category routing
-│   │   ├── Home.tsx                 # Landing page with interactive hero, benefits, products
-│   │   ├── OrderSuccess.tsx         # Verified confirmation screen with order summary
-│   │   ├── ProductDetails.tsx       # Dynamic product page with ingredients & usage rituals
-│   │   ├── SeaBuckthorn.tsx         # Comprehensive botanical guide & nutrient breakdown
-│   │   └── Shop.tsx                 # Full collection catalog with category filters
-│   ├── store/
-│   │   ├── cartStore.ts             # Zustand cart store with localStorage synchronization
-│   │   └── logoStore.ts             # Zustand logo visibility synchronization
-│   └── types/
-│       └── database.types.ts        # TypeScript interfaces for Supabase PostgreSQL schema
-└── supabase/                        # Database Migrations & Seed
-    ├── schema.sql                   # DDL: products, orders, order_items, contact_inquiries, RLS
-    └── seed.sql                     # Initial product seed data for production catalog
+│   ├── components/                  # Layout & UI components (Navbar, Footer, RootLayout, SEO, etc.)
+│   ├── data/products.ts             # Static product definitions & detail slide registries
+│   ├── lib/                         # API caller, Supabase client, Razorpay modal helper
+│   ├── pages/                       # 11 Page views (Home, Shop, ProductDetails, Cart, Checkout, Account, Auth, etc.)
+│   ├── services/                    # Customer account & address book services
+│   ├── store/                       # Zustand stores (cartStore with sync, authStore, logoStore)
+│   └── types/database.types.ts      # Generated TypeScript database definitions
+└── supabase/                        # Database Migrations & Complete Setup
+    ├── 00_complete_setup.sql        # Consolidated complete SQL script (tables, RLS, auth, triggers, seeds)
+    ├── schema.sql                   # Base catalog & orders schema
+    ├── seed.sql                     # Initial product seed data
+    └── migrations/                  # User accounts, addresses & user_carts migration
 ```
 
 ---
@@ -458,19 +439,21 @@ These tasks must be performed by the developer during final production deploymen
 
 ---
 
-## 15. Out-of-Scope Items
+## 15. Status of Extended & Out-of-Scope Features
 
-The following features are non-essential for initial commercial launch and are reserved for subsequent phases:
+### Implemented Extended Capabilities
+1. **Customer Accounts & Order History Portal**:
+   - ✅ Fully implemented: Patron registration, login, password recovery (`/reset-password`), profile updates, saved address management, order history with live status tracking, and printable tax receipts.
+   - ✅ Bidirectional cart synchronization: Persists cart across browser sessions and authenticated user accounts.
 
+### Out-of-Scope Items for Subsequent Scaling Phases
 1. **Automated Courier API Integration** (Shiprocket / Delhivery / BlueDart):
-   - Current design relies on manual courier dispatch using client email notifications containing full shipping addresses.
-2. **Customer Accounts & Order History Portal**:
-   - Guest checkout fully fulfills the current transactional need without requiring password management or authentication infrastructure.
-3. **Admin Web Dashboard**:
+   - Current design relies on manual courier dispatch using client email notifications containing full customer shipping addresses.
+2. **Admin Web Dashboard**:
    - Supabase Table Editor natively serves as the administrative interface for managing products, tracking orders, and viewing contact inquiries.
-4. **Automated Return & Refund Workflow**:
+3. **Automated Return & Refund Workflow**:
    - Returns and refunds are managed via the contact form and processed manually inside the Razorpay dashboard.
-5. **Multi-Currency Support**:
+4. **Multi-Currency Support**:
    - Indian Rupee (INR) is the sole active transactional currency.
-6. **SMS / WhatsApp Order Notifications**:
+5. **SMS / WhatsApp Order Notifications**:
    - Order notifications are currently handled via transactional email.

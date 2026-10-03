@@ -159,14 +159,9 @@ export function Footer() {
                   Privacy Policy
                 </Link>
               </li>
-              <li className="pt-3 text-xs text-gray-500 space-y-1.5">
-                <span className="block text-gray-400 font-medium text-[11px] uppercase tracking-wider mb-1">Official Email Desks</span>
-                <a href="mailto:customercare@himroots.in" className="block text-gray-400 hover:text-[var(--color-primary)] transition-colors">customercare@himroots.in</a>
-                <a href="mailto:sales@himroots.in" className="block text-gray-400 hover:text-[var(--color-primary)] transition-colors">sales@himroots.in</a>
-                <a href="mailto:info@himroots.in" className="block text-gray-400 hover:text-[var(--color-primary)] transition-colors">info@himroots.in</a>
-                <a href="mailto:orders@himroots.in" className="block text-gray-400 hover:text-[var(--color-primary)] transition-colors">orders@himroots.in</a>
-                <a href="mailto:support@himroots.in" className="block text-gray-400 hover:text-[var(--color-primary)] transition-colors">support@himroots.in</a>
-                <span className="block mt-1">Solan / Shimla, Himachal Pradesh</span>
+              <li className="pt-2 text-xs text-gray-500">
+                <span className="block text-gray-400 font-medium">Care Desk: <a href="mailto:customercare@himroots.in" className="hover:text-[var(--color-primary)] transition-colors">customercare@himroots.in</a></span>
+                <span>Solan / Shimla, Himachal Pradesh</span>
               </li>
             </ul>
           </div>

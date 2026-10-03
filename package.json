@@ -14,7 +14,9 @@
     "build:server": "esbuild server/index.ts --platform=node --format=esm --bundle --packages=external --outfile=dist-server/index.js",
     "build": "npm run build:client && npm run build:server",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "auth:verify": "node scripts/verify-auth.js",
+    "test:backend": "tsx server/scripts/testBackend.ts"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.3.3",

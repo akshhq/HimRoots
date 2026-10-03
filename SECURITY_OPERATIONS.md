@@ -78,6 +78,7 @@ The `service_role` key bypasses PostgreSQL Row-Level Security (RLS) and is stric
      ```json
      { "status": "ok", "integrations": { "supabase": "configured" } }
      ```
+   - Run diagnostic test: `node scripts/verify-auth.js`
 
 ---
 
@@ -151,3 +152,15 @@ The application includes automated monitoring through `server/services/alertServ
 2. **Correlate with Razorpay Dashboard:** Check whether the payment was captured in the Razorpay Payments tab.
 3. **Correlate with Supabase Table Editor:** Open `orders` table in Supabase. Check if `payment_status` is `paid` or `pending`.
 4. **Manual Order Recovery:** If Razorpay shows captured but Supabase order is missing, use the Razorpay payment notes (`orderNumber`, `orderId`) to locate the pending order and update `payment_status = 'paid'`.
+
+---
+
+## 4. Emergency Contacts & Response Team
+
+| Role | Contact Channel | Priority |
+| :--- | :--- | :--- |
+| **Emergency Telephone** | `+91 98715 20888` / `9871520888` | Critical / P0 |
+| **Technical & Security Alerts** | `support@himroots.in` | High / P1 |
+| **Fulfillment & Order Operations** | `orders@himroots.in` | Medium / P2 |
+| **Sales & Business Escalations** | `Sales@himroots.in` | Normal |
+| **Customer Care Escalations** | `Customercare@himroots.in` | Normal |

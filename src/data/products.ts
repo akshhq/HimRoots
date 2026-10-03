@@ -42,10 +42,18 @@ export const products: Product[] = [
     originalPrice: 1199,
     images: [
       "/images/himroots-sea-buckthorn-pulp.jpg",
-      "/images/himroots-sea-buckthorn-juice.jpg",
+      "/images/pulp-omega-profile.jpg",
+      "/images/pulp-190-bioactives.jpg",
+      "/images/pulp-vitaminc-comparison.jpg",
+      "/images/pulp-clinical-timeline.jpg",
+      "/images/pulp-quality-standards.jpg",
+      "/images/pulp-daily-ritual-guide.jpg",
+      "/images/pulp-comparison-chart.jpg",
+      "/images/pulp-pack2-bundle.jpg",
       "/images/pulp-serving-ritual.jpg",
       "/images/himroots-harvest-berries.jpg",
       "/images/sea-buckthorn-frost-harvest.jpg",
+      "/images/himroots-sea-buckthorn-juice.jpg",
       "/images/himalayan-hero-peaks.jpg"
     ],
     category: "Wild Himalayan Pulp & Juice",
@@ -126,6 +134,13 @@ export const products: Product[] = [
     originalPrice: 1499,
     images: [
       "/images/himroots-sea-buckthorn-capsules.jpg",
+      "/images/capsules-omega7-cellular.jpg",
+      "/images/capsules-skin-hydration.jpg",
+      "/images/capsules-mucosal-comfort.jpg",
+      "/images/capsules-clean-ingredients.jpg",
+      "/images/capsules-quality-certifications.jpg",
+      "/images/capsules-daily-ritual.jpg",
+      "/images/capsules-pack2-bundle.jpg",
       "/images/capsules-apothecary.jpg",
       "/images/himalayan-harvest.jpg"
     ],

@@ -48,13 +48,25 @@ Fill out each variable as described below:
 
 ---
 
-### 3. Initialize Supabase Database (Schema & Seeds)
+### 3. Initialize Supabase Database & Auth (Consolidated Script)
+We provide a single, fully consolidated idempotent SQL script: [`supabase/00_complete_setup.sql`](supabase/00_complete_setup.sql).
+
 1. Open the [Supabase SQL Editor](https://supabase.com/dashboard/project/_/sql) in your project.
-2. Open [`supabase/schema.sql`](supabase/schema.sql), copy all contents, paste into the SQL Editor, and click **Run**.
-3. Open [`supabase/seed.sql`](supabase/seed.sql), copy all contents, paste into the SQL Editor, and click **Run**.
-4. **Verification Step:**
-   - In the left sidebar, click **Table Editor**. Confirm all 7 tables exist: `products`, `orders`, `order_items`, `contact_inquiries`, `profiles`, `addresses`, `user_carts`, `payment_idempotency`, and `rate_limits`.
-   - In the left sidebar, click **Authentication > Policies**. Confirm Row-Level Security (RLS) is enabled (green checkmark) on `orders`, `order_items`, and `user_carts`.
+2. Open [`supabase/00_complete_setup.sql`](supabase/00_complete_setup.sql), copy all contents, paste into the SQL Editor, and click **Run**.
+3. *(Alternative for existing databases: apply [`supabase/migrations/20260930_user_accounts_and_cart.sql`](supabase/migrations/20260930_user_accounts_and_cart.sql)).*
+4. **Automated Verification:**
+   Run the project diagnostic script in your terminal to verify database connectivity, RLS, and auth configuration:
+   ```bash
+   node scripts/verify-auth.js
+   ```
+   Confirm all checks pass (tables exist, RLS enabled, products populated, auth triggers active).
+5. **Supabase Auth Dashboard Settings:**
+   - Under **Authentication > URL Configuration**:
+     - Set **Site URL** to: `https://himroots.in`
+     - Add **Redirect URLs**:
+       - `https://himroots.in/reset-password`
+       - `https://www.himroots.in/reset-password`
+       - `http://localhost:5173/reset-password` (for local development)
 
 ---
 
@@ -64,7 +76,7 @@ Run the dual-build compiler to ensure both the Vite client bundle and the Esbuil
 npm run build
 ```
 Verify the build succeeded with exit code 0:
-- Client files generated in `dist/` (`index.html`, `assets/*.js`, `assets/*.css`).
+- Client files generated in `dist/` (`index.html`, `assets/*.js`, `assets/*.css`, `images/*`, `.htaccess`).
 - Server file generated in `dist-server/index.js`.
 
 Locally preview the production client bundle:
@@ -73,11 +85,13 @@ npm run preview
 ```
 Visit `http://localhost:4173/` in your browser. Confirm:
 - Home page hero banner and product showcases render without console errors.
-- Navigation links (`/shop`, `/about-sea-buckthorn`, `/contact`, `/account/login`) load cleanly.
+- Navigation links (`/shop`, `/about-sea-buckthorn`, `/contact`, `/account`, `/auth`) load cleanly.
+- Product detail pages display the 15 visual detail cards.
 
 ---
 
-### 5. Deploy Frontend to Vercel
+### 5. Deploy Frontend to Vercel or Apache
+#### Option A: Vercel (Recommended for Edge Performance)
 1. Log in to [vercel.com](https://vercel.com) and click **Add New > Project**.
 2. Select the `HimRoots` repository.
 3. In **Project Settings**:
@@ -93,10 +107,15 @@ Visit `http://localhost:4173/` in your browser. Confirm:
 5. Click **Deploy**.
 6. Under **Settings > Domains**, add `himroots.in` and `www.himroots.in`.
 
+#### Option B: Apache / cPanel (`public_html/`)
+1. Run `npm run build:client`.
+2. Upload the entire contents of `dist/` into `/public_html/`.
+3. Verify `dist/.htaccess` is uploaded (ensure hidden files are visible in cPanel File Manager). This enables HTML5 history routing (`react-router-dom`).
+
 ---
 
 ### 6. Deploy Backend to Node.js Host (Render / Railway / VPS)
-*Note: Shared Apache/cPanel hosting cannot execute Node.js background processes. Deploy the backend to Render or Railway.*
+*Note: Shared Apache/cPanel hosting cannot execute Node.js background processes. Deploy the backend to Render, Railway, or a Node VPS.*
 
 1. Create a new **Web Service** on [Render.com](https://render.com) pointing to the `HimRoots` repository.
 2. Configure build settings:
@@ -148,10 +167,11 @@ Visit `http://localhost:4173/` in your browser. Confirm:
 ---
 
 ### 10. Run CI Safety Net & Live Smoke Test
-1. Confirm the GitHub Actions CI workflow in `.github/workflows/ci.yml` passes on your latest commit:
-   - TypeScript checks pass: `npx tsc -b`
-   - OxLint passes: `npx oxlint`
-   - Integration tests pass: `npx tsx server/scripts/testBackend.ts` (57 tests passing)
+1. Confirm local verification passes:
+   - TypeScript checks pass: `npm run build`
+   - OxLint passes: `npm run lint` (0 errors, 0 warnings)
+   - Integration tests pass: `npm run test:backend`
+   - Auth verification passes: `node scripts/verify-auth.js`
 2. **Execute Real End-to-End Live Transaction:**
    - Temporarily lower product price or create a ₹1 test item in the Supabase Table Editor.
    - Visit `https://himroots.in/checkout`, fill out real shipping information, and pay ₹1 using your UPI app (Google Pay / PhonePe).
@@ -252,6 +272,7 @@ Your domain name is your store's internet address.
    - Print or forward this email to your fulfillment team to pack the bottles and schedule courier pickup.
 2. **Check `support@himroots.in` (Daily):**
    - Customer questions submitted through your website's `/contact` form will arrive here.
+   - Support phone hotline for escalated assistance is `9871520888`.
    - Click "Reply" to answer the customer directly.
 3. **Check Your Alert Channel (Weekly):**
    - If an error ever occurs during payment or email delivery, your developer's alert channel (`#himroots-alerts`) will notify the team so issues are fixed before customers notice.
@@ -302,7 +323,7 @@ Before announcing your store launch on Instagram or running marketing campaigns,
 - [ ] **1. Business Accounts Approved:** Supabase project created, Razorpay KYC approved in Live Mode, and Resend/Brevo domain verified.
 - [ ] **2. Developer Test Order Completed:** Your developer has run a real ₹1 live transaction and confirmed order creation, email receipt, and Supabase order logging.
 - [ ] **3. Razorpay Switched to Live Mode:** The toggle in your Razorpay dashboard is set to **Live Mode**.
-- [ ] **4. Official Inboxes Monitored:** Someone on your team has login access to `orders@himroots.in` and `support@himroots.in`.
-- [ ] **5. Product Catalog & Inventory Verified:** Double-check your product prices (₹899 for Pulp, ₹1,199 for Capsules) and inventory counts in the Supabase `products` table.
+- [ ] **4. Official Inboxes Monitored:** Someone on your team has login access to `orders@himroots.in` and `support@himroots.in`, and phone `9871520888` is operational.
+- [ ] **5. Product Catalog & Inventory Verified:** Double-check your product prices (₹899 for Juice/Pulp Pack of 1, ₹1,699 Pack of 2; ₹999 for Capsules Pack of 1, ₹1,899 Pack of 2) and inventory counts in the Supabase `products` table.
 
 Once all 5 checkboxes are complete, your store is officially **READY FOR BUSINESS**!

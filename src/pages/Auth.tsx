@@ -20,7 +20,7 @@ import {
 export default function Auth() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, signIn, signUp, resetPasswordForEmail, isLoading } = useAuthStore();
+  const { user, signIn, signUp, resetPasswordForEmail, resendConfirmationEmail, isLoading } = useAuthStore();
 
   // Determine initial mode from URL or default to login
   const searchParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
@@ -191,9 +191,30 @@ export default function Auth() {
 
             {/* Notifications / Alerts */}
             {errorMessage && (
-              <div className="mb-6 p-3.5 rounded-lg bg-red-950/40 border border-red-500/50 flex items-start gap-3 text-red-200 text-xs sm:text-sm">
-                <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                <div className="flex-1">{errorMessage}</div>
+              <div className="mb-6 p-3.5 rounded-lg bg-red-950/40 border border-red-500/50 flex flex-col gap-2 text-red-200 text-xs sm:text-sm">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                  <div className="flex-1">{errorMessage}</div>
+                </div>
+                {errorMessage.toLowerCase().includes("confirm") && email && (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      setErrorMessage(null);
+                      setSuccessMessage("Sending verification link...");
+                      const res = await resendConfirmationEmail(email);
+                      if (res.error) {
+                        setErrorMessage(res.error);
+                        setSuccessMessage(null);
+                      } else {
+                        setSuccessMessage("Verification link resent! Please check your inbox and spam folder.");
+                      }
+                    }}
+                    className="self-start text-[11px] font-semibold text-[var(--color-primary)] hover:underline ml-7 transition-colors"
+                  >
+                    Resend confirmation email →
+                  </button>
+                )}
               </div>
             )}
 

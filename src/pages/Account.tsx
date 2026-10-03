@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect, useMemo } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
 import { addressService } from "@/services/addressService";
@@ -25,12 +25,20 @@ import {
 
 export default function Account() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
+  const tabFromUrl = searchParams.get("tab") as "orders" | "addresses" | "profile" | "cart" | null;
+  const [selectedTab, setSelectedTab] = useState<"orders" | "addresses" | "profile" | "cart" | null>(null);
+
   const { user, profile, signOut, updateProfile, isLoading: authLoading } = useAuthStore();
   const { items: cartItems, getTotals } = useCartStore();
   const { subtotal } = getTotals();
 
-  // Active tab state
-  const [activeTab, setActiveTab] = useState<"orders" | "addresses" | "profile" | "cart">("orders");
+  // Active tab state: user's clicked tab takes precedence, followed by URL param, defaulting to 'orders'
+  const activeTab = selectedTab || (tabFromUrl && ["orders", "addresses", "profile", "cart"].includes(tabFromUrl) ? tabFromUrl : "orders");
+  const setActiveTab = (tab: "orders" | "addresses" | "profile" | "cart") => {
+    setSelectedTab(tab);
+  };
 
   // Orders state
   const [orders, setOrders] = useState<UserOrderWithItems[]>([]);
@@ -55,20 +63,13 @@ export default function Account() {
     is_default: false,
   });
 
-  // Profile form state
-  const [profileName, setProfileName] = useState(() => profile?.full_name || user?.user_metadata?.full_name || "");
-  const [profilePhone, setProfilePhone] = useState(() => profile?.phone || user?.user_metadata?.phone || "");
+  // Profile form state: local user edits override profile from store
+  const [editedName, setEditedName] = useState<string | null>(null);
+  const [editedPhone, setEditedPhone] = useState<string | null>(null);
+  const profileName = editedName ?? (profile?.full_name || user?.user_metadata?.full_name || "");
+  const profilePhone = editedPhone ?? (profile?.phone || user?.user_metadata?.phone || "");
   const [profileStatus, setProfileStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [savingProfile, setSavingProfile] = useState(false);
-
-  // Sync profile fields if profile or user becomes available/updated
-  const [syncedProfileKey, setSyncedProfileKey] = useState<string>("");
-  const currentProfileKey = `${user?.id || ""}-${profile?.full_name || ""}-${profile?.phone || ""}`;
-  if (user && syncedProfileKey !== currentProfileKey) {
-    setSyncedProfileKey(currentProfileKey);
-    setProfileName(profile?.full_name || user.user_metadata?.full_name || "");
-    setProfilePhone(profile?.phone || user.user_metadata?.phone || "");
-  }
 
   // Load user data
   useEffect(() => {
@@ -111,6 +112,8 @@ export default function Account() {
     if (res.error) {
       setProfileStatus({ type: "error", message: res.error });
     } else {
+      setEditedName(null);
+      setEditedPhone(null);
       setProfileStatus({ type: "success", message: "Profile updated successfully." });
       setTimeout(() => setProfileStatus(null), 3000);
     }
@@ -605,7 +608,7 @@ export default function Account() {
                     type="text"
                     required
                     value={profileName}
-                    onChange={(e) => setProfileName(e.target.value)}
+                    onChange={(e) => setEditedName(e.target.value)}
                     className="w-full bg-black border border-[var(--color-border)] focus:border-[var(--color-primary)] text-white text-sm px-4 py-2.5 rounded-lg focus:outline-none transition-colors"
                   />
                 </div>
@@ -617,7 +620,7 @@ export default function Account() {
                   <input
                     type="tel"
                     value={profilePhone}
-                    onChange={(e) => setProfilePhone(e.target.value)}
+                    onChange={(e) => setEditedPhone(e.target.value)}
                     placeholder="+91 98765 43210"
                     className="w-full bg-black border border-[var(--color-border)] focus:border-[var(--color-primary)] text-white text-sm px-4 py-2.5 rounded-lg focus:outline-none transition-colors"
                   />

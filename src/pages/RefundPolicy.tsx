@@ -167,8 +167,8 @@ export default function RefundPolicy() {
                   <Phone className="w-5 h-5 text-[var(--color-primary)] shrink-0" />
                   <div>
                     <span className="text-gray-400 block text-xs">Helpline (Mon–Sat)</span>
-                    <a href="tel:+919876543210" className="text-white font-medium hover:text-[var(--color-primary)]">
-                      +91 98765 43210
+                    <a href="tel:+919871520888" className="text-white font-medium hover:text-[var(--color-primary)]">
+                      +91 98715 20888
                     </a>
                   </div>
                 </div>

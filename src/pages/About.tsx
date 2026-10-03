@@ -143,6 +143,59 @@ export default function About() {
           </Button>
         </div>
 
+        {/* Official Contact Channels — All Emails Listed Here */}
+        <div className="max-w-4xl mx-auto mb-16 sm:mb-24">
+          <div className="text-center mb-8">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[var(--color-primary)] block mb-2">
+              Connect With Us
+            </span>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-serif text-white mb-3">
+              Official Contact Channels
+            </h2>
+            <p className="text-gray-400 text-xs sm:text-sm max-w-xl mx-auto">
+              Reach the right department directly. Every inquiry is personally handled by our Himachal Pradesh team.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <a href="mailto:customercare@himroots.in" className="group bg-[var(--color-card)] border border-[var(--color-border)] rounded-xl p-4 hover:border-[var(--color-border-gold)] transition-all">
+              <div className="text-[10px] uppercase font-bold tracking-wider text-[var(--color-primary)] mb-1">Customer Care</div>
+              <div className="text-sm font-medium text-gray-200 group-hover:text-[var(--color-primary)] transition-colors">customercare@himroots.in</div>
+              <p className="text-[11px] text-gray-500 mt-1">Orders, returns & general assistance</p>
+            </a>
+
+            <a href="mailto:sales@himroots.in" className="group bg-[var(--color-card)] border border-[var(--color-border)] rounded-xl p-4 hover:border-[var(--color-border-gold)] transition-all">
+              <div className="text-[10px] uppercase font-bold tracking-wider text-[var(--color-primary)] mb-1">Sales & Wholesale</div>
+              <div className="text-sm font-medium text-gray-200 group-hover:text-[var(--color-primary)] transition-colors">sales@himroots.in</div>
+              <p className="text-[11px] text-gray-500 mt-1">Bulk orders & wholesale partnerships</p>
+            </a>
+
+            <a href="mailto:info@himroots.in" className="group bg-[var(--color-card)] border border-[var(--color-border)] rounded-xl p-4 hover:border-[var(--color-border-gold)] transition-all">
+              <div className="text-[10px] uppercase font-bold tracking-wider text-[var(--color-primary)] mb-1">General Information</div>
+              <div className="text-sm font-medium text-gray-200 group-hover:text-[var(--color-primary)] transition-colors">info@himroots.in</div>
+              <p className="text-[11px] text-gray-500 mt-1">Media, press & general queries</p>
+            </a>
+
+            <a href="mailto:orders@himroots.in" className="group bg-[var(--color-card)] border border-[var(--color-border)] rounded-xl p-4 hover:border-[var(--color-border-gold)] transition-all">
+              <div className="text-[10px] uppercase font-bold tracking-wider text-[var(--color-primary)] mb-1">Order Tracking</div>
+              <div className="text-sm font-medium text-gray-200 group-hover:text-[var(--color-primary)] transition-colors">orders@himroots.in</div>
+              <p className="text-[11px] text-gray-500 mt-1">Dispatch status & delivery updates</p>
+            </a>
+
+            <a href="mailto:support@himroots.in" className="group bg-[var(--color-card)] border border-[var(--color-border)] rounded-xl p-4 hover:border-[var(--color-border-gold)] transition-all">
+              <div className="text-[10px] uppercase font-bold tracking-wider text-[var(--color-primary)] mb-1">Technical Support</div>
+              <div className="text-sm font-medium text-gray-200 group-hover:text-[var(--color-primary)] transition-colors">support@himroots.in</div>
+              <p className="text-[11px] text-gray-500 mt-1">Product guidance & dosage advice</p>
+            </a>
+
+            <a href="tel:+919871520888" className="group bg-[var(--color-card)] border border-[var(--color-border)] rounded-xl p-4 hover:border-[var(--color-border-gold)] transition-all">
+              <div className="text-[10px] uppercase font-bold tracking-wider text-[var(--color-primary)] mb-1">Phone & WhatsApp</div>
+              <div className="text-sm font-medium text-gray-200 group-hover:text-[var(--color-primary)] transition-colors">+91 98715 20888</div>
+              <p className="text-[11px] text-gray-500 mt-1">Mon–Sat, 9 AM – 7 PM IST</p>
+            </a>
+          </div>
+        </div>
+
         {/* Explore Products CTA */}
         <div className="text-center py-10 sm:py-12 border-t border-[var(--color-border)] max-w-4xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold font-serif text-white mb-3 sm:mb-4">
