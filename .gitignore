@@ -6,11 +6,16 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+report.*.json
+npm-debug.log.*
 
 # Dependencies
 node_modules/
 .pnp
 .pnp.js
+.yarn/
+.pnpm-store/
+*.tgz
 
 # Production & Build outputs
 dist
@@ -19,6 +24,10 @@ dist-ssr
 build
 coverage
 *.tsbuildinfo
+.nyc_output
+.vite/
+.eslintcache
+.oxlintcache
 
 # Environment variables & secrets
 .env
@@ -31,6 +40,10 @@ coverage
 .env.production.local
 .env.*
 !.env.example
+*.pem
+*.key
+*.crt
+.secrets/
 
 # IDE & Editor files
 .vscode/*
@@ -44,6 +57,11 @@ coverage
 *.sw?
 *.swo
 *.swp
+*~
+.history/
+.fleet/
+.gemini/
+.agents/
 
 # OS generated files
 .DS_Store
@@ -54,8 +72,36 @@ coverage
 ehthumbs.db
 Thumbs.db
 [Dd]esktop.ini
+$RECYCLE.BIN/
+*.lnk
 
 # Temp & testing cache
 .cache
 .tempmediaStorage/
 .turbo
+tmp/
+temp/
+scratch/
+*.tmp
+*.bak
+*.orig
+
+# Supabase CLI local state
+supabase/.temp/
+supabase/.branches/
+supabase/.env
+
+# Vercel / deployment tooling
+.vercel
+.netlify
+
+# Python (asset generation scripts)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Test & coverage output
+coverage/
+test-results/
+playwright-report/
