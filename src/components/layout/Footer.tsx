@@ -133,46 +133,56 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Customer Care & Legal Policies (Razorpay Mandatory) */}
+          {/* Newsletter & Community Engagement */}
           <div className="lg:col-span-3">
-            <h4 className="text-white font-serif font-bold uppercase tracking-wider text-sm mb-5 text-[var(--color-primary-light)]">
-              Support & Policies
+            <h4 className="text-white font-serif font-bold uppercase tracking-wider text-sm mb-3 text-[var(--color-primary-light)]">
+              Let's Stay In Touch
             </h4>
-            <ul className="space-y-3">
-              <li>
-                <Link to="/contact" className="text-gray-400 hover:text-[var(--color-primary)] text-sm transition-colors">
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/refund-policy" className="text-gray-400 hover:text-[var(--color-primary)] text-sm transition-colors">
-                  Cancellation & Refund Policy
-                </Link>
-              </li>
-              <li>
-                <Link to="/terms-and-conditions" className="text-gray-400 hover:text-[var(--color-primary)] text-sm transition-colors">
-                  Terms & Conditions
-                </Link>
-              </li>
-              <li>
-                <Link to="/privacy-policy" className="text-gray-400 hover:text-[var(--color-primary)] text-sm transition-colors">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li className="pt-2 text-xs text-gray-500">
-                <span className="block text-gray-400 font-medium">Care Desk: <a href="mailto:customercare@himroots.in" className="hover:text-[var(--color-primary)] transition-colors">customercare@himroots.in</a></span>
-                <span>Solan / Shimla, Himachal Pradesh</span>
-              </li>
-            </ul>
+            <p className="text-xs text-gray-400 font-light leading-relaxed mb-3">
+              Receive notifications when rare sub-zero winter harvest batches are cold-pressed and bottled.
+            </p>
+            <form onSubmit={(e) => { e.preventDefault(); alert("Thank you for subscribing to HimRoots harvest notifications!"); }} className="space-y-2">
+              <div className="flex items-center">
+                <input
+                  type="email"
+                  required
+                  placeholder="Enter your email"
+                  className="w-full bg-[var(--color-secondary)] border border-[var(--color-border-gold)]/40 rounded-l-lg py-2 px-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[var(--color-primary)]"
+                />
+                <button
+                  type="submit"
+                  className="bg-gold-gradient text-black font-bold text-xs uppercase tracking-wider px-3.5 py-2 rounded-r-lg hover:opacity-95 transition-opacity"
+                >
+                  Join
+                </button>
+              </div>
+              <span className="text-[10px] text-gray-500 block">No spam. Only seasonal mountain harvest dispatches.</span>
+            </form>
+
+            {/* Grievance Redressal Officer */}
+            <div className="mt-5 pt-4 border-t border-[var(--color-border)] text-xs text-gray-400">
+              <span className="text-[10px] uppercase font-bold tracking-wider text-[var(--color-primary-light)] block mb-1">
+                Grievance Redressal Officer:
+              </span>
+              <a href="mailto:anshalini@gmail.com" className="text-[11px] text-[var(--color-primary)] hover:underline block">
+                anshalini@gmail.com
+              </a>
+              <span className="text-[10px] text-gray-500">+91 84286 11319</span>
+            </div>
           </div>
 
         </div>
 
-        {/* Bottom Bar with Compliance Links */}
+        {/* Bottom Bar with Compliance Links & FSSAI */}
         <div className="border-t border-[var(--color-border)] pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
-          <p className="text-center md:text-left">
-            &copy; {new Date().getFullYear()} Himroots Wellness. All rights reserved.
-          </p>
+          <div className="flex flex-col sm:flex-row items-center gap-3 text-center md:text-left">
+            <span className="px-2.5 py-1 rounded bg-[var(--color-secondary)] border border-[var(--color-border-gold)]/30 text-[10px] font-mono text-[var(--color-primary)] font-bold">
+              FSSAI CERTIFIED
+            </span>
+            <p>
+              &copy; {new Date().getFullYear()} Himroots Wellness. All rights reserved.
+            </p>
+          </div>
 
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs">
             <Link to="/terms-and-conditions" className="text-gray-400 hover:text-[var(--color-primary)] transition-colors">
@@ -188,7 +198,7 @@ export function Footer() {
             </Link>
             <span className="text-gray-700">•</span>
             <Link to="/contact" className="text-gray-400 hover:text-[var(--color-primary)] transition-colors">
-              Contact Us
+              Contact Care Desk
             </Link>
           </div>
 
@@ -202,7 +212,7 @@ export function Footer() {
               <InstagramIcon className="w-3.5 h-3.5" />
               <span>Instagram</span>
             </a>
-            <span className="hidden sm:inline">Wild-Foraged in the Himalayas</span>
+            <span className="hidden sm:inline font-mono text-[10px] text-gray-400">12,000+ Ft Wild Terroir</span>
           </div>
         </div>
 

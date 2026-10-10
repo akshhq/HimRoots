@@ -15,6 +15,7 @@ import {
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { useCartStore } from "@/store/cartStore";
 import { useAuthStore } from "@/store/authStore";
+import { AnnouncementBar } from "../home/AnnouncementBar";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -79,21 +80,16 @@ export function Navbar() {
 
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "About", path: "/about" },
-    { name: "Sea Buckthorn", path: "/about-sea-buckthorn" },
     { name: "Shop", path: "/shop" },
+    { name: "Sea Buckthorn", path: "/about-sea-buckthorn" },
+    { name: "About Story", path: "/about" },
     { name: "Contact Us", path: "/contact" },
   ];
 
   return (
     <>
-      {/* Top Banner */}
-      <div className="bg-black border-b border-[var(--color-border)] text-[10px] sm:text-xs text-[var(--color-muted-foreground)] py-1.5 sm:py-2 px-3 sm:px-6 text-center tracking-[0.12em] sm:tracking-[0.18em] uppercase flex items-center justify-center gap-2">
-        <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[var(--color-primary)] flex-shrink-0" />
-        <span className="hidden sm:inline">Pure Himalayan Sea Buckthorn Formulations — Free Shipping Across India</span>
-        <span className="sm:hidden">Free Shipping Across India • 100% Wild Harvested</span>
-        <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[var(--color-primary)] hidden sm:inline flex-shrink-0" />
-      </div>
+      {/* Top Rotating Security & Operational Announcement Ticker */}
+      <AnnouncementBar />
 
       <header
         className={`sticky top-0 w-full z-50 transition-colors duration-200 ${

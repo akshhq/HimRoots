@@ -190,6 +190,275 @@ export const products: Product[] = [
     rating: 4.9,
     reviews: 112,
     featured: true
+  },
+  {
+    id: "prod_003",
+    name: "Himalayan Sea Buckthorn Face Oil | Cold-Pressed | 30ml",
+    tagline: "Radiance & Deep Nourishment for Skin",
+    scriptQuote: "GLOW WITH THE GOLD OF HIMALAYAS",
+    slug: "sea-buckthorn-face-oil",
+    volume: "30 ml",
+    description: "A luxurious cold-pressed facial oil derived from wild Himalayan Sea Buckthorn berries. Rich in rare Omega-7, natural carotenoids, and Vitamin E, this lightweight elixir absorbs quickly to deeply nourish, repair, and illuminate your skin. Ideal for all skin types, it helps reduce fine lines, fade dark spots, and restore a luminous, youthful glow — the way nature intended.",
+    price: 799,
+    originalPrice: 999,
+    images: [
+      "/images/himroots-sea-buckthorn-capsules.jpg",
+      "/images/capsules-skin-hydration.jpg",
+      "/images/capsules-clean-ingredients.jpg",
+      "/images/himalayan-harvest.jpg"
+    ],
+    category: "Skin & Beauty",
+    ingredients: [
+      "Cold-Pressed Sea Buckthorn Seed Oil",
+      "Cold-Pressed Sea Buckthorn Berry Oil",
+      "Natural Vitamin E (Tocopherol)"
+    ],
+    detailedIngredients: [
+      {
+        name: "Sea Buckthorn Seed Oil",
+        percentage: "60%",
+        benefits: ["Rich in Omega 3, 6, 9", "Deep cellular nourishment", "Soothes inflamed skin"]
+      },
+      {
+        name: "Sea Buckthorn Berry Oil",
+        percentage: "35%",
+        benefits: ["Rare Omega-7 for skin elasticity", "Golden carotenoids for radiance", "Powerful antioxidant protection"]
+      },
+      {
+        name: "Natural Vitamin E",
+        percentage: "5%",
+        benefits: ["Preserves oil freshness naturally", "Additional antioxidant layer", "Supports skin barrier repair"]
+      }
+    ],
+    benefits: [
+      "Reduces Fine Lines & Wrinkles",
+      "Fades Dark Spots & Pigmentation",
+      "Deep Hydration Without Greasiness",
+      "Repairs Sun-Damaged Skin",
+      "Restores Natural Radiance"
+    ],
+    certifications: [
+      "100% Cold-Pressed",
+      "No Synthetic Fragrances",
+      "Paraben Free",
+      "Cruelty Free",
+      "Non-GMO"
+    ],
+    directions: [
+      "Apply 3-4 drops on clean, damp face and neck",
+      "Gently massage in upward circular motions",
+      "Use morning and night for best results",
+      "Can be mixed with moisturizer or used as a serum"
+    ],
+    packagingFeature: "UV-protective amber glass dropper bottle with precision pipette for controlled application",
+    shelfLife: "18 months from manufacture",
+    stock: 45,
+    rating: 4.8,
+    reviews: 67,
+    featured: true
+  },
+  {
+    id: "prod_004",
+    name: "Himalayan Sea Buckthorn Immunity Shots | Pack of 15",
+    tagline: "Daily Defense in One Powerful Shot",
+    scriptQuote: "SHIELD YOURSELF WITH HIMALAYAN POWER",
+    slug: "sea-buckthorn-immunity-shots",
+    volume: "15 × 20 ml shots",
+    description: "Potent single-serve immunity shots combining wild-harvested Sea Buckthorn pulp with Turmeric, Black Pepper extract (Piperine), and raw Himalayan Honey. Each 20ml shot delivers a concentrated burst of Vitamin C, antioxidants, and anti-inflammatory compounds designed to fortify your body's natural defences. Perfect for travel, busy mornings, or seasonal wellness support.",
+    price: 699,
+    originalPrice: 899,
+    images: [
+      "/images/himroots-sea-buckthorn-pulp.jpg",
+      "/images/pulp-190-bioactives.jpg",
+      "/images/pulp-vitaminc-comparison.jpg",
+      "/images/himalayan-hero-peaks.jpg"
+    ],
+    category: "Wild Himalayan Pulp & Juice",
+    ingredients: [
+      "Sea Buckthorn Pulp Concentrate",
+      "Raw Himalayan Honey",
+      "Turmeric Extract (Curcumin)",
+      "Black Pepper Extract (Piperine)",
+      "Purified Water"
+    ],
+    detailedIngredients: [
+      {
+        name: "Sea Buckthorn Pulp Concentrate",
+        percentage: "70%",
+        benefits: ["Up to 28x more Vitamin C than oranges", "Full-spectrum Omega profile", "190+ bioactive compounds"]
+      },
+      {
+        name: "Turmeric & Piperine Complex",
+        percentage: "15%",
+        benefits: ["Enhanced curcumin bioavailability by 2000%", "Powerful anti-inflammatory action", "Supports joint and digestive health"]
+      },
+      {
+        name: "Raw Himalayan Honey",
+        percentage: "15%",
+        benefits: ["Natural energy source", "Soothes throat and gut lining", "Enzyme-rich with natural prebiotics"]
+      }
+    ],
+    benefits: [
+      "Rapid Immunity Boost",
+      "Convenient Single-Serve Format",
+      "Anti-Inflammatory Support",
+      "Natural Energy Without Caffeine",
+      "Travel-Friendly Wellness"
+    ],
+    certifications: [
+      "Cold Processed",
+      "Zero Added Sugar",
+      "No Preservatives",
+      "Non-GMO",
+      "Third-Party Tested"
+    ],
+    directions: [
+      "Consume 1 shot daily, preferably in the morning on an empty stomach",
+      "Shake the individual sachet well before tearing open",
+      "Can be diluted in 50ml warm water if preferred",
+      "For intensive support, take 2 shots daily during seasonal changes"
+    ],
+    packagingFeature: "Individual foil-sealed sachets in a recyclable kraft box for freshness and portability",
+    shelfLife: "9 months from manufacture",
+    stock: 80,
+    rating: 4.65,
+    reviews: 38,
+    featured: false
+  },
+  {
+    id: "prod_005",
+    name: "Himalayan Sea Buckthorn Lip Balm | SPF 15 | 5g",
+    tagline: "Nourish, Protect & Repair Dry Lips",
+    scriptQuote: "HIMALAYAN CARE FOR YOUR SMILE",
+    slug: "sea-buckthorn-lip-balm",
+    volume: "5 g",
+    description: "A deeply nourishing lip balm infused with cold-pressed Sea Buckthorn oil, Beeswax, Shea Butter, and natural SPF protection. The rare Omega-7 and Vitamin E content repairs cracked, chapped lips while creating a protective moisture barrier. Its subtle golden tint and delicate berry aroma make it a daily essential for healthy, supple lips in every season.",
+    price: 299,
+    originalPrice: 399,
+    images: [
+      "/images/capsules-skin-hydration.jpg",
+      "/images/capsules-clean-ingredients.jpg",
+      "/images/himalayan-harvest.jpg"
+    ],
+    category: "Skin & Beauty",
+    ingredients: [
+      "Cold-Pressed Sea Buckthorn Oil",
+      "Organic Beeswax",
+      "Shea Butter",
+      "Coconut Oil",
+      "Natural Vitamin E"
+    ],
+    detailedIngredients: [
+      {
+        name: "Sea Buckthorn Berry Oil",
+        percentage: "30%",
+        benefits: ["Omega-7 for deep lip repair", "Natural golden tint from carotenoids", "Antioxidant shield against UV damage"]
+      },
+      {
+        name: "Shea Butter & Beeswax",
+        percentage: "55%",
+        benefits: ["Long-lasting moisture lock", "Creates protective barrier", "Softens and smooths lip texture"]
+      },
+      {
+        name: "Coconut Oil & Vitamin E",
+        percentage: "15%",
+        benefits: ["Rapid absorption and hydration", "Prevents oxidative lip aging", "Natural antimicrobial properties"]
+      }
+    ],
+    benefits: [
+      "Heals Cracked & Chapped Lips",
+      "SPF 15 Sun Protection",
+      "Long-Lasting Moisture Barrier",
+      "Subtle Natural Golden Tint",
+      "Safe for Sensitive Skin"
+    ],
+    certifications: [
+      "100% Natural Ingredients",
+      "Paraben Free",
+      "Petroleum Free",
+      "Cruelty Free",
+      "Dermatologist Tested"
+    ],
+    directions: [
+      "Apply generously to lips as needed throughout the day",
+      "Reapply after eating or drinking for continuous protection",
+      "For overnight repair, apply a thick layer before bed",
+      "Safe for daily use — no synthetic ingredients"
+    ],
+    packagingFeature: "Eco-friendly kraft tube with push-up mechanism — zero plastic packaging",
+    shelfLife: "24 months from manufacture",
+    stock: 120,
+    rating: 4.85,
+    reviews: 94,
+    featured: false
+  },
+  {
+    id: "prod_006",
+    name: "Himalayan Herbal Wellness Tea | Sea Buckthorn & Tulsi | 50g",
+    tagline: "Ancient Herbs, Modern Calm",
+    scriptQuote: "BREW THE SERENITY OF THE MOUNTAINS",
+    slug: "himalayan-herbal-tea",
+    volume: "50 g (25 cups)",
+    description: "A hand-blended herbal infusion combining dried Sea Buckthorn leaves, Holy Basil (Tulsi), Lemongrass, and Himalayan Chamomile. Each cup delivers calming adaptogens, gentle antioxidants, and a soothing warmth that supports stress relief, digestion, and restful sleep. Caffeine-free and naturally aromatic, it's the perfect evening ritual rooted in Himalayan botanical wisdom.",
+    price: 499,
+    originalPrice: 649,
+    images: [
+      "/images/himroots-harvest-berries.jpg",
+      "/images/himalayan-hero-peaks.jpg",
+      "/images/sea-buckthorn-frost-harvest.jpg",
+      "/images/himalayan-harvest.jpg"
+    ],
+    category: "Herbal Teas & Infusions",
+    ingredients: [
+      "Dried Sea Buckthorn Leaves",
+      "Holy Basil (Tulsi) Leaves",
+      "Lemongrass",
+      "Himalayan Chamomile Flowers",
+      "Stevia Leaf (natural sweetener)"
+    ],
+    detailedIngredients: [
+      {
+        name: "Sea Buckthorn Leaves",
+        percentage: "35%",
+        benefits: ["Rich in flavonoids and tannins", "Supports cardiovascular health", "Natural anti-inflammatory properties"]
+      },
+      {
+        name: "Holy Basil (Tulsi)",
+        percentage: "30%",
+        benefits: ["Potent adaptogen for stress relief", "Supports respiratory health", "Balances cortisol levels naturally"]
+      },
+      {
+        name: "Lemongrass & Chamomile",
+        percentage: "35%",
+        benefits: ["Calming aromatic blend", "Aids digestion and reduces bloating", "Promotes deep, restful sleep"]
+      }
+    ],
+    benefits: [
+      "Stress Relief & Mental Calm",
+      "Supports Digestive Comfort",
+      "Promotes Restful Sleep",
+      "Caffeine-Free Daily Ritual",
+      "Rich in Natural Antioxidants"
+    ],
+    certifications: [
+      "100% Caffeine Free",
+      "Hand-Blended Small Batches",
+      "No Artificial Flavours",
+      "Sustainably Sourced",
+      "FSSAI Certified"
+    ],
+    directions: [
+      "Steep 1 teaspoon (2g) in 200ml freshly boiled water",
+      "Cover and infuse for 4-5 minutes",
+      "Strain and enjoy plain or with a drizzle of honey",
+      "Best enjoyed in the evening for relaxation"
+    ],
+    packagingFeature: "Resealable matte kraft pouch with inner foil lining to preserve aroma and freshness",
+    shelfLife: "18 months from manufacture",
+    stock: 55,
+    rating: 4.7,
+    reviews: 42,
+    featured: true
   }
 ];
 
